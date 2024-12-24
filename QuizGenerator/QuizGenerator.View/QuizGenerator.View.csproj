@@ -8,4 +8,26 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Fonts\proximanova_black.otf" />
+    <None Remove="Fonts\proximanova_black.ttf" />
+    <None Remove="Fonts\proximanova_blackit.otf" />
+    <None Remove="Fonts\proximanova_bold.otf" />
+    <None Remove="Fonts\proximanova_boldit.otf" />
+    <None Remove="Fonts\proximanova_extrabold.otf" />
+    <None Remove="Fonts\proximanova_light.otf" />
+    <None Remove="Fonts\proximanova_regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\proximanova_black.otf" />
+    <Resource Include="Fonts\proximanova_black.ttf" />
+    <Resource Include="Fonts\proximanova_blackit.otf" />
+    <Resource Include="Fonts\proximanova_bold.otf" />
+    <Resource Include="Fonts\proximanova_boldit.otf" />
+    <Resource Include="Fonts\proximanova_extrabold.otf" />
+    <Resource Include="Fonts\proximanova_light.otf" />
+    <Resource Include="Fonts\proximanova_regular.ttf" />
+  </ItemGroup>
+
 </Project>
