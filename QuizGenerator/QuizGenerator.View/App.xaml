@@ -4,6 +4,13 @@
              xmlns:local="clr-namespace:QuizGenerator.View"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="Theme" Source="/Styles/Themes/DarkTheme.xaml"/>
+                <ResourceDictionary x:Name="Brushes" Source="/Styles/Themes/Brushes.xaml"/>
+
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
