@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="BackgroundColor">#16191c</Color>
+    <Color x:Key="BackgroundSecondaryColor">#23262b</Color>
+
+    <Color x:Key="BackdropColor">MintCream</Color>
+
+    <Color x:Key="PrimaryColor">#3d55d1</Color>
+    <Color x:Key="HoverPrimaryColor">#1c2763</Color>
+    <Color x:Key="PressedPrimaryColor">#0f163d</Color>
+
+    <Color x:Key="TextColor">#e1e2e2</Color>
+</ResourceDictionary>
