@@ -9,9 +9,11 @@
                 <ResourceDictionary x:Name="Theme" Source="/Styles/Themes/DarkTheme.xaml"/>
                 <ResourceDictionary x:Name="Brushes" Source="/Styles/Themes/Brushes.xaml"/>
 
+                <ResourceDictionary Source="/Styles/Elements/Others/TooltipStyle.xaml"/>
                 <!-- Element's styles -->
                 <ResourceDictionary Source="/Styles/Elements/Buttons/PrimaryButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Buttons/SecondaryButtonStyle.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
