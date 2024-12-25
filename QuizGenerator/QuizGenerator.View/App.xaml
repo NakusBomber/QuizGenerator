@@ -9,6 +9,9 @@
                 <ResourceDictionary x:Name="Theme" Source="/Styles/Themes/DarkTheme.xaml"/>
                 <ResourceDictionary x:Name="Brushes" Source="/Styles/Themes/Brushes.xaml"/>
 
+                <!-- Base styles -->
+                <ResourceDictionary Source="/Styles/Bases/FlatBaseStyle.xaml"/>
+
                 <ResourceDictionary Source="/Styles/Elements/Others/TooltipStyle.xaml"/>
                 <!-- Element's styles -->
                 <ResourceDictionary Source="/Styles/Elements/Buttons/PrimaryButtonStyle.xaml"/>
