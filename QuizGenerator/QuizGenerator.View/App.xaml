@@ -10,8 +10,8 @@
                 <ResourceDictionary x:Name="Brushes" Source="/Styles/Themes/Brushes.xaml"/>
 
                 <!-- Element's styles -->
-                <ResourceDictionary Source="/Styles/PrimaryButtonStyle.xaml"/>
-                <ResourceDictionary Source="/Styles/SecondaryButtonStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Elements/Buttons/PrimaryButtonStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Elements/Buttons/SecondaryButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
