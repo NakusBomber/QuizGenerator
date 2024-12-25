@@ -13,6 +13,7 @@
                 <!-- Element's styles -->
                 <ResourceDictionary Source="/Styles/Elements/Buttons/PrimaryButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Buttons/SecondaryButtonStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Elements/Buttons/RecentlyQuizButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Labels/HeaderLabelStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
