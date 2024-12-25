@@ -11,6 +11,7 @@
 
                 <!-- Element's styles -->
                 <ResourceDictionary Source="/Styles/PrimaryButtonStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/SecondaryButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

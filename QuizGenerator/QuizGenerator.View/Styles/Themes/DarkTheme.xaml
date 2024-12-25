@@ -10,6 +10,11 @@
     <Color x:Key="PressedPrimaryColor">#0f163d</Color>
     <Color x:Key="DisablePrimaryColor">#3e3e3e</Color>
 
+    <Color x:Key="SecondaryColor">#6B7280</Color>
+    <Color x:Key="HoverSecondaryColor">#3f4654</Color>
+    <Color x:Key="PressedSecondaryColor">#0f163d</Color>
+    <Color x:Key="DisableSecondaryColor">#3e3e3e</Color>
+
     <Color x:Key="TextColor">#e1e2e2</Color>
     <Color x:Key="DisableTextColor">#949595</Color>
 </ResourceDictionary>

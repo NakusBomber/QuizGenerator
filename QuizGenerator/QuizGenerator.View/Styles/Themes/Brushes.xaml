@@ -4,9 +4,17 @@
     <SolidColorBrush x:Key="HoverPrimaryBrush" Color="{StaticResource HoverPrimaryColor}"/>
     <SolidColorBrush x:Key="PressedPrimaryBrush" Color="{StaticResource PressedPrimaryColor}"/>
     <SolidColorBrush x:Key="DisablePrimaryBrush" Color="{StaticResource DisablePrimaryColor}"/>
+
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}"/>
+    <SolidColorBrush x:Key="HoverSecondaryBrush" Color="{StaticResource HoverSecondaryColor}"/>
+    <SolidColorBrush x:Key="PressedSecondaryBrush" Color="{StaticResource PressedSecondaryColor}"/>
+    <SolidColorBrush x:Key="DisableSecondaryBrush" Color="{StaticResource DisableSecondaryColor}"/>
+
     <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}"/>
     <SolidColorBrush x:Key="BackgroundSecondaryBrush" Color="{StaticResource BackgroundSecondaryColor}"/>
+
     <SolidColorBrush x:Key="BackdropBrush" Color="{StaticResource BackdropColor}"/>
+
     <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}"/>
     <SolidColorBrush x:Key="DisableTextBrush" Color="{StaticResource DisableTextColor}"/>
 </ResourceDictionary>
