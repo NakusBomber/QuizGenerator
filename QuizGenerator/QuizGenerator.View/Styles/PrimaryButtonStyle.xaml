@@ -67,7 +67,10 @@
                                 <RemoveStoryboard BeginStoryboardName="PressedBeginStoryboard"/>
                             </Trigger.ExitActions>
                         </Trigger>
-
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{StaticResource DisablePrimaryBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisableTextBrush}"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

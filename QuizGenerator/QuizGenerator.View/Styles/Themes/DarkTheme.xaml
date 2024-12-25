@@ -8,6 +8,8 @@
     <Color x:Key="PrimaryColor">#3d55d1</Color>
     <Color x:Key="HoverPrimaryColor">#1c2763</Color>
     <Color x:Key="PressedPrimaryColor">#0f163d</Color>
+    <Color x:Key="DisablePrimaryColor">#3e3e3e</Color>
 
     <Color x:Key="TextColor">#e1e2e2</Color>
+    <Color x:Key="DisableTextColor">#949595</Color>
 </ResourceDictionary>
