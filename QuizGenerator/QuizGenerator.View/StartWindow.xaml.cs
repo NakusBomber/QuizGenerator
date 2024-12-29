@@ -12,11 +12,11 @@ using System.Windows.Shapes;
 namespace QuizGenerator.View
 {
 	/// <summary>
-	/// Interaction logic for MainWindow.xaml
+	/// Interaction logic for StartWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class StartWindow : Window
 	{
-		public MainWindow()
+		public StartWindow()
 		{
 			InitializeComponent();
 		}
