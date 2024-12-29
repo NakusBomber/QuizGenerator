@@ -38,16 +38,19 @@
                     VerticalAlignment="Center"
                     Margin="10, 0"
                     HorizontalAlignment="Stretch">
+            <StackPanel.Resources>
+
+            </StackPanel.Resources>
             <Label Content="Recently quiz:"
-                   Style="{StaticResource HeaderLabelStyle}"
-                   ToolTip="TEst"/>
-            <Button Content="LastQuiz"
-                    Style="{StaticResource RecentlyQuizButtonStyle}"/>
-            <Button Content="SecondQuiz"
-                    IsEnabled="False"
-                    Style="{StaticResource RecentlyQuizButtonStyle}"/>
-            <Button Content="FirstQuiz"
-                    Style="{StaticResource RecentlyQuizButtonStyle}"/>
+                   Style="{StaticResource HeaderLabelStyle}"/>
+            <ItemsControl d:ItemsSource="{d:SampleData ItemCount=3}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding}"
+                                Style="{StaticResource RecentlyQuizButtonStyle}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
     </Grid>
 </Page>
