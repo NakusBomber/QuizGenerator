@@ -3,10 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:QuizGenerator.View"
+        xmlns:pages="clr-namespace:QuizGenerator.View.Views.Pages"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Style="{StaticResource FlatWindowStyle}"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Height="320"
+        Width="450"
+        Title="QuizGenerator">
+    <Frame>
+        <Frame.Content>
+            <pages:StartPage HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"/>
+        </Frame.Content>
+    </Frame>
 </Window>

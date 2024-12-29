@@ -12,12 +12,17 @@
                 <!-- Base styles -->
                 <ResourceDictionary Source="/Styles/Bases/FlatBaseStyle.xaml"/>
 
+                <!-- Other styles -->
                 <ResourceDictionary Source="/Styles/Elements/Others/TooltipStyle.xaml"/>
+
                 <!-- Element's styles -->
                 <ResourceDictionary Source="/Styles/Elements/Buttons/PrimaryButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Buttons/SecondaryButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Buttons/RecentlyQuizButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Labels/HeaderLabelStyle.xaml"/>
+
+                <!-- Windows styles -->
+                <ResourceDictionary Source="/Styles/Windows/FlatWindowStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
