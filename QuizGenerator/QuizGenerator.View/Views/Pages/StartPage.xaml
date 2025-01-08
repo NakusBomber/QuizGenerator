@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
       mc:Ignorable="d"
       d:DesignHeight="300"
       d:DesignWidth="600"
@@ -39,11 +40,15 @@
                     Margin="10, 0"
                     HorizontalAlignment="Stretch">
             <StackPanel.Resources>
-
+                <x:Array x:Key="testData" Type="{x:Type sys:String}">
+                    <sys:String>Last quiz</sys:String>
+                    <sys:String>Prev quiz</sys:String>
+                </x:Array>
             </StackPanel.Resources>
+
             <Label Content="Recently quiz:"
                    Style="{StaticResource HeaderLabelStyle}"/>
-            <ItemsControl d:ItemsSource="{d:SampleData ItemCount=3}">
+            <ItemsControl ItemsSource="{StaticResource testData}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Content="{Binding}"
