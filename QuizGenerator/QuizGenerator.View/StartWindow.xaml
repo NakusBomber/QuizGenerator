@@ -7,14 +7,29 @@
         mc:Ignorable="d"
         Style="{StaticResource FlatWindowStyle}"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
-        Height="320"
-        Width="450"
+        MinHeight="340"
+        Height="340"
+        MinWidth="550"
+        Width="550"
         Title="QuizGenerator">
-    <Frame>
-        <Frame.Content>
-            <pages:StartPage HorizontalAlignment="Stretch"
-                             VerticalAlignment="Stretch"/>
-        </Frame.Content>
-    </Frame>
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0"
+                HorizontalAlignment="Left"
+                Margin="6"
+                Style="{StaticResource BackNavigationButtonStyle}"/>
+
+        <Frame Grid.Row="1">
+            <Frame.Content>
+                <pages:StartPage HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"/>
+            </Frame.Content>
+        </Frame>
+
+    </Grid>
 </Window>

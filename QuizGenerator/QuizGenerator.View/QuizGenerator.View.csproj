@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Material.Icons.WPF" Version="2.1.10" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Fonts\proximanova_black.otf" />
     <Resource Include="Fonts\proximanova_black.ttf" />
     <Resource Include="Fonts\proximanova_blackit.otf" />
