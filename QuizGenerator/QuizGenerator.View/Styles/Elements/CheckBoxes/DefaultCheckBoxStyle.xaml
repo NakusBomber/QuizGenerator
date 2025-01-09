@@ -1,0 +1,103 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="{x:Type CheckBox}"
+           BasedOn="{StaticResource FlatBaseStyle}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{StaticResource TextBrush}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <Border x:Name="_border"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Width="20"
+                            Height="20"
+                            CornerRadius="3">
+                        <Grid>
+                            <Canvas>
+                                <Path x:Name="_checkmark"
+                                      Stroke="{TemplateBinding Foreground}"
+                                      Margin="-0.1 0.5"
+                                      StrokeThickness="0"
+                                      StrokeLineJoin="Round"
+                                      StrokeStartLineCap="Round"
+                                      StrokeEndLineCap="Round">
+                                    <Path.Data>
+                                        <PathGeometry>
+                                            <PathFigure StartPoint="3,9" IsClosed="False">
+                                                <LineSegment x:Name="_checkmarkFirstLine" Point="3,9"/>
+                                                <LineSegment x:Name="_checkmarkLastLine" Point="3,9"/>
+                                            </PathFigure>
+                                        </PathGeometry>
+                                    </Path.Data>
+                                </Path>
+                            </Canvas>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="_border"
+                                                        Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+                                                        To="{StaticResource PrimaryColor}"
+                                                        Duration="0:0:0.1"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="_border"
+                                                        Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+                                                        To="{StaticResource TextColor}"
+                                                        Duration="0:0:0.1"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+
+                        <Trigger Property="IsChecked" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard x:Name="_checkmarkAnimStoryboard">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="_checkmark"
+                                                         Storyboard.TargetProperty="StrokeThickness"
+                                                         To="3"
+                                                         Duration="0:0:0.01"/>
+                                        <PointAnimation Storyboard.TargetName="_checkmarkFirstLine"
+                                                        Storyboard.TargetProperty="Point"
+                                                        To="6,12"
+                                                        BeginTime="0:0:0.01"
+                                                        Duration="0:0:0.1"/>
+                                        <PointAnimation Storyboard.TargetName="_checkmarkLastLine"
+                                                        Storyboard.TargetProperty="Point"
+                                                        To="13,3"
+                                                        BeginTime="0:0:0.11"
+                                                        Duration="0:0:0.1"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="_checkmarkAnimStoryboard"/>
+                            </Trigger.ExitActions>
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource DisableTextBrush}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource DisableTextBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
