@@ -8,6 +8,8 @@
         <Setter Property="BorderBrush" Value="{StaticResource TextBrush}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="CaretBrush" Value="{StaticResource TextBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
 
         <Setter Property="Template">
             <Setter.Value>
@@ -21,9 +23,9 @@
                             Padding="4 0">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
                             <icons:MaterialIcon x:Name="_icon"
@@ -34,15 +36,15 @@
                                                 Foreground="{StaticResource TextBrush}"
                                                 Kind="{TemplateBinding MaterialIcon}"/>
 
-                            <Grid Grid.Column="1">
+                            <Grid Grid.Column="1"
+                                  x:Name="_separator">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1*" />
                                     <RowDefinition Height="5*" />
                                     <RowDefinition Height="1*" />
                                 </Grid.RowDefinitions>
 
-                                <Border x:Name="_separator"
-                                        Grid.Row="1"
+                                <Border Grid.Row="1"
                                         Width="2"
                                         BorderThickness="0"
                                         HorizontalAlignment="Stretch"
@@ -59,8 +61,8 @@
                                      Background="Transparent"
                                      HorizontalAlignment="Stretch"
                                      VerticalAlignment="Stretch"
-                                     VerticalContentAlignment="Center"
-                                     HorizontalContentAlignment="Center"
+                                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                      BorderBrush="Transparent"
                                      BorderThickness="0"
                                      CaretBrush="{TemplateBinding CaretBrush}"
