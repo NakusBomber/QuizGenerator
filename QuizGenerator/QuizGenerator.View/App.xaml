@@ -24,6 +24,7 @@
                 <ResourceDictionary Source="/Styles/Elements/TextBoxes/ExtendedTextBoxStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Labels/HeaderLabelStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/CheckBoxes/DefaultCheckBoxStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Elements/ProgressBars/SmoothProgressBarStyle.xaml"/>
 
                 <!-- Windows styles -->
                 <ResourceDictionary Source="/Styles/Windows/FlatWindowStyle.xaml"/>

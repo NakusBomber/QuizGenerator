@@ -17,4 +17,6 @@
 
     <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}"/>
     <SolidColorBrush x:Key="DisableTextBrush" Color="{StaticResource DisableTextColor}"/>
+
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}"/>
 </ResourceDictionary>

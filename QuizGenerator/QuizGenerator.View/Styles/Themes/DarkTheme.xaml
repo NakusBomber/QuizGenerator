@@ -17,4 +17,6 @@
 
     <Color x:Key="TextColor">#e1e2e2</Color>
     <Color x:Key="DisableTextColor">#949595</Color>
+
+    <Color x:Key="SuccessColor">#009900</Color>
 </ResourceDictionary>
