@@ -1,0 +1,53 @@
+﻿<Page x:Class="QuizGenerator.View.Views.Pages.SelectPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:comp="clr-namespace:QuizGenerator.View.Components"
+      xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
+      mc:Ignorable="d"
+      d:DesignHeight="350"
+      d:DesignWidth="500"
+      Title="SelectPage">
+    <Grid Margin="15 0">
+        <Grid.Resources>
+            <x:Array Type="{x:Type sys:String}"
+                     x:Key="TempDataSearch">
+                <sys:String>Quiz name 1</sys:String>
+                <sys:String>Quiz name 2</sys:String>
+                <sys:String>Quiz name 3</sys:String>
+                <sys:String>Quiz name 4</sys:String>
+                <sys:String>Quiz name 5</sys:String>
+                <sys:String>Quiz name 6</sys:String>
+                <sys:String>Quiz name 7</sys:String>
+                <sys:String>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</sys:String>
+            </x:Array>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <comp:ExtendedTextBox Grid.Row="0"
+                              IconSeparator="True"
+                              MaterialIcon="Search"
+                              Placeholder="Type text for searching"/>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="0 10"
+                      Grid.Row="1">
+            <ItemsControl ItemsSource="{StaticResource TempDataSearch}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Style="{StaticResource RecentlyQuizButtonStyle}"
+                                Margin="8 10 8 0"
+                                Content="{Binding}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Page>
