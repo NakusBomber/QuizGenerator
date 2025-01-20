@@ -24,10 +24,11 @@
                 Margin="6"
                 Style="{StaticResource BackNavigationButtonStyle}"/>
 
-        <Frame Grid.Row="1">
+        <Frame Grid.Row="1"
+               HorizontalContentAlignment="Stretch"
+               VerticalContentAlignment="Stretch">
             <Frame.Content>
-                <pages:StartPage HorizontalAlignment="Stretch"
-                                 VerticalAlignment="Stretch"/>
+                <pages:StartPage/>
             </Frame.Content>
         </Frame>
 
