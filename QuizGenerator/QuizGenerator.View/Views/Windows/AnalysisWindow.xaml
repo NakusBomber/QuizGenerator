@@ -1,0 +1,165 @@
+﻿<Window x:Class="QuizGenerator.View.Views.Windows.AnalysisWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QuizGenerator.View.Views.Windows"
+        xmlns:comp="clr-namespace:QuizGenerator.View.Components"
+        xmlns:models="clr-namespace:QuizGenerator.View.Models"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Style="{StaticResource FlatWindowStyle}"
+        Title="Analysis"
+        Height="450"
+        MinHeight="340"
+        MinWidth="550"
+        Width="600">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0"
+                  Margin="10 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Label Style="{StaticResource HeaderLabelStyle}"
+                       Margin="0 10"
+                       Grid.Column="0"
+                       Content="Quiz name"/>
+
+                <comp:IconButton MaterialIcon="Reload"
+                                 Grid.Column="1"
+                                 ToolTip="Again"/>
+            </Grid>
+
+            <Grid Grid.Row="1"
+                  Margin="20 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.Resources>
+                    <x:Array x:Key="PieChartData"
+                             Type="{x:Type models:PieChartData}">
+                        <models:PieChartData Brush="{StaticResource SuccessBrush}" Weight="9" Name="Correct"/>
+                        <models:PieChartData Brush="DarkRed" Weight="3" Name="Incorrect"/>
+                    </x:Array>
+                </Grid.Resources>
+                <comp:PieChart Grid.Column="0"
+                               Width="180"
+                               Height="180"
+                               Data="{StaticResource PieChartData}"/>
+
+                <StackPanel Orientation="Vertical"
+                            VerticalAlignment="Center"
+                            Grid.Column="1">
+                    <Label Style="{StaticResource HeaderLabelStyle}"
+                           Content="Correct answers: 9"/>
+                    <Label Style="{StaticResource HeaderLabelStyle}"
+                           FontSize="12"
+                           Content="Incorrect answers: 3"/>
+                    <Label Style="{StaticResource HeaderLabelStyle}"
+                           FontSize="12"
+                           Content="Elapsed time: 04:32"/>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Orientation="Vertical"
+                        Grid.Row="2">
+                <StackPanel Orientation="Vertical"
+                            Margin="0 10 0 0"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            Grid.Column="1">
+                    <StackPanel.Resources>
+                        <x:Array x:Key="TestAnswers"
+                                 Type="{x:Type sys:String}">
+                            <sys:String>Answer 1</sys:String>
+                            <sys:String>Answer 2</sys:String>
+                            <sys:String>Answer 3</sys:String>
+                            <sys:String>Answer 4</sys:String>
+                        </x:Array>
+                    </StackPanel.Resources>
+                    <Label Style="{StaticResource HeaderLabelStyle}"
+                           Content="Question"/>
+                    <ItemsControl ItemsSource="{StaticResource TestAnswers}"
+                                  VerticalAlignment="Stretch"
+                                  HorizontalAlignment="Stretch">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"
+                                            VerticalAlignment="Stretch"
+                                            HorizontalAlignment="Stretch"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Gray"
+                                        BorderThickness="1"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch">
+                                    <Label Style="{StaticResource HeaderLabelStyle}"
+                                           Content="{Binding}"
+                                           HorizontalAlignment="Stretch"
+                                           VerticalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical"
+                            Margin="0 10 0 0"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            Grid.Column="1">
+                    <StackPanel.Resources>
+                        <x:Array x:Key="TestAnswers"
+                                 Type="{x:Type sys:String}">
+                            <sys:String>Answer 1</sys:String>
+                            <sys:String>Answer 2</sys:String>
+                            <sys:String>Answer 3</sys:String>
+                            <sys:String>Answer 4</sys:String>
+                        </x:Array>
+                    </StackPanel.Resources>
+                    <Label Style="{StaticResource HeaderLabelStyle}"
+                           Content="Question"/>
+                    <ItemsControl ItemsSource="{StaticResource TestAnswers}"
+                                  VerticalAlignment="Stretch"
+                                  HorizontalAlignment="Stretch">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"
+                                            VerticalAlignment="Stretch"
+                                            HorizontalAlignment="Stretch"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Gray"
+                                        BorderThickness="1"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch">
+                                    <Label Style="{StaticResource HeaderLabelStyle}"
+                                           Content="{Binding}"
+                                           HorizontalAlignment="Stretch"
+                                           VerticalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Window>
