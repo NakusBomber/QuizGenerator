@@ -4,7 +4,7 @@
                     xmlns:icons="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF">
     <Style TargetType="{x:Type comp:IconButton}"
            BasedOn="{StaticResource FlatBaseStyle}">
-        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Center" />
