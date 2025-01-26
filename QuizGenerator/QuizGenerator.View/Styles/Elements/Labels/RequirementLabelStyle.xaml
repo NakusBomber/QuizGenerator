@@ -3,6 +3,8 @@
     <Style x:Key="RequirementLabelStyle"
            TargetType="{x:Type Label}"
            BasedOn="{StaticResource HeaderLabelStyle}">
+        <Setter Property="ToolTip" Value="Requirement field" />
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Label}">
