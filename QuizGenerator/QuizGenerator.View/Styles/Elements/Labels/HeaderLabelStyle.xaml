@@ -3,5 +3,6 @@
     <Style x:Key="HeaderLabelStyle" TargetType="{x:Type Label}" BasedOn="{StaticResource FlatBaseStyle}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 </ResourceDictionary>
