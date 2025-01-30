@@ -1,19 +1,13 @@
-﻿<Window x:Class="QuizGenerator.View.Views.Windows.QuizWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:comp="clr-namespace:QuizGenerator.View.Components"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Style="{StaticResource FlatWindowStyle}"
-        xmlns:local="clr-namespace:QuizGenerator.View.Views.Windows"
-        mc:Ignorable="d"
-        Title="Quiz"
-        WindowStartupLocation="CenterScreen"
-        Height="450"
-        MinHeight="450"
-        MinWidth="550"
-        Width="550">
+﻿<Page x:Class="QuizGenerator.View.Views.Pages.QuizPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:comp="clr-namespace:QuizGenerator.View.Components"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
+      mc:Ignorable="d"
+      Title="Quiz" d:DesignWidth="517.601">
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto">
@@ -211,4 +205,4 @@
             </Grid>
         </ScrollViewer>
     </Grid>
-</Window>
+</Page>

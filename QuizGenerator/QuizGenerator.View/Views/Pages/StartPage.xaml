@@ -5,9 +5,11 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
       mc:Ignorable="d"
       d:DesignHeight="300"
       d:DesignWidth="600"
+      d:DataContext="{d:DesignInstance vms:StartViewModel}"
       Title="StartPage">
 
     <Grid>
@@ -20,12 +22,17 @@
                     Margin="20"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Stretch">
+
             <Button Style="{StaticResource PrimaryButtonStyle}"
                     Margin="10"
-                    Content="New"/>
+                    Content="New"
+                    Command="{Binding QuizNavigateCommand}"/>
+
             <Button Style="{StaticResource PrimaryButtonStyle}"
                     Margin="10"
-                    Content="Open"/>
+                    Content="Open"
+                    Command="{Binding SelectNavigateCommand}"/>
+
             <Button Content="Import"
                     Margin="10"
                     Style="{StaticResource SecondaryButtonStyle}"/>
@@ -40,7 +47,7 @@
                     Margin="10, 0"
                     HorizontalAlignment="Stretch">
             <StackPanel.Resources>
-                <x:Array x:Key="testData" Type="{x:Type sys:String}">
+                <x:Array x:Key="RecentlyTestData" Type="{x:Type sys:String}">
                     <sys:String>Last quiz</sys:String>
                     <sys:String>Prev quiz</sys:String>
                 </x:Array>
@@ -48,7 +55,7 @@
 
             <Label Content="Recently quiz:"
                    Style="{StaticResource HeaderLabelStyle}"/>
-            <ItemsControl ItemsSource="{StaticResource testData}">
+            <ItemsControl d:ItemsSource="{StaticResource RecentlyTestData}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Content="{Binding}"

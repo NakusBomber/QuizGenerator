@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:QuizGenerator.View"
              xmlns:converters="clr-namespace:QuizGenerator.View.Converters"
-             StartupUri="StartWindow.xaml">
+             Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -32,6 +32,8 @@
                 <!-- Windows styles -->
                 <ResourceDictionary Source="/Styles/Windows/FlatWindowStyle.xaml"/>
 
+                <!-- Templates -->
+                <ResourceDictionary Source="/Templates/NavigationDataTemplate.xaml"/>
 
                 <!-- Global converters -->
                 <ResourceDictionary>

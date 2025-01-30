@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pages="clr-namespace:QuizGenerator.View.Views.Pages"
+        xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
         mc:Ignorable="d"
         Style="{StaticResource FlatWindowStyle}"
         WindowStartupLocation="CenterScreen"
@@ -11,7 +12,9 @@
         Height="340"
         MinWidth="550"
         Width="550"
-        Title="QuizGenerator">
+        Title="QuizGenerator"
+        d:DataContext="{d:DesignInstance vms:NavigationViewModel}">
+
     <Grid>
 
         <Grid.RowDefinitions>
@@ -22,15 +25,13 @@
         <Button Grid.Row="0"
                 HorizontalAlignment="Left"
                 Margin="6"
+                Command="{Binding BackNavigateCommand}"
                 Style="{StaticResource BackNavigationButtonStyle}"/>
 
         <Frame Grid.Row="1"
+               Content="{Binding NavigationStore.CurrentViewModel}"
                HorizontalContentAlignment="Stretch"
-               VerticalContentAlignment="Stretch">
-            <Frame.Content>
-                <pages:StartPage/>
-            </Frame.Content>
-        </Frame>
-
+               VerticalContentAlignment="Stretch"
+               JournalOwnership="UsesParentJournal"/>
     </Grid>
 </Window>
