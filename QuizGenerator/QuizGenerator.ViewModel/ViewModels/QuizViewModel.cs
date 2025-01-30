@@ -2,7 +2,6 @@
 
 namespace QuizGenerator.ViewModel.ViewModels;
 
-public class SelectViewModel : ViewModelBase
+public class QuizViewModel : ViewModelBase
 {
-
 }
