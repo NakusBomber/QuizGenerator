@@ -35,10 +35,7 @@ public class AsyncDelegateCommand<TResult> : AsyncCommandBase<TResult>
 		RaiseCanExecuteChanged();
 	}
 
-	public ICommand CancelCommand
-	{
-		get { return _cancelCommand; }
-	}
+	public override ICommand CancelCommand => _cancelCommand;
 
 	public override NotifyTaskCompletion<TResult>? Execution
 	{

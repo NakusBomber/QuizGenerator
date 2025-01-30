@@ -5,6 +5,8 @@ namespace QuizGenerator.ViewModel.Commands.Interfaces;
 
 public interface IAsyncCommand<TResult> : ICommand
 {
-	Task ExecuteAsync(object? parameter);
-	NotifyTaskCompletion<TResult>? Execution { get; }
+	public Task ExecuteAsync(object? parameter);
+	public NotifyTaskCompletion<TResult>? Execution { get; }
+
+	public ICommand CancelCommand { get; }
 }

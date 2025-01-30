@@ -9,6 +9,7 @@ public abstract class AsyncCommandBase<TResult> : ObservableObject, IAsyncComman
 	public abstract NotifyTaskCompletion<TResult>? Execution { get; protected set; }
 	public abstract bool CanExecute(object? parameter);
 	public abstract Task ExecuteAsync(object? parameter);
+	public abstract ICommand CancelCommand { get; }
 	public async void Execute(object? parameter)
 	{
 		await ExecuteAsync(parameter);
