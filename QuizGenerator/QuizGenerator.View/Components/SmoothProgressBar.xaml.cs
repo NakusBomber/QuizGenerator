@@ -23,9 +23,6 @@ namespace QuizGenerator.View.Components
     /// </summary>
     public partial class SmoothProgressBar : ProgressBar
     {
-		private bool _isAnimating = false;
-
-
 		public bool ShowValue
 		{
 			get { return (bool)GetValue(ShowValueProperty); }
@@ -107,8 +104,6 @@ namespace QuizGenerator.View.Components
 
 		private void Animate(double oldValue, double newValue)
 		{
-			_isAnimating = true;
-
 			var border = Template.FindName("_progress", this) as Border;
 
 			if (border != null)
@@ -119,17 +114,10 @@ namespace QuizGenerator.View.Components
 				{
 					EasingMode = EasingMode.EaseInOut
 				};
-				animation.Completed += Animation_Completed;
-
+				
 				border.BeginAnimation(Border.WidthProperty, animation, HandoffBehavior.Compose);
 			}
 		}
-
-		private void Animation_Completed(object? sender, EventArgs e)
-		{
-			_isAnimating = false;
-		}
-
 
 		public SmoothProgressBar()
         {
