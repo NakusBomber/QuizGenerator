@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuizGenerator.View
+namespace QuizGenerator.View.Views.Windows
 {
 	/// <summary>
 	/// Interaction logic for StartWindow.xaml

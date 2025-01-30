@@ -1,4 +1,5 @@
-﻿using QuizGenerator.ViewModel.Commands;
+﻿using QuizGenerator.View.Views.Windows;
+using QuizGenerator.ViewModel.Commands;
 using QuizGenerator.ViewModel.Other;
 using QuizGenerator.ViewModel.ViewModels;
 using System.Configuration;
