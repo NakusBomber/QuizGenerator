@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
+        xmlns:comp="clr-namespace:QuizGenerator.View.Components"
         mc:Ignorable="d"
         Style="{StaticResource FlatWindowStyle}"
         WindowStartupLocation="CenterScreen"
@@ -28,10 +29,7 @@
                 Command="{Binding BackNavigateCommand}"
                 Style="{StaticResource BackNavigationButtonStyle}"/>
 
-        <Frame Grid.Row="1"
-               Content="{Binding NavigationStore.CurrentViewModel}"
-               HorizontalContentAlignment="Stretch"
-               VerticalContentAlignment="Stretch"
-               JournalOwnership="UsesParentJournal"/>
+        <comp:FrameContainer Grid.Row="1"
+                             DataContext="{Binding NavigationStore.CurrentViewModel}"/>
     </Grid>
 </Window>
