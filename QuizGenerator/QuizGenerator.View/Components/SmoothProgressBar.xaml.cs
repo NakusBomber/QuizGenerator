@@ -23,9 +23,6 @@ namespace QuizGenerator.View.Components
     /// </summary>
     public partial class SmoothProgressBar : ProgressBar
     {
-		private bool _isAnimating = false;
-
-
 		public bool ShowValue
 		{
 			get { return (bool)GetValue(ShowValueProperty); }
