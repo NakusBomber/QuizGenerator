@@ -1,4 +1,7 @@
-﻿using QuizGenerator.View.Views.Windows;
+﻿using QuizGenerator.Model.Entities;
+using QuizGenerator.Model.Interfaces;
+using QuizGenerator.Model.Models.Fakes;
+using QuizGenerator.View.Views.Windows;
 using QuizGenerator.ViewModel.Commands;
 using QuizGenerator.ViewModel.Other;
 using QuizGenerator.ViewModel.ViewModels;
@@ -15,6 +18,8 @@ namespace QuizGenerator.View
 	{
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
+			var unitOfWork = GetUnitOfWork();
+
 			var navigationStore = new NavigationStore();
 			var navigationJournal = new NavigationJournal();
 
@@ -29,7 +34,7 @@ namespace QuizGenerator.View
 			var startNavigationService = new NavigationService<StartViewModel>(
 				navigationStore, 
 				navigationJournal,
-				() => new StartViewModel(quizNavigationService, selectNavigationService));
+				() => new StartViewModel(unitOfWork, quizNavigationService, selectNavigationService));
 			var backNavigationService = new BackNavigationService(navigationStore, navigationJournal);
 
 			MainWindow = new StartWindow();
@@ -39,6 +44,27 @@ namespace QuizGenerator.View
 			navigationJournal.Clear();
 
 			MainWindow.Show();
+		}
+
+		private IUnitOfWork GetUnitOfWork()
+		{
+			TimeSpan delay = TimeSpan.FromSeconds(1);
+			TimeSpan saveDelay = TimeSpan.FromSeconds(2);
+
+			var exampleQuiz1 = new Quiz("Last quiz");
+			var exampleQuiz2 = new Quiz("Another quiz");
+
+			var quizRepository = new RepositoryFake<Quiz>(new HashSet<Quiz>([exampleQuiz1, exampleQuiz2]), delay);
+			var questionRepository = new RepositoryFake<Question>(delay);
+			var questionDetailRepository = new RepositoryFake<QuestionDetail>(delay);
+			var answerDetailRepositiry = new RepositoryFake<AnswerDetail>(delay);
+
+			return new UnitOfWorkFake(
+				saveDelay, 
+				quizRepository, 
+				questionRepository, 
+				questionDetailRepository, 
+				answerDetailRepositiry);
 		}
 	}
 

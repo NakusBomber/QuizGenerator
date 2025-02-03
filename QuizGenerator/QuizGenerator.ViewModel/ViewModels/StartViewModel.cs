@@ -1,4 +1,6 @@
-﻿using QuizGenerator.ViewModel.Commands;
+﻿using QuizGenerator.Model.Entities;
+using QuizGenerator.Model.Interfaces;
+using QuizGenerator.ViewModel.Commands;
 using QuizGenerator.ViewModel.Commands.Bases;
 using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.Other.Interfaces;
@@ -10,8 +12,10 @@ namespace QuizGenerator.ViewModel.ViewModels;
 
 public class StartViewModel : ViewModelBase
 {
-	private ObservableCollection<string> _recentlyQuizes = new();
-	public ObservableCollection<string> RecentlyQuizes
+	private readonly IUnitOfWork _unitOfWork;
+
+	private ObservableCollection<Quiz> _recentlyQuizes = new();
+	public ObservableCollection<Quiz> RecentlyQuizes
 	{
 		get => _recentlyQuizes;
 		set
@@ -25,18 +29,21 @@ public class StartViewModel : ViewModelBase
 	public ICommand QuizNavigateCommand { get; }
 	public IAsyncCommand<object?> LoadQuizesCommand { get; }
 	public StartViewModel(
+		IUnitOfWork unitOfWork,
 		INavigationService quizNavigationService,
 		INavigationService selectNavigationService)
 	{
+		_unitOfWork = unitOfWork;
+
 		QuizNavigateCommand = new NavigateCommand(quizNavigationService);
 		SelectNavigateCommand = new NavigateCommand(selectNavigationService);
 
-		LoadQuizesCommand = AsyncDelegateCommand.Create(TempAsync);
+		LoadQuizesCommand = AsyncDelegateCommand.Create(LoadQuizesAsync);
 	}
 
-	private async Task TempAsync(CancellationToken token)
+	private async Task LoadQuizesAsync(CancellationToken token)
 	{
-		await Task.Delay(2000, token);
-		RecentlyQuizes = new ObservableCollection<string>(["First", "Last"]);
+		var list = await _unitOfWork.QuizRepository.GetAsync();
+		RecentlyQuizes = new ObservableCollection<Quiz>(list);
 	}
 }
