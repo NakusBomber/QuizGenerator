@@ -61,9 +61,9 @@
             </Grid.RowDefinitions>
 
             <Grid.Resources>
-                <x:Array x:Key="RecentlyTestData" Type="{x:Type sys:String}">
-                    <sys:String>Last quiz</sys:String>
-                    <sys:String>Prev quiz</sys:String>
+                <x:Array x:Key="RecentlyTestData" Type="{x:Type models:Quiz}">
+                    <models:Quiz Name="TestName1"/>
+                    <models:Quiz Name="TestName2"/>
                 </x:Array>
             </Grid.Resources>
 

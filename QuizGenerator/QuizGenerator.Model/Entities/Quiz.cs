@@ -11,6 +11,11 @@ public class Quiz : Entity
 
     public List<Question> Questions { get; set; }
 
+    public Quiz()
+        : this(string.Empty)
+    {
+    }
+
     public Quiz(string name, List<Question>? questions = null) :
         this(Guid.NewGuid(),
             name,
