@@ -13,13 +13,27 @@ public class UnitOfWorkFake : IUnitOfWork
 	public IRepository<AnswerDetail> AnswerDetailRepository { get; }
 
 	public UnitOfWorkFake(TimeSpan saveDelay, TimeSpan delay)
+		: this(saveDelay, 
+			  new RepositoryFake<Quiz>(delay), 
+			  new RepositoryFake<Question>(delay),
+			  new RepositoryFake<QuestionDetail>(delay),
+			  new RepositoryFake<AnswerDetail>(delay))
+	{
+	}
+
+	public UnitOfWorkFake(
+		TimeSpan saveDelay,
+		IRepository<Quiz> quizRepository,
+		IRepository<Question> questionRepository,
+		IRepository<QuestionDetail> questionDetailRepository,
+		IRepository<AnswerDetail> answerDetailRepository)
 	{
 		_saveDelay = saveDelay;
 
-		QuizRepository = new RepositoryFake<Quiz>(delay);
-		QuestionRepository = new RepositoryFake<Question>(delay);
-		QuestionDetailRepository = new RepositoryFake<QuestionDetail>(delay);
-		AnswerDetailRepository = new RepositoryFake<AnswerDetail>(delay);
+		QuizRepository = quizRepository;
+		QuestionRepository = questionRepository;
+		QuestionDetailRepository = questionDetailRepository;
+		AnswerDetailRepository = answerDetailRepository;
 	}
 
 	public async Task SaveAsync()
