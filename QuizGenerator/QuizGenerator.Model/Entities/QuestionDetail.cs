@@ -1,8 +1,8 @@
 ﻿namespace QuizGenerator.Model.Entities;
 
-public class QuestionDetail
+public class QuestionDetail : Entity
 {
-    public Guid Id { get; set; }
+    public override Guid Id { get; set; }
     public Guid QuestionId { get; set; }
     public Question Question { get; set; }
     public string Text { get; set; }
@@ -20,4 +20,9 @@ public class QuestionDetail
         Question = question;
         Text = text;
     }
+
+	public override int GetHashCode()
+	{
+		return (Id, QuestionId, Text).GetHashCode();
+	}
 }
