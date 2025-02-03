@@ -4,24 +4,32 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:comp="clr-namespace:QuizGenerator.View.Components"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
+      xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model"
+      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
       mc:Ignorable="d"
       d:DesignHeight="350"
       d:DesignWidth="500"
+      d:DataContext="{d:DesignInstance vms:SelectViewModel}"
       Title="SelectPage">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding SearchCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid Margin="15 0">
         <Grid.Resources>
-            <x:Array Type="{x:Type sys:String}"
+            <x:Array Type="{x:Type models:Quiz}"
                      x:Key="TempDataSearch">
-                <sys:String>Quiz name 1</sys:String>
-                <sys:String>Quiz name 2</sys:String>
-                <sys:String>Quiz name 3</sys:String>
-                <sys:String>Quiz name 4</sys:String>
-                <sys:String>Quiz name 5</sys:String>
-                <sys:String>Quiz name 6</sys:String>
-                <sys:String>Quiz name 7</sys:String>
-                <sys:String>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</sys:String>
+                <models:Quiz Name="Name1"/>
+                <models:Quiz Name="Name2"/>
+                <models:Quiz Name="Name3"/>
+                <models:Quiz Name="Name4"/>
+                <models:Quiz Name="Name5"/>
+                <models:Quiz Name="Name6"/>
             </x:Array>
         </Grid.Resources>
 
@@ -32,19 +40,30 @@
 
         <comp:ExtendedTextBox Grid.Row="0"
                               IconSeparator="True"
+                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                               MaterialIcon="Search"
                               Placeholder="Type text for searching"/>
 
+
+        <Label Content="Loading..."
+               Visibility="{Binding SearchCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
+               Grid.Row="1"
+               HorizontalAlignment="Center"
+               Style="{StaticResource HeaderLabelStyle}"
+               Foreground="Gray"/>
+
         <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto"
+                      Visibility="{Binding SearchCommand.Execution.IsCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
                       Margin="0 10"
                       Grid.Row="1">
-            <ItemsControl ItemsSource="{StaticResource TempDataSearch}">
+            <ItemsControl d:ItemsSource="{StaticResource TempDataSearch}"
+                          ItemsSource="{Binding Quizes}">
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate DataType="{x:Type models:Quiz}">
                         <Button Style="{StaticResource RecentlyQuizButtonStyle}"
                                 Margin="8 10 8 0"
-                                Content="{Binding}"/>
+                                Content="{Binding Name}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

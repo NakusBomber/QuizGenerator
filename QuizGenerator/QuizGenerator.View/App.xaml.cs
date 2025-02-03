@@ -26,7 +26,7 @@ namespace QuizGenerator.View
 			var selectNavigationService = new NavigationService<SelectViewModel>(
 				navigationStore, 
 				navigationJournal,
-				() => new SelectViewModel());
+				() => new SelectViewModel(unitOfWork));
 			var quizNavigationService = new NavigationService<QuizViewModel>(
 				navigationStore, 
 				navigationJournal,
