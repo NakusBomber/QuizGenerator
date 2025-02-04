@@ -30,12 +30,12 @@ public class StartViewModel : ViewModelBase
 	public IAsyncCommand<object?> LoadQuizesCommand { get; }
 	public StartViewModel(
 		IUnitOfWork unitOfWork,
-		INavigationService quizNavigationService,
+		IParameterNavigationService<Quiz?> quizParameterNavigationService,
 		INavigationService selectNavigationService)
 	{
 		_unitOfWork = unitOfWork;
 
-		QuizNavigateCommand = new NavigateCommand(quizNavigationService);
+		QuizNavigateCommand = new ParameterNavigateCommand<Quiz?>(quizParameterNavigationService);
 		SelectNavigateCommand = new NavigateCommand(selectNavigationService);
 
 		LoadQuizesCommand = AsyncDelegateCommand.Create(LoadQuizesAsync);

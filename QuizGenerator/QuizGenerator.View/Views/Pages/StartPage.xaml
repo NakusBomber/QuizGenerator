@@ -36,7 +36,8 @@
             <Button Style="{StaticResource PrimaryButtonStyle}"
                     Margin="10"
                     Content="New"
-                    Command="{Binding QuizNavigateCommand}"/>
+                    Command="{Binding QuizNavigateCommand}"
+                    CommandParameter="{x:Null}"/>
 
             <Button Style="{StaticResource PrimaryButtonStyle}"
                     Margin="10"
@@ -84,6 +85,8 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type models:Quiz}">
                         <Button Content="{Binding Name}"
+                                Command="{Binding DataContext.QuizNavigateCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                CommandParameter="{Binding}"
                                 Style="{StaticResource RecentlyQuizButtonStyle}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

@@ -4,9 +4,11 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:comp="clr-namespace:QuizGenerator.View.Components"
+      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
       mc:Ignorable="d"
+      d:DataContext="{d:DesignInstance vms:QuizViewModel}"
       Title="Quiz" d:DesignWidth="517.601">
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Disabled"
@@ -49,6 +51,7 @@
                     <comp:ExtendedTextBox Grid.Column="1"
                                           Grid.Row="0"
                                           Margin="10 0"
+                                          Text="{Binding Quiz.Name}"
                                           Placeholder="Type name here"/>
 
                     <Label Style="{StaticResource HeaderLabelStyle}"

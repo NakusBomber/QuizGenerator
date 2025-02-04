@@ -1,9 +1,13 @@
 ﻿using QuizGenerator.Model.Entities;
 using QuizGenerator.Model.Interfaces;
+using QuizGenerator.ViewModel.Commands;
 using QuizGenerator.ViewModel.Commands.Bases;
 using QuizGenerator.ViewModel.Commands.Interfaces;
+using QuizGenerator.ViewModel.Other;
+using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace QuizGenerator.ViewModel.ViewModels;
 
@@ -42,11 +46,15 @@ public class SelectViewModel : ViewModelBase
 
 
 	public IAsyncCommand<object?> SearchCommand { get; }
+	public ICommand QuizNavigateCommand { get; }
 
-	public SelectViewModel(IUnitOfWork unitOfWork)
+	public SelectViewModel(
+		IUnitOfWork unitOfWork,
+		IParameterNavigationService<Quiz?> quizParameterNavigationService)
 	{
 		_unitOfWork = unitOfWork;
 
+		QuizNavigateCommand = new ParameterNavigateCommand<Quiz?>(quizParameterNavigationService);
 		SearchCommand = AsyncDelegateCommand.Create(SearchQuizesAsync);
 	}
 
