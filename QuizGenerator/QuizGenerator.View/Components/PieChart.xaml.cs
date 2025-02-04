@@ -41,6 +41,7 @@ namespace QuizGenerator.View.Components
 			}
 		}
 
+		private readonly EventHandler _handler;
 		private readonly TimeSpan _oneAngleAnimationDuration = TimeSpan.FromMilliseconds(2.5d);
 		private double _radius = 0;
 
@@ -79,6 +80,19 @@ namespace QuizGenerator.View.Components
 		public PieChart()
 		{
 			InitializeComponent();
+
+			_handler = (sender, e) => CreateSectors();
+			Unloaded += PieChart_Unloaded;
+		}
+
+		private void PieChart_Unloaded(object sender, RoutedEventArgs e)
+		{
+			RemoveValueChanged(ActualHeightProperty);
+			RemoveValueChanged(ActualWidthProperty);
+			RemoveValueChanged(DataProperty);
+
+
+			Unloaded -= PieChart_Unloaded;
 		}
 
 		private void CreateSectors()
@@ -178,11 +192,16 @@ namespace QuizGenerator.View.Components
 		{
 			Type targetType = GetType();
 
-			var discriptor = DependencyPropertyDescriptor.FromProperty(property, typeof(PieChart));
-			if (discriptor != null)
-			{
-				discriptor.AddValueChanged(this, (sender, e) => CreateSectors());
-			}
+			var discriptor = DependencyPropertyDescriptor.FromProperty(property, targetType);
+			discriptor?.AddValueChanged(this, _handler);
+		}
+		
+		private void RemoveValueChanged(DependencyProperty property)
+		{
+			Type targetType = GetType();
+
+			var discriptor = DependencyPropertyDescriptor.FromProperty(property, targetType);
+			discriptor?.RemoveValueChanged(this, _handler);
 		}
 
 		private Point CalculateArcPoint(double angleDegree)

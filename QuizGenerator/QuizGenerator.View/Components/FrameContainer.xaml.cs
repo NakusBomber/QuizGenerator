@@ -21,6 +21,8 @@ namespace QuizGenerator.View.Components;
 /// </summary>
 public partial class FrameContainer : UserControl
 {
+	private readonly EventHandler _handler;
+
 	public static readonly RoutedEvent ViewModelChangedEvent = EventManager.RegisterRoutedEvent(
 			"ViewModelChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(FrameContainer));
 
@@ -35,11 +37,20 @@ public partial class FrameContainer : UserControl
 	{
 		InitializeComponent();
 
+		_handler = (sender, e) => RaiseViewModelChanged();
+
 		var discriptor = DependencyPropertyDescriptor.FromProperty(DataContextProperty, typeof(FrameContainer));
-		if (discriptor != null)
-		{
-			discriptor.AddValueChanged(this, (sender, e) => RaiseViewModelChanged());
-		}
+		discriptor?.AddValueChanged(this, _handler);
+
+		Unloaded += FrameContainer_Unloaded;
+	}
+
+	private void FrameContainer_Unloaded(object sender, RoutedEventArgs e)
+	{
+		var descriptor = DependencyPropertyDescriptor.FromProperty(DataContextProperty, typeof(FrameContainer));
+		descriptor?.RemoveValueChanged(this, _handler);
+
+		Unloaded -= FrameContainer_Unloaded;
 	}
 
 	private void RaiseViewModelChanged()

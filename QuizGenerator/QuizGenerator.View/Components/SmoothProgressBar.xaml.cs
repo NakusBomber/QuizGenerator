@@ -122,11 +122,25 @@ namespace QuizGenerator.View.Components
 		public SmoothProgressBar()
         {
             InitializeComponent();
+
+			Unloaded += SmoothProgressBar_Unloaded;
         }
 
-		~SmoothProgressBar()
+		private void SmoothProgressBar_Unloaded(object sender, RoutedEventArgs e)
 		{
 			this.ValueChanged -= SmoothProgressBar_ValueChanged;
+
+			var descriptorWidth = DependencyPropertyDescriptor.FromProperty(ActualWidthProperty, typeof(Border));
+			var border = Template.FindName("_border", this) as Border;
+			if (border != null)
+			{
+				descriptorWidth?.RemoveValueChanged(border, ActualWidth_ValueChanged);
+			}
+
+			var descriptorMaximum = DependencyPropertyDescriptor.FromProperty(MaximumProperty, typeof(ProgressBar));
+			descriptorMaximum?.RemoveValueChanged(this, Maximum_ValueChanged);
+
+			Unloaded -= SmoothProgressBar_Unloaded;
 		}
-    }
+	}
 }
