@@ -23,9 +23,9 @@ public class SelectViewModel : ViewModelBase
 		}
 	}
 
-	private string _searchText;
+	private string? _searchText;
 
-	public string SearchText
+	public string? SearchText
 	{
 		get => _searchText;
 		set
@@ -52,7 +52,7 @@ public class SelectViewModel : ViewModelBase
 
 	private async Task SearchQuizesAsync(CancellationToken token)
 	{
-		var quizes = await _unitOfWork.QuizRepository.GetAsync(q => q.Name.Contains(SearchText));
+		var quizes = await _unitOfWork.QuizRepository.GetAsync(q => q.Name.Contains(SearchText ?? string.Empty));
 		Quizes = new ObservableCollection<Quiz>(quizes);
 	}
 }
