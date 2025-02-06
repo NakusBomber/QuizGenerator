@@ -18,6 +18,9 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding SearchCommand}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding SearchCommand.CancelCommand}"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
 
     <Grid Margin="15 0">

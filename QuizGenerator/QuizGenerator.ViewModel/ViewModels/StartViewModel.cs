@@ -43,7 +43,7 @@ public class StartViewModel : ViewModelBase
 
 	private async Task LoadQuizesAsync(CancellationToken token)
 	{
-		var list = await _unitOfWork.QuizRepository.GetAsync();
+		var list = await _unitOfWork.QuizRepository.GetAsync(token: token);
 		RecentlyQuizes = new ObservableCollection<Quiz>(list);
 	}
 }

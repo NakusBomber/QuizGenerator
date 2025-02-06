@@ -8,9 +8,10 @@ public interface IRepository<TEntity> where TEntity : Entity
 	public Task<IEnumerable<TEntity>> GetAsync(
 		Expression<Func<TEntity, bool>>? filter = null,
 		Func<IQueryable<TEntity>, IOrderedEnumerable<TEntity>>? orderBy = null,
-		bool asNoTracking = false);
-	public Task<TEntity> GetByIdAsync(Guid id);
-	public Task CreateAsync(TEntity entity);
-	public Task UpdateAsync(TEntity entity);
-	public Task DeleteAsync(TEntity entity);
+		bool asNoTracking = false,
+		CancellationToken token = default);
+	public Task<TEntity> GetByIdAsync(Guid id, CancellationToken token = default);
+	public Task CreateAsync(TEntity entity, CancellationToken token = default);
+	public Task UpdateAsync(TEntity entity, CancellationToken token = default);
+	public Task DeleteAsync(TEntity entity, CancellationToken token = default);
 }

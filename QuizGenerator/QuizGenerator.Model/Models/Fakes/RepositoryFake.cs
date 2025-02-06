@@ -19,24 +19,25 @@ public class RepositoryFake<TEntity> : IRepository<TEntity> where TEntity : Enti
 		_set = entities;
 		_delay = delay;
 	}
-	public async Task CreateAsync(TEntity entity)
+	public async Task CreateAsync(TEntity entity, CancellationToken token = default)
 	{
-		await Task.Delay(_delay);
+		await Task.Delay(_delay, token);
 		_set.Add(entity);
 	}
 
-	public async Task DeleteAsync(TEntity entity)
+	public async Task DeleteAsync(TEntity entity, CancellationToken token = default)
 	{
-		await Task.Delay(_delay);
+		await Task.Delay(_delay, token);
 		_set.Remove(entity);
 	}
 
 	public async Task<IEnumerable<TEntity>> GetAsync(
 		Expression<Func<TEntity, bool>>? filter = null,
 		Func<IQueryable<TEntity>, IOrderedEnumerable<TEntity>>? orderBy = null,
-		bool asNoTracking = false)
+		bool asNoTracking = false,
+		CancellationToken token = default)
 	{
-		await Task.Delay(_delay);
+		await Task.Delay(_delay, token);
 
 		IQueryable<TEntity> hashSet = _set.AsQueryable();
 
@@ -53,9 +54,9 @@ public class RepositoryFake<TEntity> : IRepository<TEntity> where TEntity : Enti
 		return hashSet.ToList();
 	}
 
-	public async Task<TEntity> GetByIdAsync(Guid id)
+	public async Task<TEntity> GetByIdAsync(Guid id, CancellationToken token = default)
 	{
-		var entity = (await GetAsync(e => e.Id == id)).FirstOrDefault();
+		var entity = (await GetAsync(e => e.Id == id, token: token)).FirstOrDefault();
 		if (entity == null)
 		{
 			throw new InvalidOperationException("Entity with this Id not found");
@@ -64,9 +65,9 @@ public class RepositoryFake<TEntity> : IRepository<TEntity> where TEntity : Enti
 		return entity;
 	}
 
-	public async Task UpdateAsync(TEntity entity)
+	public async Task UpdateAsync(TEntity entity, CancellationToken token = default)
 	{
-		await Task.Delay(_delay);
+		await Task.Delay(_delay, token);
 
 		var entityRemove = _set.FirstOrDefault(e => e.Id == entity.Id);
 		if (entityRemove != null)

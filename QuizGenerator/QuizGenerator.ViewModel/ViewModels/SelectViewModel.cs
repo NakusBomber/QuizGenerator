@@ -37,10 +37,7 @@ public class SelectViewModel : ViewModelBase
 			_searchText = value;
 			OnPropertyChanged();
 
-			if (SearchCommand.CanExecute(null))
-			{
-				SearchCommand.Execute(null);
-			}
+			SearchCommand.Execute(null);
 		}
 	}
 
@@ -60,7 +57,9 @@ public class SelectViewModel : ViewModelBase
 
 	private async Task SearchQuizesAsync(CancellationToken token)
 	{
-		var quizes = await _unitOfWork.QuizRepository.GetAsync(q => q.Name.Contains(SearchText ?? string.Empty));
+		var quizes = await _unitOfWork.QuizRepository.GetAsync(
+			q => q.Name.Contains(SearchText ?? string.Empty),
+			token: token);
 		Quizes = new ObservableCollection<Quiz>(quizes);
 	}
 }
