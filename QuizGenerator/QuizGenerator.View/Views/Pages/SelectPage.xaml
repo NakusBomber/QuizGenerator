@@ -49,6 +49,7 @@
 
 
         <Label Content="Loading..."
+               d:Visibility="Collapsed"
                Visibility="{Binding SearchCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
                Grid.Row="1"
                HorizontalAlignment="Center"

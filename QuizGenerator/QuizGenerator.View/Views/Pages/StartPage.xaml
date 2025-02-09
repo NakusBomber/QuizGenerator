@@ -72,6 +72,7 @@
                    Grid.Row="0"
                    Style="{StaticResource HeaderLabelStyle}"/>
             <Label Content="Loading..."
+                   d:Visibility="Collapsed"
                    Visibility="{Binding LoadQuizesCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
                    Grid.Row="1"
                    HorizontalAlignment="Center"
