@@ -51,7 +51,7 @@
                     <comp:ExtendedTextBox Grid.Column="1"
                                           Grid.Row="0"
                                           Margin="10 0"
-                                          Text="{Binding Quiz.Name}"
+                                          Text="{Binding Name}"
                                           Placeholder="Type name here"/>
 
                     <Label Style="{StaticResource HeaderLabelStyle}"
@@ -59,7 +59,8 @@
                            Content="Time limit"/>
 
                     <CheckBox Grid.Row="1"
-                              IsChecked="True"
+                              d:IsChecked="True"
+                              IsChecked="{Binding IsNeedInterval}"
                               x:Name="TimeLimitCheckBox"
                               Margin="10 0"
                               HorizontalAlignment="Left"
@@ -73,6 +74,7 @@
 
                     <comp:ExtendedTextBox Placeholder="12:34"
                                           Margin="10 0"
+                                          Text="{Binding Interval}"
                                           Visibility="{Binding ElementName=TimeLimitCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
                                           Grid.Row="2"
                                           Grid.Column="1"/>
@@ -95,110 +97,15 @@
                                      MaterialIcon="Play"/>
                 </StackPanel>
 
-                <StackPanel Grid.Row="2"
-                            Orientation="Vertical"
-                            VerticalAlignment="Stretch"
-                            HorizontalAlignment="Stretch">
-                    <StackPanel.Resources>
-                        <x:Array x:Key="TestAnswers"
-                                 Type="{x:Type sys:String}">
-                            <sys:String>Answer 1</sys:String>
-                            <sys:String>Answer 2</sys:String>
-                            <sys:String>Answer 3</sys:String>
-                            <sys:String>Answer 4</sys:String>
-                        </x:Array>
-                    </StackPanel.Resources>
-
-                    <StackPanel Orientation="Vertical"
-                                VerticalAlignment="Stretch"
-                                HorizontalAlignment="Stretch">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <Label Style="{StaticResource HeaderLabelStyle}"
-                                   Grid.Column="0"
-                                   Content="Question"/>
-
-                            <comp:IconButton ToolTip="Edit"
-                                             Grid.Column="1"
-                                             Margin="0 0 10 0"
-                                             MaterialIcon="Edit"/>
-                        </Grid>
-                        <ItemsControl ItemsSource="{StaticResource TestAnswers}"
-                                      VerticalAlignment="Stretch"
-                                      HorizontalAlignment="Stretch">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Vertical"
-                                                VerticalAlignment="Stretch"
-                                                HorizontalAlignment="Stretch"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border BorderBrush="Gray"
-                                            BorderThickness="1"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch">
-                                        <Label Style="{StaticResource HeaderLabelStyle}"
-                                               Content="{Binding}"
-                                               HorizontalAlignment="Stretch"
-                                               VerticalAlignment="Center"/>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Vertical"
-                                VerticalAlignment="Stretch"
-                                HorizontalAlignment="Stretch"
-                                Margin="0 10 0 0">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <Label Style="{StaticResource HeaderLabelStyle}"
-                                   Grid.Column="0"
-                                   Content="Question"/>
-
-                            <comp:IconButton ToolTip="Edit"
-                                             Grid.Column="1"
-                                             Margin="0 0 10 0"
-                                             MaterialIcon="Edit"/>
-                        </Grid>
-                        <ItemsControl ItemsSource="{StaticResource TestAnswers}"
-                                      VerticalAlignment="Stretch"
-                                      HorizontalAlignment="Stretch">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Vertical"
-                                                VerticalAlignment="Stretch"
-                                                HorizontalAlignment="Stretch"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border BorderBrush="Gray"
-                                            BorderThickness="1"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch">
-                                        <Label Style="{StaticResource HeaderLabelStyle}"
-                                               Content="{Binding}"
-                                               HorizontalAlignment="Stretch"
-                                               VerticalAlignment="Center"/>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-
-                </StackPanel>
+                <ItemsControl Grid.Row="2"
+                              ItemsSource="{Binding Questions}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl ContentTemplateSelector="{StaticResource EditorQuestionTemplateSelector}"
+                                            Content="{Binding}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
                 <comp:IconButton VerticalAlignment="Center"
                                  HorizontalAlignment="Center"

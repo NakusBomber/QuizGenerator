@@ -51,7 +51,9 @@ namespace QuizGenerator.View
 			TimeSpan delay = TimeSpan.FromSeconds(1);
 			TimeSpan saveDelay = TimeSpan.FromSeconds(2);
 
-			var exampleQuiz1 = new Quiz("Last quiz");
+			var exampleQuiz1 = new Quiz("Quiz with questions");
+			exampleQuiz1.Questions.Add(new Question(exampleQuiz1, 1, QuestionType.OneMore));
+			exampleQuiz1.Questions.Add(new Question(exampleQuiz1, 1, QuestionType.Open));
 			var exampleQuiz2 = new Quiz("Another quiz");
 
 			var quizRepository = new RepositoryFake<Quiz>(new HashSet<Quiz>([exampleQuiz1, exampleQuiz2]), delay);
