@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:QuizGenerator.View"
              xmlns:converters="clr-namespace:QuizGenerator.View.Converters"
-             xmlns:selectors="clr-namespace:QuizGenerator.View.Models.Selectors"
              Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
@@ -17,6 +16,7 @@
                 <!-- Other styles -->
                 <ResourceDictionary Source="/Styles/Elements/Others/TooltipStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Others/PieChartStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Elements/Others/QuestionEditCardStyle.xaml"/>
 
                 <!-- Element's styles -->
                 <ResourceDictionary Source="/Styles/Elements/Buttons/PrimaryButtonStyle.xaml"/>
@@ -35,14 +35,6 @@
 
                 <!-- Templates -->
                 <ResourceDictionary Source="/Templates/NavigationDataTemplate.xaml"/>
-                <ResourceDictionary Source="/Templates/Questions/Editor/OneMore.xaml"/>
-                <ResourceDictionary Source="/Templates/Questions/Editor/Open.xaml"/>
-
-                <ResourceDictionary>
-                    <selectors:QuestionTemplateSelector x:Key="EditorQuestionTemplateSelector"
-                                                        OneMoreTemplate="{StaticResource EditorOneMoreTemplate}"
-                                                        OpenTemplate="{StaticResource EditorOpenTemplate}"/>
-                </ResourceDictionary>
 
                 <!-- Global converters -->
                 <ResourceDictionary>

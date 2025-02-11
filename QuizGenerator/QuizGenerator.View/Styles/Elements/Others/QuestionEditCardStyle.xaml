@@ -1,0 +1,76 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model"
+                    xmlns:comp="clr-namespace:QuizGenerator.View.Components">
+    <Style TargetType="{x:Type comp:QuestionEditCard}"
+           BasedOn="{StaticResource FlatBaseStyle}">
+        <Setter Property="BorderBrush" Value="{DynamicResource TextBrush}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Padding" Value="6" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type comp:QuestionEditCard}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="Transparent"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="8">
+                        <StackPanel Orientation="Vertical">
+                            <Grid VerticalAlignment="Stretch"
+                                  HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <ItemsControl Grid.Column="0"
+                                              ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=Question.QuestionDetails}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type models:QuestionDetail}">
+                                            <Label Content="{Binding Text}"
+                                                   Style="{DynamicResource HeaderLabelStyle}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <comp:IconButton Grid.Column="1"
+                                                 VerticalAlignment="Top"
+                                                 Margin="5 0 0 0"
+                                                 MaterialIcon="Edit"
+                                                 Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=EditCommand}"
+                                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=EditCommandParameter}"/>
+                            </Grid>
+
+                            <Separator BorderBrush="{TemplateBinding BorderBrush}"/>
+
+                            <Label Content="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}},
+                                   Path=Question.EvaluationPrice}"
+                                   ContentStringFormat="Price: {0}"
+                                   Style="{DynamicResource HeaderLabelStyle}"
+                                   FontSize="12"/>
+
+                            <Label Content="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}},
+                                   Path=Question.QuestionType}"
+                                   ContentStringFormat="Type: {0}"
+                                   Style="{DynamicResource HeaderLabelStyle}"
+                                   FontSize="12"/>
+
+                            <Separator BorderBrush="{TemplateBinding BorderBrush}"/>
+
+                            <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=Question.AnswerDetails}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type models:AnswerDetail}">
+                                        <Label Content="{Binding Text}"
+                                               Style="{DynamicResource HeaderLabelStyle}"
+                                               FontSize="14"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,8 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model">
-    <DataTemplate DataType="{x:Type models:Question}"
-                  x:Key="EditorOneMoreTemplate">
-        <Label Content="OneMore" Foreground="White"/>
-    </DataTemplate>
-</ResourceDictionary>
