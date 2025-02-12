@@ -3,48 +3,52 @@
 public class Question : Entity
 {
     public override Guid Id { get; set; }
-    public Guid QuizId { get; set; }
-    public Quiz Quiz { get; set; }
+    public Guid? QuizId { get; set; }
+    public Quiz? Quiz { get; set; }
     public int EvaluationPrice { get; set; }
+    public int ListNumber { get; set; }
     public QuestionType QuestionType { get; set; }
 
-    public List<QuestionDetail> QuestionDetails { get; set; }
-    public List<AnswerDetail> AnswerDetails { get; set; }
+    public IEnumerable<QuestionDetail> QuestionDetails { get; set; }
 
+    public Question()
+        : this(null, 1, QuestionType.OneMore, 0)
+    {
+    }
 
     public Question(
-        Quiz quiz,
+        Quiz? quiz,
         int price,
         QuestionType questionType,
-        List<QuestionDetail>? questionDetails = null,
-        List<AnswerDetail>? answerDetails = null)
+        int listNumber,
+        IEnumerable<QuestionDetail>? questionDetails = null)
         : this(Guid.NewGuid(),
                 quiz,
                 price,
                 questionType,
-                questionDetails ?? new List<QuestionDetail>(),
-                answerDetails ?? new List<AnswerDetail>())
+                listNumber,
+                questionDetails ?? new List<QuestionDetail>())
     { }
 
     public Question(
         Guid id,
-        Quiz quiz,
+        Quiz? quiz,
         int price,
         QuestionType questionType,
-        List<QuestionDetail> questionDetails,
-        List<AnswerDetail> answerDetails)
+        int listNumber,
+        IEnumerable<QuestionDetail> questionDetails)
     {
         Id = id;
-        QuizId = quiz.Id;
+        QuizId = quiz?.Id;
         Quiz = quiz;
         EvaluationPrice = price;
         QuestionType = questionType;
+        ListNumber = listNumber;
         QuestionDetails = questionDetails;
-        AnswerDetails = answerDetails;
     }
 
 	public override int GetHashCode()
 	{
-		return (Id, QuizId, EvaluationPrice, QuestionType).GetHashCode();
+		return (Id, QuizId, EvaluationPrice, QuestionType, ListNumber).GetHashCode();
 	}
 }

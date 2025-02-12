@@ -3,26 +3,31 @@
 public class AnswerDetail : Entity
 {
     public override Guid Id { get; set; }
-    public Guid QuestionId { get; set; }
-    public Question Question { get; set; }
+    public Guid? QuestionDetailId { get; set; }
+    public QuestionDetail? QuestionDetail { get; set; }
     public string Text { get; set; }
     public bool IsCorrect { get; set; }
 
-    public AnswerDetail(Question question, string? text = null, bool isCorrect = false)
-        : this(Guid.NewGuid(), question, text ?? string.Empty, isCorrect)
+    public AnswerDetail()
+        : this(null)
+    {
+    }
+
+    public AnswerDetail(QuestionDetail? questionDetail, string? text = null, bool isCorrect = false)
+        : this(Guid.NewGuid(), questionDetail, text ?? string.Empty, isCorrect)
     { }
 
-    public AnswerDetail(Guid id, Question question, string text, bool isCorrect)
+    public AnswerDetail(Guid id, QuestionDetail? questionDetail, string text, bool isCorrect)
     {
         Id = id;
-        QuestionId = question.Id;
-        Question = question;
+        QuestionDetailId = questionDetail?.Id;
+        QuestionDetail = questionDetail;
         Text = text;
         IsCorrect = isCorrect;
     }
 
 	public override int GetHashCode()
 	{
-		return (Id, QuestionId, Text, IsCorrect).GetHashCode();
+		return (Id, QuestionDetailId, Text, IsCorrect).GetHashCode();
 	}
 }

@@ -9,14 +9,14 @@ public class Quiz : Entity
     public DateTime? DateTimeLastPractice { get; set; }
     public TimeSpan? IntervalPractice { get; set; }
 
-    public List<Question> Questions { get; set; }
+    public IEnumerable<Question> Questions { get; set; }
 
     public Quiz()
         : this(string.Empty)
     {
     }
 
-    public Quiz(string name, List<Question>? questions = null) :
+    public Quiz(string name, IEnumerable<Question>? questions = null) :
         this(Guid.NewGuid(),
             name,
             DateTime.Now,
@@ -27,7 +27,7 @@ public class Quiz : Entity
     {
     }
 
-    public Quiz(Guid id, string name, DateTime dateTimeCreated, DateTime dateTimeChanged, DateTime? dateTimeLastPractice, TimeSpan? intervalPractice, List<Question> questions)
+    public Quiz(Guid id, string name, DateTime dateTimeCreated, DateTime dateTimeChanged, DateTime? dateTimeLastPractice, TimeSpan? intervalPractice, IEnumerable<Question> questions)
     {
         Id = id;
         Name = name;

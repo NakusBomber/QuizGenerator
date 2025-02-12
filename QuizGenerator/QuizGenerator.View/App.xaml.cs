@@ -52,36 +52,30 @@ namespace QuizGenerator.View
 			TimeSpan saveDelay = TimeSpan.FromSeconds(2);
 
 			var exampleQuiz1 = new Quiz("Quiz with questions");
-			var question1 = new Question(exampleQuiz1, 1, QuestionType.OneMore);
+			var question1 = new Question(exampleQuiz1, 1, QuestionType.OneMore, 0);
 			var questionText1 = new QuestionDetail(question1, "QuestionText1");
-			var answerText1 = new AnswerDetail(question1, "Answer1", true);
-			var answerText2 = new AnswerDetail(question1, "Answer2");
-			var answerText3 = new AnswerDetail(question1, "Answer3");
-			var answerText4 = new AnswerDetail(question1, "Answer4");
-			question1.QuestionDetails.Add(questionText1);
-			question1.QuestionDetails.Add(questionText1);
-			var answers = new List<AnswerDetail> { answerText1, answerText2, answerText3, answerText4 };
-			foreach (var ans in answers)
-			{
-				question1.AnswerDetails.Add(ans);
-			}
-			var question2 = new Question(exampleQuiz1, 1, QuestionType.Open);
-			exampleQuiz1.Questions.Add(question1);
-			exampleQuiz1.Questions.Add(question2);
+			var answerText1 = new AnswerDetail(questionText1, "Answer1", true);
+			var answerText2 = new AnswerDetail(questionText1, "Answer2");
+			var answerText3 = new AnswerDetail(questionText1, "Answer3");
+			var answerText4 = new AnswerDetail(questionText1, "Answer4");
+			questionText1.AnswerDetails = new List<AnswerDetail> { answerText1, answerText2, answerText3, answerText4 };
+			question1.QuestionDetails = new List<QuestionDetail> { questionText1 };
+			var question2 = new Question(exampleQuiz1, 1, QuestionType.Open, 1);
+			exampleQuiz1.Questions = new List<Question> { question1, question2 };
 
 			var exampleQuiz2 = new Quiz("Another quiz");
 
 			var quizRepository = new RepositoryFake<Quiz>(new HashSet<Quiz>([exampleQuiz1, exampleQuiz2]), delay);
 			var questionRepository = new RepositoryFake<Question>(delay);
 			var questionDetailRepository = new RepositoryFake<QuestionDetail>(delay);
-			var answerDetailRepositiry = new RepositoryFake<AnswerDetail>(delay);
+			var answerDetailRepository = new RepositoryFake<AnswerDetail>(delay);
 
 			return new UnitOfWorkFake(
 				saveDelay, 
 				quizRepository, 
 				questionRepository, 
 				questionDetailRepository, 
-				answerDetailRepositiry);
+				answerDetailRepository);
 		}
 	}
 
