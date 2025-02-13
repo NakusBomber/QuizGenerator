@@ -36,8 +36,8 @@ public class UnitOfWorkFake : IUnitOfWork
 		AnswerDetailRepository = answerDetailRepository;
 	}
 
-	public async Task SaveAsync()
+	public async Task SaveAsync(CancellationToken token)
 	{
-		await Task.Delay(_saveDelay);
+		await Task.Delay(_saveDelay, token);
 	}
 }

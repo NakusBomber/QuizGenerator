@@ -9,5 +9,5 @@ public interface IUnitOfWork
 	public IRepository<QuestionDetail> QuestionDetailRepository { get; }
 	public IRepository<AnswerDetail> AnswerDetailRepository { get; }
 
-	public Task SaveAsync();
+	public Task SaveAsync(CancellationToken token);
 }

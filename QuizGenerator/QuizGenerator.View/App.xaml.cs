@@ -23,10 +23,10 @@ namespace QuizGenerator.View
 			var navigationStore = new NavigationStore();
 			var navigationJournal = new NavigationJournal();
 
-			var quizParameterNavigationService = new ParameterNavigationService<Quiz?, QuizViewModel>(
+			var quizParameterNavigationService = new ParameterNavigationService<Guid?, QuizPageViewModel>(
 				navigationStore,
 				navigationJournal,
-				(p) => new QuizViewModel(p));
+				(p) => new QuizPageViewModel(p, unitOfWork));
 			var selectNavigationService = new NavigationService<SelectViewModel>(
 				navigationStore, 
 				navigationJournal,

@@ -1,17 +1,25 @@
 ﻿using QuizGenerator.Model.Entities;
-using QuizGenerator.Model.Interfaces;
-using QuizGenerator.ViewModel.Commands.Bases;
-using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using System.Collections.ObjectModel;
-using System.Windows.Controls;
-using System.Windows.Input;
+using System.Runtime.CompilerServices;
 
 namespace QuizGenerator.ViewModel.ViewModels;
 
 public class QuizViewModel : ViewModelBase
 {
-	private Quiz _quiz;
+
+	private Guid _id;
+
+	public Guid Id
+	{
+		get => _id;
+		set
+		{
+			_id = value;
+			OnPropertyChanged();
+		}
+	}
+
 
 	private string _name;
 
@@ -21,6 +29,30 @@ public class QuizViewModel : ViewModelBase
 		set
 		{
 			_name = value;
+			OnPropertyChanged();
+		}
+	}
+
+	private DateTime _dateTimeCreated;
+
+	public DateTime DateTimeCreated
+	{
+		get => _dateTimeCreated;
+		set
+		{
+			_dateTimeCreated = value;
+			OnPropertyChanged();
+		}
+	}
+
+	private DateTime _dateTimeChanged;
+
+	public DateTime DateTimeChanged
+	{
+		get => _dateTimeChanged;
+		set
+		{
+			_dateTimeChanged = value;
 			OnPropertyChanged();
 		}
 	}
@@ -61,39 +93,32 @@ public class QuizViewModel : ViewModelBase
 			OnPropertyChanged();
 		}
 	}
-
-	public ICommand OpenDropDownQuestionTypesCommand { get; }
-	public ICommand AddNewQuestionCommand { get; }
-
-	public QuizViewModel(Quiz? quiz)
+	
+	public QuizViewModel()
+		: this(new Quiz())
 	{
-		_quiz = quiz ?? new Quiz();
-
-		_name = _quiz.Name;
-		_isNeedInterval = _quiz.IntervalPractice != null;
-		_interval = _quiz.IntervalPractice;
-		_questions = new ObservableCollection<Question>(_quiz.Questions);
-
-		OpenDropDownQuestionTypesCommand = new DelegateCommand(OpenDropDownQuestionTypes);
-		AddNewQuestionCommand = new DelegateCommand(AddNewQuestion);
 	}
 
-	private void AddNewQuestion(object? obj)
+	public QuizViewModel(Quiz quiz)
 	{
-		if (obj is QuestionType questionType)
-		{
-			var listNumber = (Questions.LastOrDefault()?.ListNumber + 1) ?? 0;
-			var question = new Question(_quiz, 1, questionType, listNumber);
-			Questions.Add(question);
-		}
+		_id = quiz.Id;
+		_name = quiz.Name;
+		_dateTimeCreated = quiz.DateTimeCreated;
+		_dateTimeChanged = quiz.DateTimeChanged;
+		_isNeedInterval= quiz.IntervalPractice != null;
+		_interval = quiz.IntervalPractice;
+		_questions = new ObservableCollection<Question>(quiz.Questions);
 	}
 
-	private void OpenDropDownQuestionTypes(object? obj)
+	public static explicit operator Quiz(QuizViewModel quizViewModel)
 	{
-		// ContextMenu located not in visual tree, thus "Binding" won't work
-		if (obj is Button btn)
-		{
-			btn.ContextMenu.IsOpen = true;
-		}
+		return new Quiz(
+			quizViewModel.Id,
+			quizViewModel.Name,
+			quizViewModel.DateTimeCreated,
+			quizViewModel.DateTimeChanged,
+			null,
+			quizViewModel.Interval,
+			quizViewModel.Questions);
 	}
 }

@@ -11,11 +11,28 @@
       xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model"
       xmlns:viewModels="clr-namespace:QuizGenerator.View.Models"
       mc:Ignorable="d"
-      d:DataContext="{d:DesignInstance vms:QuizViewModel}"
+      d:DataContext="{d:DesignInstance vms:QuizPageViewModel}"
       Title="Quiz" d:DesignWidth="517.601">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadQuizCommand}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding LoadQuizCommand.CancelCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
 
-        <Grid Margin="10">
+        <Label Content="Loading..."
+               d:Visibility="Collapsed"
+               Visibility="{Binding LoadQuizCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
+               HorizontalAlignment="Center"
+               Style="{StaticResource HeaderLabelStyle}"
+               Foreground="Gray"/>
+
+        <Grid Margin="10"
+              Visibility="{Binding LoadQuizCommand.Execution.IsCompleted, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -23,15 +40,6 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid.Resources>
-                <x:Array x:Key="AnswerTestData"
-                         Type="{x:Type sys:String}">
-                    <sys:String>Answer 1</sys:String>
-                    <sys:String>Answer 2</sys:String>
-                    <sys:String>Answer 3</sys:String>
-                    <sys:String>Answer 4</sys:String>
-                </x:Array>
-            </Grid.Resources>
 
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
@@ -53,7 +61,7 @@
                 <comp:ExtendedTextBox Grid.Column="1"
                                       Grid.Row="0"
                                       Margin="10 0"
-                                      Text="{Binding Name}"
+                                      Text="{Binding Quiz.Name}"
                                       Placeholder="Type name here"/>
 
                 <Label Style="{StaticResource HeaderLabelStyle}"
@@ -62,7 +70,7 @@
 
                 <CheckBox Grid.Row="1"
                           d:IsChecked="True"
-                          IsChecked="{Binding IsNeedInterval}"
+                          IsChecked="{Binding Quiz.IsNeedInterval}"
                           x:Name="TimeLimitCheckBox"
                           Margin="10 0"
                           HorizontalAlignment="Left"
@@ -76,7 +84,7 @@
 
                 <comp:ExtendedTextBox Placeholder="12:34"
                                       Margin="10 0"
-                                      Text="{Binding Interval}"
+                                      Text="{Binding Quiz.Interval}"
                                       Visibility="{Binding ElementName=TimeLimitCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
                                       Grid.Row="2"
                                       Grid.Column="1"/>
@@ -150,7 +158,7 @@
                     </x:Array>
                 </ScrollViewer.Resources>
 
-                <ItemsControl ItemsSource="{Binding Questions}"
+                <ItemsControl ItemsSource="{Binding Quiz.Questions}"
                               d:ItemsSource="{StaticResource QuestionsDesignData}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -165,6 +173,7 @@
             <comp:IconButton VerticalAlignment="Center"
                              HorizontalAlignment="Center"
                              MaterialIcon="ContentSave"
+                             Command="{Binding SaveQuizCommand}"
                              Content="Save"
                              Grid.Row="3"/>
         </Grid>

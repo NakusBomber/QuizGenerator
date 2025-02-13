@@ -68,7 +68,7 @@
                         <Button Style="{StaticResource RecentlyQuizButtonStyle}"
                                 Margin="8 10 8 0"
                                 Command="{Binding DataContext.QuizNavigateCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                                CommandParameter="{Binding}"
+                                CommandParameter="{Binding Id}"
                                 Content="{Binding Name}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
