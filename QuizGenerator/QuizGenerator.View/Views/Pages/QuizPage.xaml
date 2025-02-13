@@ -24,12 +24,9 @@
 
     <Grid>
 
-        <Label Content="Loading..."
-               d:Visibility="Collapsed"
-               Visibility="{Binding LoadQuizCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
-               HorizontalAlignment="Center"
-               Style="{StaticResource HeaderLabelStyle}"
-               Foreground="Gray"/>
+        <ProgressBar d:Visibility="Collapsed"
+                     Visibility="{Binding LoadQuizCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
+                     Style="{StaticResource SpinnerProgressBarStyle}"/>
 
         <Grid Margin="10"
               Visibility="{Binding LoadQuizCommand.Execution.IsCompleted, Converter={StaticResource BooleanToVisibilityConverter}}">

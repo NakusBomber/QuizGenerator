@@ -71,13 +71,10 @@
             <Label Content="Recently quiz:"
                    Grid.Row="0"
                    Style="{StaticResource HeaderLabelStyle}"/>
-            <Label Content="Loading..."
-                   d:Visibility="Collapsed"
-                   Visibility="{Binding LoadQuizesCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
-                   Grid.Row="1"
-                   HorizontalAlignment="Center"
-                   Style="{StaticResource HeaderLabelStyle}"
-                   Foreground="Gray"/>
+            <ProgressBar d:Visibility="Collapsed"
+                         Visibility="{Binding LoadQuizesCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
+                         Grid.Row="1"
+                         Style="{StaticResource SpinnerProgressBarStyle}"/>
             <ItemsControl d:ItemsSource="{StaticResource RecentlyTestData}"
                           Grid.Row="1"
                           Style="{StaticResource FlatBaseStyle}"

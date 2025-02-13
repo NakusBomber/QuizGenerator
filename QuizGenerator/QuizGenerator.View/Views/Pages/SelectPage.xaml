@@ -48,13 +48,10 @@
                               Placeholder="Type text for searching"/>
 
 
-        <Label Content="Loading..."
-               d:Visibility="Collapsed"
-               Visibility="{Binding SearchCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
-               Grid.Row="1"
-               HorizontalAlignment="Center"
-               Style="{StaticResource HeaderLabelStyle}"
-               Foreground="Gray"/>
+        <ProgressBar d:Visibility="Collapsed"
+                     Visibility="{Binding SearchCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
+                     Grid.Row="1"
+                     Style="{StaticResource SpinnerProgressBarStyle}"/>
 
         <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto"
