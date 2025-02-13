@@ -23,5 +23,5 @@ namespace QuizGenerator.View.Views.Pages
         {
             InitializeComponent();
         }
-    }
+	}
 }

@@ -4,6 +4,8 @@ using QuizGenerator.ViewModel.Commands.Bases;
 using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace QuizGenerator.ViewModel.ViewModels;
 
@@ -60,6 +62,9 @@ public class QuizViewModel : ViewModelBase
 		}
 	}
 
+	public ICommand OpenDropDownQuestionTypesCommand { get; }
+	public ICommand AddNewQuestionCommand { get; }
+
 	public QuizViewModel(Quiz? quiz)
 	{
 		_quiz = quiz ?? new Quiz();
@@ -68,5 +73,27 @@ public class QuizViewModel : ViewModelBase
 		_isNeedInterval = _quiz.IntervalPractice != null;
 		_interval = _quiz.IntervalPractice;
 		_questions = new ObservableCollection<Question>(_quiz.Questions);
+
+		OpenDropDownQuestionTypesCommand = new DelegateCommand(OpenDropDownQuestionTypes);
+		AddNewQuestionCommand = new DelegateCommand(AddNewQuestion);
+	}
+
+	private void AddNewQuestion(object? obj)
+	{
+		if (obj is QuestionType questionType)
+		{
+			var listNumber = (Questions.LastOrDefault()?.ListNumber + 1) ?? 0;
+			var question = new Question(_quiz, 1, questionType, listNumber);
+			Questions.Add(question);
+		}
+	}
+
+	private void OpenDropDownQuestionTypes(object? obj)
+	{
+		// ContextMenu located not in visual tree, thus "Binding" won't work
+		if (obj is Button btn)
+		{
+			btn.ContextMenu.IsOpen = true;
+		}
 	}
 }

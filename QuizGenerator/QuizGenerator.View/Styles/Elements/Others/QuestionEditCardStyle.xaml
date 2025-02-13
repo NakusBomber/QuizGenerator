@@ -24,15 +24,21 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <ItemsControl Grid.Column="0"
-                                              ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=Question.QuestionDetails}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate DataType="{x:Type models:QuestionDetail}">
-                                            <Label Content="{Binding Text}"
-                                                   Style="{DynamicResource HeaderLabelStyle}"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                <StackPanel Orientation="Horizontal"
+                                            Grid.Column="0">
+                                    <Label Content="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}},
+                                           Path=Question.EvaluationPrice}"
+                                           ContentStringFormat="Price: {0}"
+                                           Style="{DynamicResource HeaderLabelStyle}"
+                                           FontSize="12"/>
+
+                                    <Label Content="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}},
+                                           Path=Question.QuestionType}"
+                                           ContentStringFormat="Type: {0}"
+                                           Style="{DynamicResource HeaderLabelStyle}"
+                                           FontSize="12"/>
+                                </StackPanel>
+
 
                                 <comp:IconButton Grid.Column="1"
                                                  VerticalAlignment="Top"
@@ -44,29 +50,29 @@
 
                             <Separator BorderBrush="{TemplateBinding BorderBrush}"/>
 
-                            <Label Content="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}},
-                                   Path=Question.EvaluationPrice}"
-                                   ContentStringFormat="Price: {0}"
-                                   Style="{DynamicResource HeaderLabelStyle}"
-                                   FontSize="12"/>
-
-                            <Label Content="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}},
-                                   Path=Question.QuestionType}"
-                                   ContentStringFormat="Type: {0}"
-                                   Style="{DynamicResource HeaderLabelStyle}"
-                                   FontSize="12"/>
-
-                            <Separator BorderBrush="{TemplateBinding BorderBrush}"/>
-
-                            <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=Question.AnswerDetails}">
+                            <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=Question.QuestionDetails}">
                                 <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type models:AnswerDetail}">
-                                        <Label Content="{Binding Text}"
-                                               Style="{DynamicResource HeaderLabelStyle}"
-                                               FontSize="14"/>
+                                    <DataTemplate DataType="{x:Type models:QuestionDetail}">
+                                        <StackPanel Orientation="Vertical">
+                                            <Label Content="{Binding Text}"
+                                                   Style="{DynamicResource HeaderLabelStyle}"/>
+
+                                            <Separator BorderBrush="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=BorderBrush}"/>
+
+                                            <ItemsControl ItemsSource="{Binding AnswerDetails}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate DataType="{x:Type models:AnswerDetail}">
+                                                        <Label Content="{Binding Text}"
+                                                               Style="{DynamicResource HeaderLabelStyle}"
+                                                               FontSize="14"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
+
                         </StackPanel>
                     </Border>
                 </ControlTemplate>

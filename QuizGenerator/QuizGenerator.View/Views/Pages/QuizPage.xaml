@@ -6,113 +6,167 @@
       xmlns:comp="clr-namespace:QuizGenerator.View.Components"
       xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
+      xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model"
+      xmlns:viewModels="clr-namespace:QuizGenerator.View.Models"
       mc:Ignorable="d"
       d:DataContext="{d:DesignInstance vms:QuizViewModel}"
       Title="Quiz" d:DesignWidth="517.601">
     <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto">
-            <Grid Margin="10">
+
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.Resources>
+                <x:Array x:Key="AnswerTestData"
+                         Type="{x:Type sys:String}">
+                    <sys:String>Answer 1</sys:String>
+                    <sys:String>Answer 2</sys:String>
+                    <sys:String>Answer 3</sys:String>
+                    <sys:String>Answer 4</sys:String>
+                </x:Array>
+            </Grid.Resources>
+
+            <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid.Resources>
-                    <x:Array x:Key="AnswerTestData"
-                             Type="{x:Type sys:String}">
-                        <sys:String>Answer 1</sys:String>
-                        <sys:String>Answer 2</sys:String>
-                        <sys:String>Answer 3</sys:String>
-                        <sys:String>Answer 4</sys:String>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Style="{StaticResource RequirementLabelStyle}"
+                       Grid.Column="0"
+                       Grid.Row="0"
+                       Content="Quiz name"/>
+
+                <comp:ExtendedTextBox Grid.Column="1"
+                                      Grid.Row="0"
+                                      Margin="10 0"
+                                      Text="{Binding Name}"
+                                      Placeholder="Type name here"/>
+
+                <Label Style="{StaticResource HeaderLabelStyle}"
+                       Grid.Row="1"
+                       Content="Time limit"/>
+
+                <CheckBox Grid.Row="1"
+                          d:IsChecked="True"
+                          IsChecked="{Binding IsNeedInterval}"
+                          x:Name="TimeLimitCheckBox"
+                          Margin="10 0"
+                          HorizontalAlignment="Left"
+                          Grid.Column="1"/>
+
+                <Label Content="Time"
+                       Grid.Row="2"
+                       Grid.Column="0"
+                       Visibility="{Binding ElementName=TimeLimitCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                       Style="{StaticResource HeaderLabelStyle}"/>
+
+                <comp:ExtendedTextBox Placeholder="12:34"
+                                      Margin="10 0"
+                                      Text="{Binding Interval}"
+                                      Visibility="{Binding ElementName=TimeLimitCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                      Grid.Row="2"
+                                      Grid.Column="1"/>
+
+            </Grid>
+
+            <StackPanel HorizontalAlignment="Right"
+                        Orientation="Horizontal"
+                        Grid.Row="1">
+                <StackPanel.Resources>
+                    <ObjectDataProvider MethodName="GetValues"
+                                        ObjectType="{x:Type sys:Enum}"
+                                        x:Key="QuestionTypeEnum">
+                        <ObjectDataProvider.MethodParameters>
+                            <x:Type Type="{x:Type models:QuestionType}"/>
+                        </ObjectDataProvider.MethodParameters>
+                    </ObjectDataProvider>
+
+                    <viewModels:BindingProxy x:Key="Proxy" Data="{Binding}"/>
+                </StackPanel.Resources>
+
+                <comp:IconButton ToolTip="Add"
+                                 MaterialIcon="Add"
+                                 Margin="0 0 10 0"
+                                 Command="{Binding OpenDropDownQuestionTypesCommand}"
+                                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+                    <comp:IconButton.ContextMenu>
+                        <ContextMenu Placement="MousePoint"
+                                     ItemsSource="{Binding Source={StaticResource QuestionTypeEnum}}">
+                            <ContextMenu.ItemContainerStyle>
+                                <Style TargetType="{x:Type MenuItem}">
+                                    <Setter Property="Header" Value="{Binding}" />
+                                    <Setter Property="Command" Value="{Binding Source={StaticResource Proxy}, Path=Data.AddNewQuestionCommand}" />
+                                    <Setter Property="CommandParameter" Value="{Binding}" />
+                                </Style>
+                            </ContextMenu.ItemContainerStyle>
+                        </ContextMenu>
+                    </comp:IconButton.ContextMenu>
+                </comp:IconButton>
+
+                <comp:IconButton ToolTip="Export"
+                                 MaterialIcon="ExportVariant"
+                                 Margin="0 0 10 0"/>
+
+                <comp:IconButton ToolTip="Start"
+                                 MaterialIcon="Play"/>
+            </StackPanel>
+            <ScrollViewer Grid.Row="2"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto">
+                <ScrollViewer.Resources>
+                    <x:Array x:Key="AnswerDetailsDesignData"
+                             Type="{x:Type models:AnswerDetail}">
+                        <models:AnswerDetail Text="Green"/>
+                        <models:AnswerDetail Text="Yellow"/>
+                        <models:AnswerDetail Text="Blue"/>
+                        <models:AnswerDetail Text="Red"/>
                     </x:Array>
-                </Grid.Resources>
+                    <x:Array x:Key="QuestionDetailsDesignData"
+                             Type="{x:Type models:QuestionDetail}">
+                        <models:QuestionDetail Text="Favourite color?"
+                                               AnswerDetails="{StaticResource AnswerDetailsDesignData}"/>
+                    </x:Array>
+                    <x:Array x:Key="QuestionsDesignData"
+                             Type="{x:Type models:Question}">
+                        <models:Question EvaluationPrice="1"
+                                         QuestionType="OneMore"
+                                         ListNumber="0"
+                                         QuestionDetails="{StaticResource QuestionDetailsDesignData}"/>
 
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                    </x:Array>
+                </ScrollViewer.Resources>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Label Style="{StaticResource RequirementLabelStyle}"
-                           Grid.Column="0"
-                           Grid.Row="0"
-                           Content="Quiz name"/>
-
-                    <comp:ExtendedTextBox Grid.Column="1"
-                                          Grid.Row="0"
-                                          Margin="10 0"
-                                          Text="{Binding Name}"
-                                          Placeholder="Type name here"/>
-
-                    <Label Style="{StaticResource HeaderLabelStyle}"
-                           Grid.Row="1"
-                           Content="Time limit"/>
-
-                    <CheckBox Grid.Row="1"
-                              d:IsChecked="True"
-                              IsChecked="{Binding IsNeedInterval}"
-                              x:Name="TimeLimitCheckBox"
-                              Margin="10 0"
-                              HorizontalAlignment="Left"
-                              Grid.Column="1"/>
-
-                    <Label Content="Time"
-                           Grid.Row="2"
-                           Grid.Column="0"
-                           Visibility="{Binding ElementName=TimeLimitCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
-                           Style="{StaticResource HeaderLabelStyle}"/>
-
-                    <comp:ExtendedTextBox Placeholder="12:34"
-                                          Margin="10 0"
-                                          Text="{Binding Interval}"
-                                          Visibility="{Binding ElementName=TimeLimitCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                          Grid.Row="2"
-                                          Grid.Column="1"/>
-
-                </Grid>
-
-                <StackPanel HorizontalAlignment="Right"
-                            Orientation="Horizontal"
-                            Grid.Row="1">
-
-                    <comp:IconButton ToolTip="Add"
-                                     MaterialIcon="Add"
-                                     Margin="0 0 10 0"/>
-
-                    <comp:IconButton ToolTip="Export"
-                                     MaterialIcon="ExportVariant"
-                                     Margin="0 0 10 0"/>
-
-                    <comp:IconButton ToolTip="Start"
-                                     MaterialIcon="Play"/>
-                </StackPanel>
-
-                <ItemsControl Grid.Row="2"
-                              ItemsSource="{Binding Questions}">
+                <ItemsControl ItemsSource="{Binding Questions}"
+                              d:ItemsSource="{StaticResource QuestionsDesignData}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <comp:QuestionEditCard Question="{Binding}"
-                                                   Margin="0 5 0 0"/>
+                                                   Margin="0 5 5 0"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+            </ScrollViewer>
 
-                <comp:IconButton VerticalAlignment="Center"
-                                 HorizontalAlignment="Center"
-                                 MaterialIcon="ContentSave"
-                                 Content="Save"
-                                 Grid.Row="3"/>
-            </Grid>
-        </ScrollViewer>
+
+            <comp:IconButton VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             MaterialIcon="ContentSave"
+                             Content="Save"
+                             Grid.Row="3"/>
+        </Grid>
     </Grid>
 </Page>
