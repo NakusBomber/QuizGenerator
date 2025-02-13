@@ -24,11 +24,39 @@
 
     <Grid>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <Border Background="Black"
+                Panel.ZIndex="1"
+                d:Visibility="Collapsed"
+                Visibility="{Binding IsNowSaving, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Opacity="0.6"
+                Grid.Row="0"/>
+        <Border Background="Transparent"
+                d:Visibility="Collapsed"
+                Visibility="{Binding IsNowSaving, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Panel.ZIndex="2"
+                Grid.Row="0">
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Center">
+                <ProgressBar Style="{DynamicResource SpinnerProgressBarStyle}"/>
+                <Label Content="Saving..."
+                       Margin="0 5 0 0"
+                       HorizontalAlignment="Center"
+                       Style="{DynamicResource HeaderLabelStyle}"
+                       Foreground="{DynamicResource DisableTextBrush}"/>
+            </StackPanel>
+        </Border>
+
         <ProgressBar d:Visibility="Collapsed"
+                     Grid.Row="0"
                      Visibility="{Binding LoadQuizCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
                      Style="{StaticResource SpinnerProgressBarStyle}"/>
 
         <Grid Margin="10"
+              Grid.Row="0"
               Visibility="{Binding LoadQuizCommand.Execution.IsCompleted, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

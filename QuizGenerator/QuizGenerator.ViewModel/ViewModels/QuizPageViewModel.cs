@@ -30,6 +30,19 @@ public class QuizPageViewModel : ViewModelBase
 		}
 	}
 
+	private bool _isNowSaving;
+
+	public bool IsNowSaving
+	{
+		get => _isNowSaving;
+		set
+		{
+			_isNowSaving = value;
+			OnPropertyChanged();
+		}
+	}
+
+
 	public ICommand OpenDropDownQuestionTypesCommand { get; }
 	public ICommand AddNewQuestionCommand { get; }
 
@@ -40,6 +53,7 @@ public class QuizPageViewModel : ViewModelBase
 	{
 		_unitOfWork = unitOfWork;
 		_quizId = id;
+		_isNowSaving = false;
 
 		LoadQuizCommand = AsyncDelegateCommand.Create(LoadQuizAsync);
 		SaveQuizCommand = AsyncDelegateCommand.Create(SaveQuizAsync, (o) => Quiz != null);
@@ -68,13 +82,24 @@ public class QuizPageViewModel : ViewModelBase
 	{
 		if (Quiz != null)
 		{
+			IsNowSaving = true;
+
 			_quiz = (Quiz)Quiz;
 			await _unitOfWork.QuizRepository.UpdateAsync(_quiz);
 			foreach (var question in _quiz.Questions)
 			{
-				await _unitOfWork.QuestionRepository.UpdateAsync(question);
+				try
+				{
+					await _unitOfWork.QuestionRepository.CreateAsync(question, token);
+				}
+				catch (Exception)
+				{
+					await _unitOfWork.QuestionRepository.UpdateAsync(question, token);
+				}
 			}
 			await _unitOfWork.SaveAsync(token);
+
+			IsNowSaving = false;
 		}
 	}
 

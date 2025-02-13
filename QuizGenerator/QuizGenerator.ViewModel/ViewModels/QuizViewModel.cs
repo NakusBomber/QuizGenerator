@@ -65,6 +65,10 @@ public class QuizViewModel : ViewModelBase
 		get => _isNeedInterval;
 		set
 		{
+			if (value == false)
+			{
+				Interval = null;
+			}
 			_isNeedInterval = value;
 			OnPropertyChanged();
 		}
