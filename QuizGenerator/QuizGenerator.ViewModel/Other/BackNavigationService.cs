@@ -2,7 +2,7 @@
 
 namespace QuizGenerator.ViewModel.Other;
 
-public class BackNavigationService : INavigationService
+public class BackNavigationService : IBackNavigationService
 {
 	private readonly NavigationStore _navigationStore;
 	private readonly INavigationJournal _navigationJournal;

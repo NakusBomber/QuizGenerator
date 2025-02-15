@@ -85,7 +85,7 @@ public class QuizPageViewModel : ViewModelBase
 			IsNowSaving = true;
 
 			_quiz = (Quiz)Quiz;
-			await _unitOfWork.QuizRepository.UpdateAsync(_quiz);
+			await _unitOfWork.QuizRepository.UpdateAsync(_quiz, token);
 			foreach (var question in _quiz.Questions)
 			{
 				try

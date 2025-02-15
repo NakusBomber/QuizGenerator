@@ -2,8 +2,6 @@
 
 namespace QuizGenerator.ViewModel.Other.Interfaces;
 
-public interface INavigationService<TViewModel>
-	where TViewModel : ViewModelBase
+public interface IBackNavigationService : INavigationService<ViewModelBase>
 {
-	public void Navigate();
 }

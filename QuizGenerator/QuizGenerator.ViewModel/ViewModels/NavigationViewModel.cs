@@ -17,7 +17,7 @@ public class NavigationViewModel : ViewModelBase
 	public NavigationViewModel(
 		NavigationStore navigationStore,
 		INavigationJournal navigationJournal,
-		INavigationService backNavigationService)
+		IBackNavigationService backNavigationService)
 	{
 		NavigationStore = navigationStore;
 		BackNavigateCommand = new BackNavigateCommand(backNavigationService, navigationJournal);

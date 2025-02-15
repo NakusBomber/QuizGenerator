@@ -47,11 +47,11 @@ public class SelectViewModel : ViewModelBase
 
 	public SelectViewModel(
 		IUnitOfWork unitOfWork,
-		IParameterNavigationService<Guid?> quizParameterNavigationService)
+		IParameterNavigationService<Guid?, QuizPageViewModel> quizParameterNavigationService)
 	{
 		_unitOfWork = unitOfWork;
 
-		QuizNavigateCommand = new ParameterNavigateCommand<Guid?>(quizParameterNavigationService);
+		QuizNavigateCommand = new ParameterNavigateCommand<Guid?, QuizPageViewModel>(quizParameterNavigationService);
 		SearchCommand = AsyncDelegateCommand.Create(SearchQuizesAsync);
 	}
 

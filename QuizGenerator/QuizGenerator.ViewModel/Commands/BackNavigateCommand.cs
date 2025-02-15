@@ -6,7 +6,7 @@ namespace QuizGenerator.ViewModel.Commands;
 
 public class BackNavigateCommand : DelegateCommand
 {
-	public BackNavigateCommand(INavigationService backNavigationService, INavigationJournal navigationJournal) 
+	public BackNavigateCommand(IBackNavigationService backNavigationService, INavigationJournal navigationJournal) 
 		: base((o) => backNavigationService.Navigate(), (o) => navigationJournal.IsNotEmptyHistory())
 	{
 	}

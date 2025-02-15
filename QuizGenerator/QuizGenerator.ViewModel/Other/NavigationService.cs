@@ -3,7 +3,8 @@ using QuizGenerator.ViewModel.ViewModels.Bases;
 
 namespace QuizGenerator.ViewModel.Other;
 
-public class NavigationService<TViewModel> : INavigationService where TViewModel : ViewModelBase
+public class NavigationService<TViewModel> : INavigationService<TViewModel>
+	where TViewModel : ViewModelBase
 {
 	private readonly NavigationStore _navigationStore;
 	private readonly INavigationJournal _navigationJournal;
