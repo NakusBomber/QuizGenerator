@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="/Styles/Elements/Others/TooltipStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Others/PieChartStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Others/QuestionEditCardStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Elements/Others/ItemsControlDragDropStyle.xaml"/>
 
                 <!-- Element's styles -->
                 <ResourceDictionary Source="/Styles/Elements/Buttons/PrimaryButtonStyle.xaml"/>
@@ -35,6 +36,7 @@
 
                 <!-- Templates -->
                 <ResourceDictionary Source="/Templates/NavigationDataTemplate.xaml"/>
+                <ResourceDictionary Source="/Templates/DragAdornerDataTemplate.xaml"/>
 
                 <!-- Global converters -->
                 <ResourceDictionary>

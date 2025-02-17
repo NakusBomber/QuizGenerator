@@ -1,4 +1,5 @@
 ﻿using QuizGenerator.Model.Entities;
+using QuizGenerator.ViewModel.ViewModels.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,14 +24,14 @@ namespace QuizGenerator.View.Components
     {
 
 
-        public Question Question
+        public QuestionViewModel Question
         {
-            get { return (Question)GetValue(QuestionProperty); }
+            get { return (QuestionViewModel)GetValue(QuestionProperty); }
             set { SetValue(QuestionProperty, value); }
         }
 
         public static readonly DependencyProperty QuestionProperty =
-            DependencyProperty.Register("Question", typeof(Question), typeof(QuestionEditCard), new PropertyMetadata(null));
+            DependencyProperty.Register("Question", typeof(QuestionViewModel), typeof(QuestionEditCard), new PropertyMetadata(null));
 
 
 

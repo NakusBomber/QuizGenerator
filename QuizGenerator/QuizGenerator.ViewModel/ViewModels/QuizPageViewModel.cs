@@ -1,20 +1,22 @@
-﻿using QuizGenerator.Model.Entities;
+﻿using GongSolutions.Wpf.DragDrop;
+using QuizGenerator.Model.Entities;
 using QuizGenerator.Model.Interfaces;
 using QuizGenerator.ViewModel.Commands.Bases;
 using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
+using QuizGenerator.ViewModel.ViewModels.Models;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows;
-using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace QuizGenerator.ViewModel.ViewModels;
 
-public class QuizPageViewModel : ViewModelBase
+public class QuizPageViewModel : ViewModelBase, IDropTarget
 {
 	private readonly IUnitOfWork _unitOfWork;
+	private readonly IDropTarget _dropHandler;
+
 	private Guid? _quizId;
 	private Quiz? _quiz;
 
@@ -52,6 +54,7 @@ public class QuizPageViewModel : ViewModelBase
 	public QuizPageViewModel(Guid? id, IUnitOfWork unitOfWork)
 	{
 		_unitOfWork = unitOfWork;
+		_dropHandler = new DefaultDropHandler();
 		_quizId = id;
 		_isNowSaving = false;
 
@@ -59,6 +62,27 @@ public class QuizPageViewModel : ViewModelBase
 		SaveQuizCommand = AsyncDelegateCommand.Create(SaveQuizAsync, (o) => Quiz != null);
 		OpenDropDownQuestionTypesCommand = new DelegateCommand(OpenDropDownQuestionTypes, CanAddNewQuestion);
 		AddNewQuestionCommand = new DelegateCommand(AddNewQuestion, CanAddNewQuestion);
+	}
+
+	public void Drop(IDropInfo dropInfo)
+	{
+		_dropHandler.Drop(dropInfo);
+		ChangeAllQuestionNumbers();
+	}
+
+	public void DragOver(IDropInfo dropInfo) => _dropHandler.DragOver(dropInfo);
+
+	private void ChangeAllQuestionNumbers()
+	{
+		if (Quiz == null)
+		{
+			return;
+		}
+
+		for (int i = 0; i < Quiz.Questions.Count; i++)
+		{
+			Quiz.Questions[i].ListNumber = i + 1;
+		}
 	}
 
 	private async Task LoadQuizAsync(CancellationToken token)
@@ -76,6 +100,7 @@ public class QuizPageViewModel : ViewModelBase
 
 		_quizId = _quiz.Id;
 		Quiz = new QuizViewModel(_quiz);
+		Quiz.Questions = new ObservableCollection<QuestionViewModel>(Quiz.Questions.OrderBy(qVM => qVM.ListNumber));
 	}
 
 	private async Task SaveQuizAsync(CancellationToken token)
@@ -84,7 +109,7 @@ public class QuizPageViewModel : ViewModelBase
 		{
 			IsNowSaving = true;
 
-			_quiz = (Quiz)Quiz;
+			_quiz = Quiz.ToQuiz();
 			await _unitOfWork.QuizRepository.UpdateAsync(_quiz, token);
 			foreach (var question in _quiz.Questions)
 			{
@@ -109,7 +134,7 @@ public class QuizPageViewModel : ViewModelBase
 		{
 			var listNumber = (Quiz.Questions.LastOrDefault()?.ListNumber + 1) ?? 0;
 			var question = new Question(_quiz, 1, questionType, listNumber);
-			Quiz.Questions.Add(question);
+			Quiz.Questions.Add(new QuestionViewModel(question));
 		}
 	}
 

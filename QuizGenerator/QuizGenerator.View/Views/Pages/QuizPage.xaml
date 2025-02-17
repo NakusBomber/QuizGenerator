@@ -9,6 +9,8 @@
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
       xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model"
+      xmlns:modelsViewModel="clr-namespace:QuizGenerator.ViewModel.ViewModels.Models;assembly=QuizGenerator.ViewModel"
+      xmlns:dd="urn:gong-wpf-dragdrop"
       xmlns:viewModels="clr-namespace:QuizGenerator.View.Models"
       mc:Ignorable="d"
       d:DataContext="{d:DesignInstance vms:QuizPageViewModel}"
@@ -157,7 +159,8 @@
                 <comp:IconButton ToolTip="Start"
                                  MaterialIcon="Play"/>
             </StackPanel>
-            <ScrollViewer Grid.Row="2"
+            <ScrollViewer x:Name="_scrollViewer"
+                          Grid.Row="2"
                           HorizontalScrollBarVisibility="Disabled"
                           VerticalScrollBarVisibility="Auto">
                 <ScrollViewer.Resources>
@@ -174,21 +177,27 @@
                                                AnswerDetails="{StaticResource AnswerDetailsDesignData}"/>
                     </x:Array>
                     <x:Array x:Key="QuestionsDesignData"
-                             Type="{x:Type models:Question}">
-                        <models:Question EvaluationPrice="1"
-                                         QuestionType="OneMore"
-                                         ListNumber="0"
-                                         QuestionDetails="{StaticResource QuestionDetailsDesignData}"/>
+                             Type="{x:Type modelsViewModel:QuestionViewModel}">
+                        <modelsViewModel:QuestionViewModel EvaluationPrice="1"
+                                                           QuestionType="OneMore"
+                                                           ListNumber="1"
+                                                           QuestionDetails="{StaticResource QuestionDetailsDesignData}"/>
 
                     </x:Array>
                 </ScrollViewer.Resources>
 
                 <ItemsControl ItemsSource="{Binding Quiz.Questions}"
-                              d:ItemsSource="{StaticResource QuestionsDesignData}">
+                              Padding="0 5"
+                              d:ItemsSource="{StaticResource QuestionsDesignData}"
+                              dd:DragDrop.DropTargetScrollViewer="{Binding ElementName=_scrollViewer}"
+                              dd:DragDrop.DragAdornerTemplate="{StaticResource DragAdornerDataTemplate}"
+                              dd:DragDrop.IsDragSource="True"
+                              dd:DragDrop.IsDropTarget="True"
+                              dd:DragDrop.DropHandler="{Binding}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <comp:QuestionEditCard Question="{Binding}"
-                                                   Margin="0 5 5 0"/>
+                                                   Margin="0 4 5 4"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

@@ -9,7 +9,7 @@ public static class TestData
 	public static UnitOfWorkFake GetUnitOfWork(TimeSpan delay, TimeSpan saveDelay)
 	{
 		var exampleQuiz1 = new Quiz("Quiz with questions");
-		var question1 = new Question(exampleQuiz1, 1, QuestionType.OneMore, 0);
+		var question1 = new Question(exampleQuiz1, 1, QuestionType.OneMore, 1);
 		var questionText1 = new QuestionDetail(question1, "QuestionText1");
 		var answerText1 = new AnswerDetail(questionText1, "Answer1", true);
 		var answerText2 = new AnswerDetail(questionText1, "Answer2");
@@ -17,8 +17,8 @@ public static class TestData
 		var answerText4 = new AnswerDetail(questionText1, "Answer4");
 		questionText1.AnswerDetails = new List<AnswerDetail> { answerText1, answerText2, answerText3, answerText4 };
 		question1.QuestionDetails = new List<QuestionDetail> { questionText1 };
-		var question2 = new Question(exampleQuiz1, 1, QuestionType.Open, 1);
-		exampleQuiz1.Questions = new List<Question> { question1, question2 };
+		var question2 = new Question(exampleQuiz1, 1, QuestionType.Open, 2);
+		exampleQuiz1.Questions = new List<Question> { question2, question1 };
 
 		var exampleQuiz2 = new Quiz("Another quiz");
 
