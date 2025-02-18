@@ -8,6 +8,7 @@
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
+      xmlns:converters="clr-namespace:QuizGenerator.View.Converters"
       xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model"
       xmlns:modelsViewModel="clr-namespace:QuizGenerator.ViewModel.ViewModels.Models;assembly=QuizGenerator.ViewModel"
       xmlns:dd="urn:gong-wpf-dragdrop"
@@ -67,6 +68,9 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
+            <Grid.Resources>
+                <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
+            </Grid.Resources>
 
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
@@ -118,48 +122,75 @@
 
             </Grid>
 
-            <StackPanel HorizontalAlignment="Right"
-                        Orientation="Horizontal"
-                        Grid.Row="1">
-                <StackPanel.Resources>
-                    <ObjectDataProvider MethodName="GetValues"
-                                        ObjectType="{x:Type sys:Enum}"
-                                        x:Key="QuestionTypeEnum">
-                        <ObjectDataProvider.MethodParameters>
-                            <x:Type Type="{x:Type models:QuestionType}"/>
-                        </ObjectDataProvider.MethodParameters>
-                    </ObjectDataProvider>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                    <viewModels:BindingProxy x:Key="Proxy" Data="{Binding}"/>
-                </StackPanel.Resources>
+                <Label Grid.Column="0"
+                       VerticalAlignment="Stretch"
+                       VerticalContentAlignment="Center"
+                       Foreground="{DynamicResource DisableTextBrush}"
+                       FontSize="14"
+                       Content="{Binding Quiz.Questions.Count}"
+                       d:Content="1"
+                       ContentStringFormat="Question count: {0}"/>
 
-                <comp:IconButton ToolTip="Add"
-                                 MaterialIcon="Add"
-                                 Margin="0 0 10 0"
-                                 Command="{Binding OpenDropDownQuestionTypesCommand}"
-                                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-                    <comp:IconButton.ContextMenu>
-                        <ContextMenu Placement="MousePoint"
-                                     ItemsSource="{Binding Source={StaticResource QuestionTypeEnum}}">
-                            <ContextMenu.ItemContainerStyle>
-                                <Style TargetType="{x:Type MenuItem}"
-                                       BasedOn="{StaticResource MenuItemStyle}">
-                                    <Setter Property="Header" Value="{Binding}" />
-                                    <Setter Property="Command" Value="{Binding Source={StaticResource Proxy}, Path=Data.AddNewQuestionCommand}" />
-                                    <Setter Property="CommandParameter" Value="{Binding}" />
-                                </Style>
-                            </ContextMenu.ItemContainerStyle>
-                        </ContextMenu>
-                    </comp:IconButton.ContextMenu>
-                </comp:IconButton>
+                <StackPanel HorizontalAlignment="Right"
+                            Orientation="Horizontal"
+                            Grid.Column="1">
+                    <StackPanel.Resources>
+                        <ObjectDataProvider MethodName="GetValues"
+                                            ObjectType="{x:Type sys:Enum}"
+                                            x:Key="QuestionTypeEnum">
+                            <ObjectDataProvider.MethodParameters>
+                                <x:Type Type="{x:Type models:QuestionType}"/>
+                            </ObjectDataProvider.MethodParameters>
+                        </ObjectDataProvider>
 
-                <comp:IconButton ToolTip="Export"
-                                 MaterialIcon="ExportVariant"
-                                 Margin="0 0 10 0"/>
+                        <viewModels:BindingProxy x:Key="Proxy" Data="{Binding}"/>
+                    </StackPanel.Resources>
 
-                <comp:IconButton ToolTip="Start"
-                                 MaterialIcon="Play"/>
-            </StackPanel>
+                    <comp:IconButton ToolTip="Add"
+                                     MaterialIcon="Add"
+                                     Margin="0 0 10 0"
+                                     Command="{Binding OpenDropDownQuestionTypesCommand}"
+                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+                        <comp:IconButton.ContextMenu>
+                            <ContextMenu Placement="MousePoint"
+                                         ItemsSource="{Binding Source={StaticResource QuestionTypeEnum}}">
+                                <ContextMenu.ItemContainerStyle>
+                                    <Style TargetType="{x:Type MenuItem}"
+                                           BasedOn="{StaticResource MenuItemStyle}">
+                                        <Setter Property="Header" Value="{Binding}" />
+                                        <Setter Property="Command" Value="{Binding Source={StaticResource Proxy}, Path=Data.AddNewQuestionCommand}" />
+                                        <Setter Property="CommandParameter" Value="{Binding}" />
+                                    </Style>
+                                </ContextMenu.ItemContainerStyle>
+                            </ContextMenu>
+                        </comp:IconButton.ContextMenu>
+                    </comp:IconButton>
+
+                    <comp:IconButton ToolTip="Export"
+                                     MaterialIcon="ExportVariant"
+                                     Margin="0 0 10 0"/>
+
+                    <comp:IconButton ToolTip="Start"
+                                     MaterialIcon="Play"/>
+                </StackPanel>
+            </Grid>
+
+            <Label Content="No one question :("
+                   Grid.Row="2"
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center"
+                   HorizontalAlignment="Stretch"
+                   HorizontalContentAlignment="Center"
+                   d:Visibility="Collapsed"
+                   Visibility="{Binding Quiz.Questions.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=Invert}"
+                   Style="{StaticResource HeaderLabelStyle}"/>
+
             <ScrollViewer x:Name="_scrollViewer"
                           Grid.Row="2"
                           HorizontalScrollBarVisibility="Disabled"

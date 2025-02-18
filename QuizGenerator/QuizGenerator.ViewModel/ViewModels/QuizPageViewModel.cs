@@ -130,9 +130,11 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 
 	private void AddNewQuestion(object? obj)
 	{
+		var minimalNumber = 1;
+
 		if (obj is QuestionType questionType && _quiz != null && Quiz != null)
 		{
-			var listNumber = (Quiz.Questions.LastOrDefault()?.ListNumber + 1) ?? 0;
+			var listNumber = (Quiz.Questions.LastOrDefault()?.ListNumber + 1) ?? minimalNumber;
 			var question = new Question(_quiz, 1, questionType, listNumber);
 			Quiz.Questions.Add(new QuestionViewModel(question));
 		}
