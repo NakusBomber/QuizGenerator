@@ -142,7 +142,8 @@
                         <ContextMenu Placement="MousePoint"
                                      ItemsSource="{Binding Source={StaticResource QuestionTypeEnum}}">
                             <ContextMenu.ItemContainerStyle>
-                                <Style TargetType="{x:Type MenuItem}">
+                                <Style TargetType="{x:Type MenuItem}"
+                                       BasedOn="{StaticResource MenuItemStyle}">
                                     <Setter Property="Header" Value="{Binding}" />
                                     <Setter Property="Command" Value="{Binding Source={StaticResource Proxy}, Path=Data.AddNewQuestionCommand}" />
                                     <Setter Property="CommandParameter" Value="{Binding}" />

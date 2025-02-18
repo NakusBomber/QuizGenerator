@@ -17,6 +17,8 @@
                 <ResourceDictionary Source="/Styles/Elements/Others/PieChartStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Others/QuestionEditCardStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Others/ItemsControlDragDropStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Elements/Others/ContextMenuStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Elements/Others/MenuItemStyle.xaml"/>
 
                 <!-- Element's styles -->
                 <ResourceDictionary Source="/Styles/Elements/Buttons/PrimaryButtonStyle.xaml"/>
