@@ -229,6 +229,8 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <comp:QuestionEditCard Question="{Binding}"
+                                                   DeleteCommand="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.DeleteQuestionCommand}"
+                                                   DeleteCommandParameter="{Binding}"
                                                    Margin="0 4 5 4"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

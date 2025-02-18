@@ -45,13 +45,27 @@
                                            FontSize="12"/>
                                 </StackPanel>
 
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Stretch"
+                                            HorizontalAlignment="Stretch"
+                                            Grid.Column="2">
 
-                                <comp:IconButton Grid.Column="2"
-                                                 VerticalAlignment="Top"
-                                                 Margin="5 0 0 0"
-                                                 MaterialIcon="Edit"
-                                                 Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=EditCommand}"
-                                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=EditCommandParameter}"/>
+                                    <comp:IconButton Grid.Column="2"
+                                                     VerticalAlignment="Top"
+                                                     MaterialIcon="Edit"
+                                                     Margin="5 0"
+                                                     ToolTip="Edit"
+                                                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=EditCommand}"
+                                                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=EditCommandParameter}"/>
+                                    <comp:IconButton Grid.Column="2"
+                                                     VerticalAlignment="Top"
+                                                     MaterialIcon="Trash"
+                                                     Margin="5 0"
+                                                     ToolTip="Delete"
+                                                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=DeleteCommand}"
+                                                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=DeleteCommandParameter}"/>
+                                </StackPanel>
+
                             </Grid>
 
                             <Separator BorderBrush="{TemplateBinding BorderBrush}"/>

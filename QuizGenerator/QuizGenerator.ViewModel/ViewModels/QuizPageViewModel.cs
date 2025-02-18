@@ -17,6 +17,8 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IDropTarget _dropHandler;
 
+	private List<Question> _questionsToDelete = new();
+
 	private Guid? _quizId;
 	private Quiz? _quiz;
 
@@ -47,6 +49,7 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 
 	public ICommand OpenDropDownQuestionTypesCommand { get; }
 	public ICommand AddNewQuestionCommand { get; }
+	public ICommand DeleteQuestionCommand { get; }
 
 	public IAsyncCommand<object?> LoadQuizCommand { get; }
 	public IAsyncCommand<object?> SaveQuizCommand { get; }
@@ -60,6 +63,7 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 
 		LoadQuizCommand = AsyncDelegateCommand.Create(LoadQuizAsync);
 		SaveQuizCommand = AsyncDelegateCommand.Create(SaveQuizAsync, (o) => Quiz != null);
+		DeleteQuestionCommand = new DelegateCommand(DeleteQuestion);
 		OpenDropDownQuestionTypesCommand = new DelegateCommand(OpenDropDownQuestionTypes, CanAddNewQuestion);
 		AddNewQuestionCommand = new DelegateCommand(AddNewQuestion, CanAddNewQuestion);
 	}
@@ -98,6 +102,7 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 			await _unitOfWork.SaveAsync(token);
 		}
 
+		_questionsToDelete.Clear();
 		_quizId = _quiz.Id;
 		Quiz = new QuizViewModel(_quiz);
 		Quiz.Questions = new ObservableCollection<QuestionViewModel>(Quiz.Questions.OrderBy(qVM => qVM.ListNumber));
@@ -110,6 +115,13 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 			IsNowSaving = true;
 
 			_quiz = Quiz.ToQuiz();
+			
+			foreach (var question in _questionsToDelete)
+			{
+				await _unitOfWork.QuestionRepository.DeleteAsync(question, token);
+			}
+			_questionsToDelete.Clear();
+
 			await _unitOfWork.QuizRepository.UpdateAsync(_quiz, token);
 			foreach (var question in _quiz.Questions)
 			{
@@ -125,6 +137,15 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 			await _unitOfWork.SaveAsync(token);
 
 			IsNowSaving = false;
+		}
+	}
+
+	private void DeleteQuestion(object? obj)
+	{
+		if (obj is QuestionViewModel questionViewModel && Quiz != null)
+		{
+			Quiz.Questions.Remove(questionViewModel);
+			_questionsToDelete.Add(questionViewModel.ToQuestion());
 		}
 	}
 
