@@ -146,6 +146,8 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		{
 			Quiz.Questions.Remove(questionViewModel);
 			_questionsToDelete.Add(questionViewModel.ToQuestion());
+
+			ChangeAllQuestionNumbers();
 		}
 	}
 

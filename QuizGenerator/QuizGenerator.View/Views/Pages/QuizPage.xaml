@@ -226,12 +226,20 @@
                               dd:DragDrop.IsDragSource="True"
                               dd:DragDrop.IsDropTarget="True"
                               dd:DragDrop.DropHandler="{Binding}">
+                    <ItemsControl.Resources>
+                        <ResourceDictionary Source="/Styles/Animations/FadeInOpacityStoryboard.xaml"/>
+                    </ItemsControl.Resources>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <comp:QuestionEditCard Question="{Binding}"
                                                    DeleteCommand="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.DeleteQuestionCommand}"
                                                    DeleteCommandParameter="{Binding}"
                                                    Margin="0 4 5 4"/>
+                            <DataTemplate.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard Storyboard="{StaticResource FadeInOpacityStoryboard}"/>
+                                </EventTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
