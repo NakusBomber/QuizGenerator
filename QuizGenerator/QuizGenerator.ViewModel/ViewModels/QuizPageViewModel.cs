@@ -1,8 +1,10 @@
 ﻿using GongSolutions.Wpf.DragDrop;
 using QuizGenerator.Model.Entities;
 using QuizGenerator.Model.Interfaces;
+using QuizGenerator.ViewModel.Commands;
 using QuizGenerator.ViewModel.Commands.Bases;
 using QuizGenerator.ViewModel.Commands.Interfaces;
+using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
 using System.Collections.ObjectModel;
@@ -16,6 +18,8 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IDropTarget _dropHandler;
+	private readonly IParameterNavigationService<Guid?, TrainingViewModel> _trainingNavigationService;
+	private readonly IParameterNavigationService<Guid?, QuestionPageViewModel> _questionNavigationService;
 
 	private List<Question> _questionsToDelete = new();
 
@@ -51,18 +55,31 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 	public ICommand AddNewQuestionCommand { get; }
 	public ICommand DeleteQuestionCommand { get; }
 
+	
+	public IAsyncCommand<object?> StartQuizCommand { get; }
 	public IAsyncCommand<object?> LoadQuizCommand { get; }
 	public IAsyncCommand<object?> SaveQuizCommand { get; }
+	public IAsyncCommand<object?> EditQuestionCommand { get; }
 
-	public QuizPageViewModel(Guid? id, IUnitOfWork unitOfWork)
+	public QuizPageViewModel(
+		Guid? id,
+		IUnitOfWork unitOfWork,
+		IParameterNavigationService<Guid?, TrainingViewModel> trainingNavigationService,
+		IParameterNavigationService<Guid?, QuestionPageViewModel> questionNavigationService)
 	{
 		_unitOfWork = unitOfWork;
 		_dropHandler = new DefaultDropHandler();
+		_trainingNavigationService = trainingNavigationService;
+		_questionNavigationService = questionNavigationService;
+
 		_quizId = id;
 		_isNowSaving = false;
 
 		LoadQuizCommand = AsyncDelegateCommand.Create(LoadQuizAsync);
 		SaveQuizCommand = AsyncDelegateCommand.Create(SaveQuizAsync, (o) => Quiz != null);
+		StartQuizCommand = AsyncDelegateCommand.Create(StartQuizAsync, CanStartQuiz);
+		EditQuestionCommand = AsyncDelegateCommand.Create(OpenEditQuestionPageAsync);
+		
 		DeleteQuestionCommand = new DelegateCommand(DeleteQuestion);
 		OpenDropDownQuestionTypesCommand = new DelegateCommand(OpenDropDownQuestionTypes, CanAddNewQuestion);
 		AddNewQuestionCommand = new DelegateCommand(AddNewQuestion, CanAddNewQuestion);
@@ -89,6 +106,18 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		}
 	}
 
+	private async Task StartQuizAsync(CancellationToken token)
+	{
+		if (SaveQuizCommand.CanExecute(null) && Quiz != null)
+		{
+			await SaveQuizCommand.ExecuteAsync(null);
+
+			_trainingNavigationService.Navigate(Quiz.Id);
+		}
+	}
+
+	private bool CanStartQuiz(object? obj) => Quiz != null && Quiz.Questions.Count > 0;
+
 	private async Task LoadQuizAsync(CancellationToken token)
 	{
 		if (_quizId is Guid id)
@@ -102,10 +131,10 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 			await _unitOfWork.SaveAsync(token);
 		}
 
-		_questionsToDelete.Clear();
 		_quizId = _quiz.Id;
 		Quiz = new QuizViewModel(_quiz);
-		Quiz.Questions = new ObservableCollection<QuestionViewModel>(Quiz.Questions.OrderBy(qVM => qVM.ListNumber));
+		Quiz.Questions = new ObservableCollection<QuestionViewModel>(
+			Quiz.Questions.OrderBy(qVM => qVM.ListNumber));
 	}
 
 	private async Task SaveQuizAsync(CancellationToken token)
@@ -137,6 +166,17 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 			await _unitOfWork.SaveAsync(token);
 
 			IsNowSaving = false;
+		}
+	}
+
+	private async Task OpenEditQuestionPageAsync(object? parameter, CancellationToken token)
+	{
+		if (SaveQuizCommand.CanExecute(null) &&
+			parameter is QuestionViewModel questionViewModel)
+		{
+			await SaveQuizCommand.ExecuteAsync(null);
+
+			_questionNavigationService.Navigate(questionViewModel.Id);
 		}
 	}
 

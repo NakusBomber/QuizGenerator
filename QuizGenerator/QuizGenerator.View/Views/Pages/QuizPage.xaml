@@ -177,7 +177,8 @@
                                      Margin="0 0 10 0"/>
 
                     <comp:IconButton ToolTip="Start"
-                                     MaterialIcon="Play"/>
+                                     MaterialIcon="Play"
+                                     Command="{Binding StartQuizCommand}"/>
                 </StackPanel>
             </Grid>
 
@@ -233,7 +234,9 @@
                         <DataTemplate>
                             <comp:QuestionEditCard Question="{Binding}"
                                                    DeleteCommand="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.DeleteQuestionCommand}"
+                                                   EditCommand="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.EditQuestionCommand}"
                                                    DeleteCommandParameter="{Binding}"
+                                                   EditCommandParameter="{Binding}"
                                                    Margin="0 4 5 4"/>
                             <DataTemplate.Triggers>
                                 <EventTrigger RoutedEvent="Loaded">

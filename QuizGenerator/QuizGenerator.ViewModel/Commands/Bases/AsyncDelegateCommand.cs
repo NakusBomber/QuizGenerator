@@ -5,13 +5,20 @@ namespace QuizGenerator.ViewModel.Commands.Bases;
 // Reference: https://learn.microsoft.com/ru-ru/archive/msdn-magazine/2014/april/async-programming-patterns-for-asynchronous-mvvm-applications-commands
 public class AsyncDelegateCommand<TResult> : AsyncCommandBase<TResult>
 {
-	private readonly Func<CancellationToken, Task<TResult>> _command;
+	private readonly Func<object?, CancellationToken, Task<TResult>> _command;
 	private readonly Func<object?, bool>? _canExecute;
 	private readonly CancelAsyncCommand _cancelCommand;
 	private NotifyTaskCompletion<TResult>? _execution;
 
 	public AsyncDelegateCommand(
 		Func<CancellationToken, Task<TResult>> command,
+		Func<object?, bool>? canExecute = null)
+		: this((o, token) => command(token), canExecute)
+	{
+	}
+
+	public AsyncDelegateCommand(
+		Func<object?, CancellationToken, Task<TResult>> command,
 		Func<object?, bool>? canExecute = null)
 	{
 		_command = command;
@@ -28,7 +35,7 @@ public class AsyncDelegateCommand<TResult> : AsyncCommandBase<TResult>
 	public override async Task ExecuteAsync(object? parameter)
 	{
 		_cancelCommand.NotifyCommandStarting();
-		Execution = new NotifyTaskCompletion<TResult>(_command(_cancelCommand.Token));
+		Execution = new NotifyTaskCompletion<TResult>(_command(parameter, _cancelCommand.Token));
 		RaiseCanExecuteChanged();
 		await Execution.TaskCompletion;
 		_cancelCommand.NotifyCommandFinished();
@@ -66,6 +73,16 @@ public static class AsyncDelegateCommand
 	}
 
 	public static AsyncDelegateCommand<TResult> Create<TResult>(Func<CancellationToken, Task<TResult>> command)
+	{
+		return new AsyncDelegateCommand<TResult>(command);
+	}
+
+	public static AsyncDelegateCommand<object?> Create(Func<object?, CancellationToken, Task> command, Func<object?, bool>? canExecute = null)
+	{
+		return new AsyncDelegateCommand<object?>(async (o, token) => { await command(o, token); return null; }, canExecute);
+	}
+
+	public static AsyncDelegateCommand<TResult> Create<TResult>(Func<object?, CancellationToken, Task<TResult>> command)
 	{
 		return new AsyncDelegateCommand<TResult>(command);
 	}

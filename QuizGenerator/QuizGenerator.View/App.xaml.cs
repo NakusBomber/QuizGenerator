@@ -62,11 +62,32 @@ public partial class App : Application
 
 		services.AddSingleton<IBackNavigationService, BackNavigationService>();
 
+		RegisterQuestionPageNavigationService(services);
+		RegisterTrainingNavigationService(services);
 		RegisterQuizPageNavigationService(services);
 		RegisterSelectNavigationService(services);
 		RegisterStartNavigationService(services);
 
 		services.AddSingleton<NavigationViewModel>();
+	}
+
+	private void RegisterQuestionPageNavigationService(IServiceCollection services)
+	{
+		services.AddSingleton<IParameterNavigationService<Guid?, QuestionPageViewModel>>(sp =>
+			new ParameterNavigationService<Guid?, QuestionPageViewModel>(
+				sp.GetRequiredService<NavigationStore>(),
+				sp.GetRequiredService<INavigationJournal>(),
+				p => new QuestionPageViewModel(p)
+			));
+	}
+
+	private void RegisterTrainingNavigationService(IServiceCollection services)
+	{
+		services.AddSingleton<IParameterNavigationService<Guid?, TrainingViewModel>>(sp =>
+			new ParameterNavigationService<Guid?, TrainingViewModel>(
+				sp.GetRequiredService<NavigationStore>(),
+				sp.GetRequiredService<INavigationJournal>(),
+				p => new TrainingViewModel(p)));
 	}
 
 	private void RegisterQuizPageNavigationService(IServiceCollection services)
@@ -75,7 +96,11 @@ public partial class App : Application
 			new ParameterNavigationService<Guid?, QuizPageViewModel>(
 				sp.GetRequiredService<NavigationStore>(),
 				sp.GetRequiredService<INavigationJournal>(),
-				p => new QuizPageViewModel(p, sp.GetRequiredService<IUnitOfWork>())
+				p => new QuizPageViewModel(
+					p,
+					sp.GetRequiredService<IUnitOfWork>(),
+					sp.GetRequiredService<IParameterNavigationService<Guid?, TrainingViewModel>>(),
+					sp.GetRequiredService<IParameterNavigationService<Guid?, QuestionPageViewModel>>())
 			));
 	}
 

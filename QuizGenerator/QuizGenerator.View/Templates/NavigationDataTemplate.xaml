@@ -13,4 +13,12 @@
     <DataTemplate DataType="{x:Type vms:QuizPageViewModel}">
         <pages:QuizPage/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vms:QuestionPageViewModel}">
+        <pages:QuestionPage/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vms:TrainingViewModel}">
+        <pages:TrainingPage/>
+    </DataTemplate>
 </ResourceDictionary>
