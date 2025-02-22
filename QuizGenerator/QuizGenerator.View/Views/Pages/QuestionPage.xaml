@@ -12,63 +12,92 @@
       d:Width="550"
       d:Height="450"
       d:DataContext="{d:DesignInstance vms:QuestionPageViewModel}">
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollBarVisibility="Auto">
-        <Grid Margin="10">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <x:Array x:Key="AnswerTestData"
+                     Type="{x:Type sys:String}">
+                <sys:String>Answer 1</sys:String>
+                <sys:String>Answer 2</sys:String>
+                <sys:String>Answer 3</sys:String>
+                <sys:String>Answer 4</sys:String>
+            </x:Array>
+        </Grid.Resources>
+
+        <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid.Resources>
-                <x:Array x:Key="AnswerTestData"
-                         Type="{x:Type sys:String}">
-                    <sys:String>Answer 1</sys:String>
-                    <sys:String>Answer 2</sys:String>
-                    <sys:String>Answer 3</sys:String>
-                    <sys:String>Answer 4</sys:String>
-                </x:Array>
-            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
+            <Label Style="{StaticResource RequirementLabelStyle}"
+                   Grid.Row="0"
+                   Grid.Column="0"
+                   Content="Question"/>
 
-                <Label Style="{StaticResource RequirementLabelStyle}"
-                       Grid.Column="0"
-                       Content="Question"/>
+            <comp:ExtendedTextBox Grid.Column="1"
+                                  Grid.Row="0"
+                                  Margin="10 0"
+                                  Placeholder="Question text"/>
 
-                <comp:ExtendedTextBox Grid.Column="1"
-                                      Margin="10 0"
-                                      Placeholder="Question text"/>
+            <Label Style="{StaticResource HeaderLabelStyle}"
+                   Content="Price"
+                   Grid.Row="1"
+                   Grid.Column="0"/>
 
-            </Grid>
+            <comp:ExtendedTextBox Grid.Column="1"
+                                  Grid.Row="1"
+                                  Margin="10 0"
+                                  Placeholder="Integer digit"/>
 
-            <Rectangle Fill="Gray"
-                       Width="Auto"
-                       Height="150"
-                       Grid.Row="1"
-                       Margin="20"/>
-            <Button Style="{StaticResource PrimaryButtonStyle}"
-                    Width="140"
-                    Height="40"
-                    Grid.Row="1"
-                    Content="Open"/>
+            <Label Style="{StaticResource HeaderLabelStyle}"
+                   Content="Question type"
+                   Grid.Row="2"
+                   Grid.Column="0"/>
 
-            <comp:IconButton VerticalAlignment="Center"
-                             HorizontalAlignment="Right"
-                             Margin="10 0"
-                             Grid.Row="2"
-                             Content="Add"
-                             MaterialIcon="Add"/>
+            <ComboBox Grid.Row="2"
+                      Grid.Column="1"
+                      Margin="10 0"/>
 
+        </Grid>
+
+        <Rectangle Fill="Gray"
+                   Width="Auto"
+                   Height="125"
+                   Grid.Row="1"
+                   Margin="20"/>
+        <Button Style="{StaticResource PrimaryButtonStyle}"
+                Width="140"
+                Height="40"
+                Grid.Row="1"
+                Content="Open"/>
+
+        <comp:IconButton VerticalAlignment="Center"
+                         HorizontalAlignment="Right"
+                         Margin="10 0"
+                         Grid.Row="2"
+                         ToolTip="Add"
+                         MaterialIcon="Add"/>
+
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      Grid.Row="3"
+                      VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{StaticResource AnswerTestData}"
-                          Grid.Row="3">
+                          Margin="0 0 10 0">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type sys:String}">
                         <Border Background="Transparent"
@@ -94,12 +123,13 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+        </ScrollViewer>
 
-            <comp:IconButton VerticalAlignment="Center"
-                             HorizontalAlignment="Center"
-                             MaterialIcon="ContentSave"
-                             Content="Save"
-                             Grid.Row="4"/>
-        </Grid>
-    </ScrollViewer>
+
+        <comp:IconButton VerticalAlignment="Center"
+                         HorizontalAlignment="Center"
+                         MaterialIcon="ContentSave"
+                         Content="Save"
+                         Grid.Row="4"/>
+    </Grid>
 </Page>
