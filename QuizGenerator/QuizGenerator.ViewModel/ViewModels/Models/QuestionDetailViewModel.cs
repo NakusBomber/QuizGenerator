@@ -1,0 +1,61 @@
+﻿using QuizGenerator.Model.Entities;
+using QuizGenerator.ViewModel.ViewModels.Bases;
+using System.Collections.ObjectModel;
+
+namespace QuizGenerator.ViewModel.ViewModels.Models;
+
+public class QuestionDetailViewModel : ViewModelBase
+{
+	private Question? _question;
+
+	private Guid _id;
+
+	public Guid Id => _id;
+
+	private string _text;
+
+	public string Text
+	{
+		get => _text;
+		set
+		{
+			_text = value;
+			OnPropertyChanged();
+		}
+	}
+
+
+	private IEnumerable<AnswerDetail> _answerDetails;
+
+	public IEnumerable<AnswerDetail> AnswerDetails
+	{
+		get => _answerDetails;
+		set
+		{
+			_answerDetails = value;
+			OnPropertyChanged();
+		}
+	}
+
+	public QuestionDetailViewModel()
+		: this(new QuestionDetail())
+	{
+	}
+
+	public QuestionDetailViewModel(QuestionDetail questionDetail)
+	{
+		_id = questionDetail.Id;
+		_question = questionDetail.Question;
+		_text = questionDetail.Text;
+		_answerDetails = new ObservableCollection<AnswerDetail>(questionDetail.AnswerDetails);
+	}
+
+	public QuestionDetail ToQuestionDetail()
+	{
+		return new QuestionDetail(
+			Id,
+			_question,
+			_text,
+			_answerDetails);
+	}
+}

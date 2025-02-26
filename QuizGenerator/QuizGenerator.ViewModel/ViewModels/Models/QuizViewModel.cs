@@ -26,15 +26,7 @@ public class QuizViewModel : ViewModelBase
 
     private DateTime _dateTimeCreated;
 
-    public DateTime DateTimeCreated
-    {
-        get => _dateTimeCreated;
-        set
-        {
-            _dateTimeCreated = value;
-            OnPropertyChanged();
-        }
-    }
+    public DateTime DateTimeCreated => _dateTimeCreated;
 
     private DateTime _dateTimeChanged;
 
@@ -77,9 +69,9 @@ public class QuizViewModel : ViewModelBase
         }
     }
 
-    private ObservableCollection<QuestionViewModel> _questions;
+    private IEnumerable<QuestionViewModel> _questions;
 
-    public ObservableCollection<QuestionViewModel> Questions
+    public IEnumerable<QuestionViewModel> Questions
     {
         get => _questions;
         set

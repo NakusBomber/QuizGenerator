@@ -18,7 +18,7 @@ public class QuestionDetail : Entity
     {
     }
 
-    public QuestionDetail(Guid id, Question? question, string text, IEnumerable<AnswerDetail> answerDetails = null)
+    public QuestionDetail(Guid id, Question? question, string text, IEnumerable<AnswerDetail>? answerDetails = null)
     {
         Id = id;
         QuestionId = question?.Id;

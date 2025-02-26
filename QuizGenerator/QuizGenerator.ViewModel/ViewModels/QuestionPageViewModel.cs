@@ -26,6 +26,19 @@ public class QuestionPageViewModel : ViewModelBase
 		}
 	}
 
+	private bool _isNowSaving;
+
+	public bool IsNowSaving
+	{
+		get => _isNowSaving;
+		set
+		{
+			_isNowSaving = value;
+			OnPropertyChanged();
+		}
+	}
+
+
 	public IAsyncCommand<object?> LoadQuestionCommand { get; }
 	public IAsyncCommand<object?> SaveQuestionCommand { get; }
 
@@ -36,7 +49,10 @@ public class QuestionPageViewModel : ViewModelBase
 		_questionId = id;
 		_unitOfWork = unitOfWork;
 
+		_isNowSaving = false;
+
 		LoadQuestionCommand = AsyncDelegateCommand.Create(LoadQuestionAsync);
+		SaveQuestionCommand = AsyncDelegateCommand.Create(SaveQuestionAsync);
 	}
 
 	private async Task LoadQuestionAsync(CancellationToken token)
@@ -48,11 +64,45 @@ public class QuestionPageViewModel : ViewModelBase
 		else
 		{
 			_question = new Question();
-			await _unitOfWork.QuestionRepository.CreateAsync(_question, token);
-			await _unitOfWork.SaveAsync(token);
 		}
 
 		_questionId = _question.Id;
 		Question = new QuestionViewModel(_question);
+	}
+
+	private async Task SaveQuestionAsync(CancellationToken token)
+	{
+		if (Question != null)
+		{
+			IsNowSaving = true;
+
+			_question = Question.ToQuestion();
+
+			try
+			{
+				await _unitOfWork.QuestionRepository.UpdateAsync(_question, token);
+			}
+			catch (Exception)
+			{
+				await _unitOfWork.QuestionRepository.CreateAsync(_question, token);
+			}
+
+			foreach (var questionDetail in _question.QuestionDetails)
+			{
+				try
+				{
+					await _unitOfWork.QuestionDetailRepository.CreateAsync(questionDetail, token);
+				}
+				catch (Exception)
+				{
+					await _unitOfWork.QuestionDetailRepository.UpdateAsync(questionDetail, token);
+				}
+			}
+
+			await _unitOfWork.SaveAsync(token);
+
+			IsNowSaving = false;
+		}
+
 	}
 }

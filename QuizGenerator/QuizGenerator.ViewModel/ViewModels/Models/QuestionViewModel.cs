@@ -49,9 +49,9 @@ public class QuestionViewModel : ViewModelBase
 		}
 	}
 
-	private IEnumerable<QuestionDetail> _questionDetails;
+	private IEnumerable<QuestionDetailViewModel> _questionDetails;
 
-	public IEnumerable<QuestionDetail> QuestionDetails
+	public IEnumerable<QuestionDetailViewModel> QuestionDetails
 	{
 		get => _questionDetails;
 		set
@@ -74,7 +74,7 @@ public class QuestionViewModel : ViewModelBase
 		_evaluationPrice = question.EvaluationPrice;
 		_listNumber = question.ListNumber;
 		_questionType = question.QuestionType;
-		_questionDetails = new ObservableCollection<QuestionDetail>(question.QuestionDetails);
+		_questionDetails = new ObservableCollection<QuestionDetailViewModel>(question.QuestionDetails.Select(qd => new QuestionDetailViewModel(qd)));
 	}
 
 	public Question ToQuestion()
@@ -85,6 +85,6 @@ public class QuestionViewModel : ViewModelBase
 			_evaluationPrice,
 			_questionType,
 			_listNumber,
-			_questionDetails); 
+			_questionDetails.Select(questionDetailVM => questionDetailVM.ToQuestionDetail())); 
 	}
 }

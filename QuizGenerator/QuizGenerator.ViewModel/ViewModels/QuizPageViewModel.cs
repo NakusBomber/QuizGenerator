@@ -100,9 +100,9 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 			return;
 		}
 
-		for (int i = 0; i < Quiz.Questions.Count; i++)
+		for (int i = 0; i < Quiz.Questions.Count(); i++)
 		{
-			Quiz.Questions[i].ListNumber = i + 1;
+			Quiz.Questions.ElementAt(i).ListNumber = i + 1;
 		}
 	}
 
@@ -116,7 +116,7 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		}
 	}
 
-	private bool CanStartQuiz(object? obj) => Quiz != null && Quiz.Questions.Count > 0;
+	private bool CanStartQuiz(object? obj) => Quiz != null && Quiz.Questions.Count() > 0;
 
 	private async Task LoadQuizAsync(CancellationToken token)
 	{
@@ -190,7 +190,9 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 	{
 		if (obj is QuestionViewModel questionViewModel && Quiz != null)
 		{
-			Quiz.Questions.Remove(questionViewModel);
+			Quiz.Questions = new ObservableCollection<QuestionViewModel>(
+				Quiz.Questions.Where(qVM => qVM.Id != questionViewModel.Id));
+
 			_questionsToDelete.Add(questionViewModel.ToQuestion());
 
 			ChangeAllQuestionNumbers();
@@ -205,7 +207,8 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		{
 			var listNumber = (Quiz.Questions.LastOrDefault()?.ListNumber + 1) ?? minimalNumber;
 			var question = new Question(_quiz, 1, questionType, listNumber);
-			Quiz.Questions.Add(new QuestionViewModel(question));
+			Quiz.Questions = new ObservableCollection<QuestionViewModel>(
+				Quiz.Questions.Append(new QuestionViewModel(question)));
 		}
 	}
 

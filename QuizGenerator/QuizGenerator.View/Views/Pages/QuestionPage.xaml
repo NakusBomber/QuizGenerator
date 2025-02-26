@@ -28,7 +28,11 @@
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
 
-        <ProgressBar Style="{StaticResource SpinnerProgressBarStyle}"
+        <comp:SavingSplash Visibility="{Binding IsNowSaving, Converter={StaticResource BooleanToVisibilityConverter}}"
+                           Grid.Row="0"
+                           d:Visibility="Collapsed"/>
+
+        <ProgressBar Style="{DynamicResource SpinnerProgressBarStyle}"
                      d:Visibility="Collapsed"
                      Visibility="{Binding LoadQuestionCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
                      Grid.Row="0"/>
@@ -37,7 +41,6 @@
               Visibility="{Binding LoadQuestionCommand.Execution.IsCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
               Grid.Row="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -97,27 +100,16 @@
 
             </Grid>
 
-            <Rectangle Fill="Gray"
-                       Width="Auto"
-                       Height="125"
-                       Grid.Row="1"
-                       Margin="20"/>
-            <Button Style="{StaticResource PrimaryButtonStyle}"
-                    Width="140"
-                    Height="40"
-                    Grid.Row="1"
-                    Content="Open"/>
-
             <comp:IconButton VerticalAlignment="Center"
                              HorizontalAlignment="Right"
                              Margin="10 0"
-                             Grid.Row="2"
+                             Grid.Row="1"
                              ToolTip="Add"
                              MaterialIcon="Add"/>
 
 
             <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                          Grid.Row="3"
+                          Grid.Row="2"
                           VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{StaticResource AnswerTestData}"
                               Margin="0 0 10 0">
@@ -152,8 +144,9 @@
             <comp:IconButton VerticalAlignment="Center"
                              HorizontalAlignment="Center"
                              MaterialIcon="ContentSave"
+                             Command="{Binding SaveQuestionCommand}"
                              Content="Save"
-                             Grid.Row="4"/>
+                             Grid.Row="3"/>
         </Grid>
     </Grid>
 </Page>

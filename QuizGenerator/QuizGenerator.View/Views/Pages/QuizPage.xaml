@@ -31,27 +31,9 @@
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
 
-        <Border Background="Black"
-                Panel.ZIndex="1"
-                d:Visibility="Collapsed"
-                Visibility="{Binding IsNowSaving, Converter={StaticResource BooleanToVisibilityConverter}}"
-                Opacity="0.6"
-                Grid.Row="0"/>
-        <Border Background="Transparent"
-                d:Visibility="Collapsed"
-                Visibility="{Binding IsNowSaving, Converter={StaticResource BooleanToVisibilityConverter}}"
-                Panel.ZIndex="2"
-                Grid.Row="0">
-            <StackPanel Orientation="Vertical"
-                        VerticalAlignment="Center">
-                <ProgressBar Style="{DynamicResource SpinnerProgressBarStyle}"/>
-                <Label Content="Saving..."
-                       Margin="0 5 0 0"
-                       HorizontalAlignment="Center"
-                       Style="{DynamicResource HeaderLabelStyle}"
-                       Foreground="{DynamicResource DisableTextBrush}"/>
-            </StackPanel>
-        </Border>
+        <comp:SavingSplash Visibility="{Binding IsNowSaving, Converter={StaticResource BooleanToVisibilityConverter}}"
+                           Grid.Row="0"
+                           d:Visibility="Collapsed"/>
 
         <ProgressBar d:Visibility="Collapsed"
                      Grid.Row="0"
@@ -205,9 +187,9 @@
                         <models:AnswerDetail Text="Red"/>
                     </x:Array>
                     <x:Array x:Key="QuestionDetailsDesignData"
-                             Type="{x:Type models:QuestionDetail}">
-                        <models:QuestionDetail Text="Favourite color?"
-                                               AnswerDetails="{StaticResource AnswerDetailsDesignData}"/>
+                             Type="{x:Type modelsViewModel:QuestionDetailViewModel}">
+                        <modelsViewModel:QuestionDetailViewModel Text="Favourite color?"
+                                                                 AnswerDetails="{StaticResource AnswerDetailsDesignData}"/>
                     </x:Array>
                     <x:Array x:Key="QuestionsDesignData"
                              Type="{x:Type modelsViewModel:QuestionViewModel}">
