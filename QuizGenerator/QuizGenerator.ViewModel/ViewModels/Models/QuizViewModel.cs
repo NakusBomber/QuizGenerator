@@ -9,15 +9,7 @@ public class QuizViewModel : ViewModelBase
 
     private Guid _id;
 
-    public Guid Id
-    {
-        get => _id;
-        set
-        {
-            _id = value;
-            OnPropertyChanged();
-        }
-    }
+    public Guid Id => _id;
 
 
     private string _name;

@@ -3,133 +3,157 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
       xmlns:comp="clr-namespace:QuizGenerator.View.Components"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
+      xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model"
       mc:Ignorable="d"
       Title="Question"
       d:Width="550"
       d:Height="450"
       d:DataContext="{d:DesignInstance vms:QuestionPageViewModel}">
-    <Grid Margin="10">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadQuestionCommand}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding LoadQuestionCommand.CancelCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
 
-        <Grid.Resources>
-            <x:Array x:Key="AnswerTestData"
-                     Type="{x:Type sys:String}">
-                <sys:String>Answer 1</sys:String>
-                <sys:String>Answer 2</sys:String>
-                <sys:String>Answer 3</sys:String>
-                <sys:String>Answer 4</sys:String>
-            </x:Array>
-        </Grid.Resources>
+        <ProgressBar Style="{StaticResource SpinnerProgressBarStyle}"
+                     d:Visibility="Collapsed"
+                     Visibility="{Binding LoadQuestionCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
+                     Grid.Row="0"/>
 
-        <Grid Grid.Row="0">
+        <Grid Margin="10"
+              Visibility="{Binding LoadQuestionCommand.Execution.IsCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
+              Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <ObjectDataProvider x:Key="QuestionTypeEnum"
+                                    ObjectType="{x:Type sys:Enum}"
+                                    MethodName="GetValues">
+                    <ObjectDataProvider.MethodParameters>
+                        <x:Type Type="{x:Type models:QuestionType}"/>
+                    </ObjectDataProvider.MethodParameters>
+                </ObjectDataProvider>
 
-            <Label Style="{StaticResource RequirementLabelStyle}"
-                   Grid.Row="0"
-                   Grid.Column="0"
-                   Content="Question"/>
+                <x:Array x:Key="AnswerTestData"
+                         Type="{x:Type sys:String}">
+                    <sys:String>Answer 1</sys:String>
+                    <sys:String>Answer 2</sys:String>
+                    <sys:String>Answer 3</sys:String>
+                    <sys:String>Answer 4</sys:String>
+                </x:Array>
+            </Grid.Resources>
 
-            <comp:ExtendedTextBox Grid.Column="1"
-                                  Grid.Row="0"
-                                  Margin="10 0"
-                                  Placeholder="Question text"/>
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <Label Style="{StaticResource HeaderLabelStyle}"
-                   Content="Price"
-                   Grid.Row="1"
-                   Grid.Column="0"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
 
-            <comp:ExtendedTextBox Grid.Column="1"
-                                  Grid.Row="1"
-                                  Margin="10 0"
-                                  Placeholder="Integer digit"/>
+                <Label Style="{StaticResource HeaderLabelStyle}"
+                       Content="Price"
+                       Grid.Row="0"
+                       Grid.Column="0"/>
 
-            <Label Style="{StaticResource HeaderLabelStyle}"
-                   Content="Question type"
-                   Grid.Row="2"
-                   Grid.Column="0"/>
+                <comp:ExtendedTextBox Grid.Column="1"
+                                      Grid.Row="0"
+                                      Margin="10 0"
+                                      Text="{Binding Question.EvaluationPrice}"
+                                      Placeholder="Integer digit"/>
 
-            <ComboBox Grid.Row="2"
-                      Grid.Column="1"
-                      Margin="10 0"/>
+                <Label Style="{StaticResource HeaderLabelStyle}"
+                       Content="Question type"
+                       Grid.Row="1"
+                       Grid.Column="0"/>
 
+                <ComboBox Grid.Row="1"
+                          Grid.Column="1"
+                          SelectedItem="{Binding Question.QuestionType}"
+                          ItemsSource="{Binding Source={StaticResource QuestionTypeEnum}}"
+                          Margin="10 0"/>
+
+            </Grid>
+
+            <Rectangle Fill="Gray"
+                       Width="Auto"
+                       Height="125"
+                       Grid.Row="1"
+                       Margin="20"/>
+            <Button Style="{StaticResource PrimaryButtonStyle}"
+                    Width="140"
+                    Height="40"
+                    Grid.Row="1"
+                    Content="Open"/>
+
+            <comp:IconButton VerticalAlignment="Center"
+                             HorizontalAlignment="Right"
+                             Margin="10 0"
+                             Grid.Row="2"
+                             ToolTip="Add"
+                             MaterialIcon="Add"/>
+
+
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                          Grid.Row="3"
+                          VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{StaticResource AnswerTestData}"
+                              Margin="0 0 10 0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type sys:String}">
+                            <Border Background="Transparent"
+                                    Margin="0 10 0 0"
+                                    CornerRadius="8"
+                                    BorderThickness="1"
+                                    BorderBrush="{StaticResource TextBrush}">
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Style="{StaticResource HeaderLabelStyle}"
+                                           Grid.Column="0"
+                                           Content="{Binding}"/>
+
+                                    <comp:IconButton Grid.Column="1"
+                                                     MaterialIcon="Edit"
+                                                     Margin="0 0 5 0"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+
+            <comp:IconButton VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             MaterialIcon="ContentSave"
+                             Content="Save"
+                             Grid.Row="4"/>
         </Grid>
-
-        <Rectangle Fill="Gray"
-                   Width="Auto"
-                   Height="125"
-                   Grid.Row="1"
-                   Margin="20"/>
-        <Button Style="{StaticResource PrimaryButtonStyle}"
-                Width="140"
-                Height="40"
-                Grid.Row="1"
-                Content="Open"/>
-
-        <comp:IconButton VerticalAlignment="Center"
-                         HorizontalAlignment="Right"
-                         Margin="10 0"
-                         Grid.Row="2"
-                         ToolTip="Add"
-                         MaterialIcon="Add"/>
-
-
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                      Grid.Row="3"
-                      VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{StaticResource AnswerTestData}"
-                          Margin="0 0 10 0">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type sys:String}">
-                        <Border Background="Transparent"
-                                Margin="0 10 0 0"
-                                CornerRadius="8"
-                                BorderThickness="1"
-                                BorderBrush="{StaticResource TextBrush}">
-                            <Grid Margin="5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Label Style="{StaticResource HeaderLabelStyle}"
-                                       Grid.Column="0"
-                                       Content="{Binding}"/>
-
-                                <comp:IconButton Grid.Column="1"
-                                                 MaterialIcon="Edit"
-                                                 Margin="0 0 5 0"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-
-
-        <comp:IconButton VerticalAlignment="Center"
-                         HorizontalAlignment="Center"
-                         MaterialIcon="ContentSave"
-                         Content="Save"
-                         Grid.Row="4"/>
     </Grid>
 </Page>

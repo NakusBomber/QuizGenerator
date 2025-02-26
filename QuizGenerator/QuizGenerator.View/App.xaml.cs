@@ -77,7 +77,7 @@ public partial class App : Application
 			new ParameterNavigationService<Guid?, QuestionPageViewModel>(
 				sp.GetRequiredService<NavigationStore>(),
 				sp.GetRequiredService<INavigationJournal>(),
-				p => new QuestionPageViewModel(p)
+				p => new QuestionPageViewModel(p, sp.GetRequiredService<IUnitOfWork>())
 			));
 	}
 

@@ -127,8 +127,6 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		else
 		{
 			_quiz = new Quiz();
-			await _unitOfWork.QuizRepository.CreateAsync(_quiz, token);
-			await _unitOfWork.SaveAsync(token);
 		}
 
 		_quizId = _quiz.Id;
@@ -144,14 +142,22 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 			IsNowSaving = true;
 
 			_quiz = Quiz.ToQuiz();
-			
+
+			try
+			{
+				await _unitOfWork.QuizRepository.UpdateAsync(_quiz, token);
+			}
+			catch (Exception)
+			{
+				await _unitOfWork.QuizRepository.CreateAsync(_quiz, token);
+			}
+
 			foreach (var question in _questionsToDelete)
 			{
 				await _unitOfWork.QuestionRepository.DeleteAsync(question, token);
 			}
 			_questionsToDelete.Clear();
 
-			await _unitOfWork.QuizRepository.UpdateAsync(_quiz, token);
 			foreach (var question in _quiz.Questions)
 			{
 				try
