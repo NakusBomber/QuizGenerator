@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\QuizGenerator.DAL\QuizGenerator.DAL.csproj" />
     <ProjectReference Include="..\QuizGenerator.ViewModel\QuizGenerator.ViewModel.csproj" />
   </ItemGroup>
 
