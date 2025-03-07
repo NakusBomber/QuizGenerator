@@ -24,8 +24,6 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 	private readonly IParameterNavigationService<Guid?, TrainingViewModel> _trainingNavigationService;
 	private readonly IParameterNavigationService<Guid?, QuestionPageViewModel> _questionNavigationService;
 
-	private List<Question> _questionsToDelete = new();
-
 	private Guid? _quizId;
 	private Quiz? _quiz;
 
@@ -118,7 +116,7 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		}
 	}
 
-	private bool CanStartQuiz(object? obj) => Quiz != null && Quiz.Questions.Count() > 0;
+	private bool CanStartQuiz(object? obj) => Quiz != null && Quiz.Questions.Any();
 
 	private async Task LoadQuizAsync(CancellationToken token)
 	{
