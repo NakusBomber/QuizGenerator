@@ -6,8 +6,7 @@ namespace QuizGenerator.ViewModel.ViewModels.Models;
 
 public class QuestionDetailViewModel : ViewModelBase
 {
-	private Question? _question;
-
+	private Guid? _questionId;
 	private Guid _id;
 
 	public Guid Id => _id;
@@ -45,17 +44,16 @@ public class QuestionDetailViewModel : ViewModelBase
 	public QuestionDetailViewModel(QuestionDetail questionDetail)
 	{
 		_id = questionDetail.Id;
-		_question = questionDetail.Question;
+		_questionId = questionDetail.QuestionId;
 		_text = questionDetail.Text;
 		_answerDetails = new ObservableCollection<AnswerDetail>(questionDetail.AnswerDetails);
 	}
 
-	public QuestionDetail ToQuestionDetail()
+	public void CopyToQuestionDetail(QuestionDetail questionDetail)
 	{
-		return new QuestionDetail(
-			Id,
-			_question,
-			_text,
-			_answerDetails);
+		ArgumentNullException.ThrowIfNull(questionDetail);
+
+		questionDetail.QuestionId = _questionId;
+		questionDetail.Text = _text;
 	}
 }

@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using QuizGenerator.DAL;
 using QuizGenerator.Model.Entities;
 using QuizGenerator.Model.Interfaces;
-using QuizGenerator.Model.Models.Fakes;
 using QuizGenerator.View.Helpers;
 using QuizGenerator.View.Views.Windows;
 using QuizGenerator.ViewModel.Commands;
@@ -45,14 +46,43 @@ public partial class App : Application
 	{
 		services.AddSingleton<StartWindow>();
 
+		ConfigureApplicationContext(services);
+
+		ConfigureRepositories(services);
+
 		ConfigureUnitOfWork(services);
 
 		ConfigureNavigation(services);
 	}
 
+	private void ConfigureApplicationContext(IServiceCollection services)
+	{
+		var debug = true;
+		ApplicationContext context;
+		if (debug)
+		{
+			context = new InMemoryApplicationContext();
+		}
+		else
+		{
+			context = new ApplicationContext();
+			context.Database.Migrate();
+		}
+
+		services.AddSingleton(context);
+	}
+
+	private void ConfigureRepositories(IServiceCollection services)
+	{
+		services.AddSingleton<IRepository<Quiz>, GeneralRepository<Quiz>>();
+		services.AddSingleton<IRepository<Question>, GeneralRepository<Question>>();
+		services.AddSingleton<IRepository<QuestionDetail>, GeneralRepository<QuestionDetail>>();
+		services.AddSingleton<IRepository<AnswerDetail>, GeneralRepository<AnswerDetail>>();
+	}
+
 	private void ConfigureUnitOfWork(IServiceCollection services)
 	{
-		services.AddSingleton<IUnitOfWork>(TestData.GetUnitOfWork(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2)));
+		services.AddSingleton<IUnitOfWork, UnitOfWork>();
 	}
 
 	private void ConfigureNavigation(IServiceCollection services)

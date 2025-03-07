@@ -1,8 +1,15 @@
-﻿namespace QuizGenerator.Model.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace QuizGenerator.Model.Entities;
+
+[Table("Quizes")]
 public class Quiz : Entity
 {
+    [Key]
     public override Guid Id { get; set; }
+
+    [Required]
     public string Name { get; set; }
     public DateTime DateTimeCreated { get; set; }
     public DateTime DateTimeChanged { get; set; }

@@ -8,6 +8,9 @@ using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -52,13 +55,12 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 
 
 	public ICommand OpenDropDownQuestionTypesCommand { get; }
-	public ICommand AddNewQuestionCommand { get; }
-	public ICommand DeleteQuestionCommand { get; }
 
-	
 	public IAsyncCommand<object?> StartQuizCommand { get; }
 	public IAsyncCommand<object?> LoadQuizCommand { get; }
 	public IAsyncCommand<object?> SaveQuizCommand { get; }
+	public IAsyncCommand<object?> AddNewQuestionCommand { get; }
+	public IAsyncCommand<object?> DeleteQuestionCommand { get; }
 	public IAsyncCommand<object?> EditQuestionCommand { get; }
 
 	public QuizPageViewModel(
@@ -78,11 +80,11 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		LoadQuizCommand = AsyncDelegateCommand.Create(LoadQuizAsync);
 		SaveQuizCommand = AsyncDelegateCommand.Create(SaveQuizAsync, (o) => Quiz != null);
 		StartQuizCommand = AsyncDelegateCommand.Create(StartQuizAsync, CanStartQuiz);
+		AddNewQuestionCommand = AsyncDelegateCommand.Create(AddNewQuestion, CanAddNewQuestion);
 		EditQuestionCommand = AsyncDelegateCommand.Create(OpenEditQuestionPageAsync);
+		DeleteQuestionCommand = AsyncDelegateCommand.Create(DeleteQuestion);
 		
-		DeleteQuestionCommand = new DelegateCommand(DeleteQuestion);
 		OpenDropDownQuestionTypesCommand = new DelegateCommand(OpenDropDownQuestionTypes, CanAddNewQuestion);
-		AddNewQuestionCommand = new DelegateCommand(AddNewQuestion, CanAddNewQuestion);
 	}
 
 	public void Drop(IDropInfo dropInfo)
@@ -122,7 +124,7 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 	{
 		if (_quizId is Guid id)
 		{
-			_quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, token);
+			_quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, token: token);
 		}
 		else
 		{
@@ -137,38 +139,21 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 
 	private async Task SaveQuizAsync(CancellationToken token)
 	{
-		if (Quiz != null)
+		if (Quiz != null && _quiz != null)
 		{
 			IsNowSaving = true;
 
-			_quiz = Quiz.ToQuiz();
+			Quiz.CopyToQuiz(_quiz);
 
-			try
+			await _unitOfWork.QuizRepository.UpdateOrCreateAsync(_quiz, token);
+
+			foreach (var questionVM in Quiz.Questions)
 			{
-				await _unitOfWork.QuizRepository.UpdateAsync(_quiz, token);
-			}
-			catch (Exception)
-			{
-				await _unitOfWork.QuizRepository.CreateAsync(_quiz, token);
+				var question = await _unitOfWork.QuestionRepository.GetByIdAsync(questionVM.Id);
+				questionVM.CopyToQuestion(question);
+				await _unitOfWork.QuestionRepository.UpdateAsync(question, token);
 			}
 
-			foreach (var question in _questionsToDelete)
-			{
-				await _unitOfWork.QuestionRepository.DeleteAsync(question, token);
-			}
-			_questionsToDelete.Clear();
-
-			foreach (var question in _quiz.Questions)
-			{
-				try
-				{
-					await _unitOfWork.QuestionRepository.CreateAsync(question, token);
-				}
-				catch (Exception)
-				{
-					await _unitOfWork.QuestionRepository.UpdateAsync(question, token);
-				}
-			}
 			await _unitOfWork.SaveAsync(token);
 
 			IsNowSaving = false;
@@ -186,27 +171,33 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		}
 	}
 
-	private void DeleteQuestion(object? obj)
+	private async Task DeleteQuestion(object? obj, CancellationToken token)
 	{
 		if (obj is QuestionViewModel questionViewModel && Quiz != null)
 		{
+			var question = await _unitOfWork.QuestionRepository.GetByIdAsync(questionViewModel.Id);
+			await _unitOfWork.QuestionRepository.DeleteAsync(question);
+			await _unitOfWork.SaveAsync(token);
+
 			Quiz.Questions = new ObservableCollection<QuestionViewModel>(
 				Quiz.Questions.Where(qVM => qVM.Id != questionViewModel.Id));
-
-			_questionsToDelete.Add(questionViewModel.ToQuestion());
 
 			ChangeAllQuestionNumbers();
 		}
 	}
 
-	private void AddNewQuestion(object? obj)
+	private async Task AddNewQuestion(object? obj, CancellationToken token)
 	{
 		var minimalNumber = 1;
 
 		if (obj is QuestionType questionType && _quiz != null && Quiz != null)
 		{
 			var listNumber = (Quiz.Questions.LastOrDefault()?.ListNumber + 1) ?? minimalNumber;
-			var question = new Question(_quiz, 1, questionType, listNumber);
+			var question = new Question(_quizId, 1, questionType, listNumber);
+
+			await _unitOfWork.QuestionRepository.CreateAsync(question, token);
+			await _unitOfWork.SaveAsync(token);
+
 			Quiz.Questions = new ObservableCollection<QuestionViewModel>(
 				Quiz.Questions.Append(new QuestionViewModel(question)));
 		}

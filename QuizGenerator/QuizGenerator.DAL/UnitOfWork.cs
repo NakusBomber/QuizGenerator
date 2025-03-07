@@ -1,34 +1,25 @@
 ﻿using QuizGenerator.Model.Entities;
 using QuizGenerator.Model.Interfaces;
 
-namespace QuizGenerator.Model.Models.Fakes;
+namespace QuizGenerator.DAL;
 
-public class UnitOfWorkFake : IUnitOfWork
+public class UnitOfWork : IUnitOfWork
 {
-	private readonly TimeSpan _saveDelay;
+	private readonly ApplicationContext _context;
 
 	public IRepository<Quiz> QuizRepository { get; }
 	public IRepository<Question> QuestionRepository { get; }
 	public IRepository<QuestionDetail> QuestionDetailRepository { get; }
 	public IRepository<AnswerDetail> AnswerDetailRepository { get; }
 
-	public UnitOfWorkFake(TimeSpan saveDelay, TimeSpan delay)
-		: this(saveDelay, 
-			  new RepositoryFake<Quiz>(delay), 
-			  new RepositoryFake<Question>(delay),
-			  new RepositoryFake<QuestionDetail>(delay),
-			  new RepositoryFake<AnswerDetail>(delay))
-	{
-	}
-
-	public UnitOfWorkFake(
-		TimeSpan saveDelay,
+	public UnitOfWork(
+		ApplicationContext context,
 		IRepository<Quiz> quizRepository,
 		IRepository<Question> questionRepository,
 		IRepository<QuestionDetail> questionDetailRepository,
 		IRepository<AnswerDetail> answerDetailRepository)
 	{
-		_saveDelay = saveDelay;
+		_context = context;
 
 		QuizRepository = quizRepository;
 		QuestionRepository = questionRepository;
@@ -38,6 +29,6 @@ public class UnitOfWorkFake : IUnitOfWork
 
 	public async Task SaveAsync(CancellationToken token)
 	{
-		await Task.Delay(_saveDelay, token);
+		await _context.SaveChangesAsync(token);
 	}
 }

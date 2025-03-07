@@ -5,6 +5,7 @@ using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace QuizGenerator.ViewModel.ViewModels;
 
@@ -59,7 +60,7 @@ public class QuestionPageViewModel : ViewModelBase
 	{
 		if (_questionId is Guid id)
 		{
-			_question = await _unitOfWork.QuestionRepository.GetByIdAsync(id, token);
+			_question = await _unitOfWork.QuestionRepository.GetByIdAsync(id, token: token);
 		}
 		else
 		{
@@ -76,7 +77,7 @@ public class QuestionPageViewModel : ViewModelBase
 		{
 			IsNowSaving = true;
 
-			_question = Question.ToQuestion();
+			//_question = Question.ToQuestion();
 
 			try
 			{

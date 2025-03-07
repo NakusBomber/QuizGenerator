@@ -1,10 +1,18 @@
-﻿namespace QuizGenerator.Model.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace QuizGenerator.Model.Entities;
+
+[Table("Questions")]
 public class Question : Entity
 {
+    [Key]
     public override Guid Id { get; set; }
+
     public Guid? QuizId { get; set; }
+    [ForeignKey(nameof(QuizId))]
     public Quiz? Quiz { get; set; }
+
     public int EvaluationPrice { get; set; }
     public int ListNumber { get; set; }
     public QuestionType QuestionType { get; set; }
@@ -17,13 +25,13 @@ public class Question : Entity
     }
 
     public Question(
-        Quiz? quiz,
+        Guid? quizId,
         int price,
         QuestionType questionType,
         int listNumber,
         IEnumerable<QuestionDetail>? questionDetails = null)
         : this(Guid.NewGuid(),
-                quiz,
+                quizId,
                 price,
                 questionType,
                 listNumber,
@@ -32,15 +40,14 @@ public class Question : Entity
 
     public Question(
         Guid id,
-        Quiz? quiz,
+        Guid? quizId,
         int price,
         QuestionType questionType,
         int listNumber,
         IEnumerable<QuestionDetail> questionDetails)
     {
         Id = id;
-        QuizId = quiz?.Id;
-        Quiz = quiz;
+        QuizId = quizId;
         EvaluationPrice = price;
         QuestionType = questionType;
         ListNumber = listNumber;

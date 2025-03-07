@@ -69,6 +69,20 @@ public class QuizViewModel : ViewModelBase
         }
     }
 
+    private DateTime? _dateTimeLastPractice;
+
+    public DateTime? DateTimeLastPractice
+    {
+        get => _dateTimeLastPractice;
+        set
+        {
+            _dateTimeLastPractice = value;
+            OnPropertyChanged();
+        }
+    }
+
+
+
     private IEnumerable<QuestionViewModel> _questions;
 
     public IEnumerable<QuestionViewModel> Questions
@@ -93,19 +107,20 @@ public class QuizViewModel : ViewModelBase
         _dateTimeCreated = quiz.DateTimeCreated;
         _dateTimeChanged = quiz.DateTimeChanged;
         _isNeedInterval = quiz.IntervalPractice != null;
+        _dateTimeLastPractice = quiz.DateTimeLastPractice;
         _interval = quiz.IntervalPractice;
-        _questions = new ObservableCollection<QuestionViewModel>(quiz.Questions.Select(q => new QuestionViewModel(q)));
+        _questions = new ObservableCollection<QuestionViewModel>(
+            quiz.Questions.Select(q => new QuestionViewModel(q)));
     }
 
-    public Quiz ToQuiz()
+    public void CopyToQuiz(Quiz quiz)
     {
-        return new Quiz(
-            _id,
-            _name,
-            _dateTimeCreated,
-            _dateTimeChanged,
-            null,
-            _interval,
-            _questions.Select(qVM => qVM.ToQuestion()));
+		ArgumentNullException.ThrowIfNull(quiz);
+
+		quiz.Name = _name;
+        quiz.DateTimeCreated = _dateTimeCreated;
+        quiz.DateTimeChanged = _dateTimeChanged;
+        quiz.IntervalPractice = _interval;
+        quiz.DateTimeLastPractice = _dateTimeLastPractice;
     }
 }

@@ -1,10 +1,18 @@
-﻿namespace QuizGenerator.Model.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace QuizGenerator.Model.Entities;
+
+[Table("AnswerDetails")]
 public class AnswerDetail : Entity
 {
+    [Key]
     public override Guid Id { get; set; }
+
     public Guid? QuestionDetailId { get; set; }
+    [ForeignKey(nameof(QuestionDetailId))]
     public QuestionDetail? QuestionDetail { get; set; }
+
     public string Text { get; set; }
     public bool IsCorrect { get; set; }
 
@@ -13,15 +21,14 @@ public class AnswerDetail : Entity
     {
     }
 
-    public AnswerDetail(QuestionDetail? questionDetail, string? text = null, bool isCorrect = false)
-        : this(Guid.NewGuid(), questionDetail, text ?? string.Empty, isCorrect)
+    public AnswerDetail(Guid? questionDetailId, string? text = null, bool isCorrect = false)
+        : this(Guid.NewGuid(), questionDetailId, text ?? string.Empty, isCorrect)
     { }
 
-    public AnswerDetail(Guid id, QuestionDetail? questionDetail, string text, bool isCorrect)
+    public AnswerDetail(Guid id, Guid? questionDetailId, string text, bool isCorrect)
     {
         Id = id;
-        QuestionDetailId = questionDetail?.Id;
-        QuestionDetail = questionDetail;
+        QuestionDetailId = questionDetailId;
         Text = text;
         IsCorrect = isCorrect;
     }

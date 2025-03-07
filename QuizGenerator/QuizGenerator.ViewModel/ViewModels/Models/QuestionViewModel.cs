@@ -77,14 +77,13 @@ public class QuestionViewModel : ViewModelBase
 		_questionDetails = new ObservableCollection<QuestionDetailViewModel>(question.QuestionDetails.Select(qd => new QuestionDetailViewModel(qd)));
 	}
 
-	public Question ToQuestion()
+	public void CopyToQuestion(Question question)
 	{
-		return new Question(
-			_id,
-			_quiz,
-			_evaluationPrice,
-			_questionType,
-			_listNumber,
-			_questionDetails.Select(questionDetailVM => questionDetailVM.ToQuestionDetail())); 
+		ArgumentNullException.ThrowIfNull(question);
+
+		question.QuizId = _quizId;
+		question.EvaluationPrice = _evaluationPrice;
+		question.QuestionType = _questionType;
+		question.ListNumber = _listNumber;
 	}
 }
