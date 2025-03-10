@@ -24,9 +24,9 @@ public class QuestionDetailViewModel : ViewModelBase
 	}
 
 
-	private IEnumerable<AnswerDetail> _answerDetails;
+	private ICollection<AnswerDetail> _answerDetails;
 
-	public IEnumerable<AnswerDetail> AnswerDetails
+	public ICollection<AnswerDetail> AnswerDetails
 	{
 		get => _answerDetails;
 		set

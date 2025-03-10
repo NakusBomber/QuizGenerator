@@ -83,9 +83,9 @@ public class QuizViewModel : ViewModelBase
 
 
 
-    private IEnumerable<QuestionViewModel> _questions;
+    private ICollection<QuestionViewModel> _questions;
 
-    public IEnumerable<QuestionViewModel> Questions
+    public ICollection<QuestionViewModel> Questions
     {
         get => _questions;
         set

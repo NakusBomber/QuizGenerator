@@ -95,7 +95,7 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 			return;
 		}
 
-		for (int i = 0; i < Quiz.Questions.Count(); i++)
+		for (int i = 0; i < Quiz.Questions.Count; i++)
 		{
 			Quiz.Questions.ElementAt(i).ListNumber = i + 1;
 		}
@@ -142,7 +142,7 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 
 			foreach (var questionVM in Quiz.Questions)
 			{
-				var question = await _unitOfWork.QuestionRepository.GetByIdAsync(questionVM.Id);
+				var question = await _unitOfWork.QuestionRepository.GetByIdAsync(questionVM.Id, token: token);
 				questionVM.CopyToQuestion(question);
 				await _unitOfWork.QuestionRepository.UpdateAsync(question, token);
 			}
@@ -172,9 +172,8 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 			await _unitOfWork.QuestionRepository.DeleteAsync(question);
 			await _unitOfWork.SaveAsync(token);
 
-			Quiz.Questions = new ObservableCollection<QuestionViewModel>(
-				Quiz.Questions.Where(qVM => qVM.Id != questionViewModel.Id));
-
+			Quiz.Questions.Remove(questionViewModel);
+			
 			ChangeAllQuestionNumbers();
 		}
 	}
@@ -191,8 +190,7 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 			await _unitOfWork.QuestionRepository.CreateAsync(question, token);
 			await _unitOfWork.SaveAsync(token);
 
-			Quiz.Questions = new ObservableCollection<QuestionViewModel>(
-				Quiz.Questions.Append(new QuestionViewModel(question)));
+			Quiz.Questions.Add(new QuestionViewModel(question));
 		}
 	}
 

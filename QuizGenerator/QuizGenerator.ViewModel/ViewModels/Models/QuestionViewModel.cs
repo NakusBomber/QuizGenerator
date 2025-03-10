@@ -49,9 +49,9 @@ public class QuestionViewModel : ViewModelBase
 		}
 	}
 
-	private IEnumerable<QuestionDetailViewModel> _questionDetails;
+	private ICollection<QuestionDetailViewModel> _questionDetails;
 
-	public IEnumerable<QuestionDetailViewModel> QuestionDetails
+	public ICollection<QuestionDetailViewModel> QuestionDetails
 	{
 		get => _questionDetails;
 		set
@@ -74,7 +74,8 @@ public class QuestionViewModel : ViewModelBase
 		_evaluationPrice = question.EvaluationPrice;
 		_listNumber = question.ListNumber;
 		_questionType = question.QuestionType;
-		_questionDetails = new ObservableCollection<QuestionDetailViewModel>(question.QuestionDetails.Select(qd => new QuestionDetailViewModel(qd)));
+		_questionDetails = new ObservableCollection<QuestionDetailViewModel>(
+			question.QuestionDetails.Select(qd => new QuestionDetailViewModel(qd)));
 	}
 
 	public void CopyToQuestion(Question question)
