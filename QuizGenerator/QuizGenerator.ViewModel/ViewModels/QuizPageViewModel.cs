@@ -1,17 +1,12 @@
 ﻿using GongSolutions.Wpf.DragDrop;
 using QuizGenerator.Model.Entities;
 using QuizGenerator.Model.Interfaces;
-using QuizGenerator.ViewModel.Commands;
 using QuizGenerator.ViewModel.Commands.Bases;
 using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -78,9 +73,9 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		LoadQuizCommand = AsyncDelegateCommand.Create(LoadQuizAsync);
 		SaveQuizCommand = AsyncDelegateCommand.Create(SaveQuizAsync, (o) => Quiz != null);
 		StartQuizCommand = AsyncDelegateCommand.Create(StartQuizAsync, CanStartQuiz);
-		AddNewQuestionCommand = AsyncDelegateCommand.Create(AddNewQuestion, CanAddNewQuestion);
+		AddNewQuestionCommand = AsyncDelegateCommand.Create(AddNewQuestionAsync, CanAddNewQuestion);
 		EditQuestionCommand = AsyncDelegateCommand.Create(OpenEditQuestionPageAsync);
-		DeleteQuestionCommand = AsyncDelegateCommand.Create(DeleteQuestion);
+		DeleteQuestionCommand = AsyncDelegateCommand.Create(DeleteQuestionAsync);
 		
 		OpenDropDownQuestionTypesCommand = new DelegateCommand(OpenDropDownQuestionTypes, CanAddNewQuestion);
 	}
@@ -169,7 +164,7 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		}
 	}
 
-	private async Task DeleteQuestion(object? obj, CancellationToken token)
+	private async Task DeleteQuestionAsync(object? obj, CancellationToken token)
 	{
 		if (obj is QuestionViewModel questionViewModel && Quiz != null)
 		{
@@ -184,7 +179,7 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		}
 	}
 
-	private async Task AddNewQuestion(object? obj, CancellationToken token)
+	private async Task AddNewQuestionAsync(object? obj, CancellationToken token)
 	{
 		var minimalNumber = 1;
 
