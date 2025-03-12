@@ -6,18 +6,16 @@ namespace QuizGenerator.Model.Entities;
 [Table("Questions")]
 public class Question : Entity
 {
-    [Key]
     public override Guid Id { get; set; }
 
     public Guid? QuizId { get; set; }
-    [ForeignKey(nameof(QuizId))]
-    public Quiz? Quiz { get; set; }
+    public virtual Quiz? Quiz { get; set; }
 
     public int EvaluationPrice { get; set; }
     public int ListNumber { get; set; }
     public QuestionType QuestionType { get; set; }
 
-    public IEnumerable<QuestionDetail> QuestionDetails { get; set; }
+    public virtual IEnumerable<QuestionDetail> QuestionDetails { get; set; }
 
     public Question()
         : this(null, 1, QuestionType.OneMore, 0)

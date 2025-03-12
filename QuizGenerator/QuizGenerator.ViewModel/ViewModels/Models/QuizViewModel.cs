@@ -1,6 +1,7 @@
 ﻿using QuizGenerator.Model.Entities;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace QuizGenerator.ViewModel.ViewModels.Models;
 
@@ -109,8 +110,7 @@ public class QuizViewModel : ViewModelBase
         _isNeedInterval = quiz.IntervalPractice != null;
         _dateTimeLastPractice = quiz.DateTimeLastPractice;
         _interval = quiz.IntervalPractice;
-        _questions = new ObservableCollection<QuestionViewModel>(
-            quiz.Questions.Select(q => new QuestionViewModel(q)));
+        _questions = new ObservableCollection<QuestionViewModel>();
     }
 
     public void CopyToQuiz(Quiz quiz)

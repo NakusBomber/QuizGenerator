@@ -7,6 +7,9 @@ using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -18,9 +21,13 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 	private readonly IDropTarget _dropHandler;
 	private readonly IParameterNavigationService<Guid?, TrainingViewModel> _trainingNavigationService;
 	private readonly IParameterNavigationService<Guid?, QuestionPageViewModel> _questionNavigationService;
+	private readonly IBackNavigationService _backNavigationService;
 
+	private readonly PropertyChangedEventHandler _propertyChangedHandler;
+	private readonly ICollection<Question> _newQuestions;
 	private Guid? _quizId;
 	private Quiz? _quiz;
+	
 
 	private QuizViewModel? _quizViewModel;
 
@@ -46,12 +53,25 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		}
 	}
 
+	private bool _isNeedSaving;
+
+	public bool IsNeedSaving
+	{
+		get => _isNeedSaving;
+		set
+		{
+			_isNeedSaving = value;
+			OnPropertyChanged();
+		}
+	}
+
 
 	public ICommand OpenDropDownQuestionTypesCommand { get; }
 
 	public IAsyncCommand<object?> StartQuizCommand { get; }
 	public IAsyncCommand<object?> LoadQuizCommand { get; }
 	public IAsyncCommand<object?> SaveQuizCommand { get; }
+	public IAsyncCommand<object?> DeleteQuizCommand { get; }
 	public IAsyncCommand<object?> AddNewQuestionCommand { get; }
 	public IAsyncCommand<object?> DeleteQuestionCommand { get; }
 	public IAsyncCommand<object?> EditQuestionCommand { get; }
@@ -60,30 +80,47 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		Guid? id,
 		IUnitOfWork unitOfWork,
 		IParameterNavigationService<Guid?, TrainingViewModel> trainingNavigationService,
-		IParameterNavigationService<Guid?, QuestionPageViewModel> questionNavigationService)
+		IParameterNavigationService<Guid?, QuestionPageViewModel> questionNavigationService,
+		IBackNavigationService backNavigationService)
 	{
 		_unitOfWork = unitOfWork;
 		_dropHandler = new DefaultDropHandler();
 		_trainingNavigationService = trainingNavigationService;
 		_questionNavigationService = questionNavigationService;
+		_backNavigationService = backNavigationService;
 
+		_propertyChangedHandler = (s, a) => IsNeedSaving = true;
 		_quizId = id;
 		_isNowSaving = false;
+		_isNeedSaving = false;
+		_newQuestions = new List<Question>();
 
 		LoadQuizCommand = AsyncDelegateCommand.Create(LoadQuizAsync);
-		SaveQuizCommand = AsyncDelegateCommand.Create(SaveQuizAsync, (o) => Quiz != null);
+		SaveQuizCommand = AsyncDelegateCommand.Create(SaveQuizAsync, o => Quiz != null && IsNeedSaving);
+		DeleteQuizCommand = AsyncDelegateCommand.Create(DeleteQuizAsync, o => Quiz != null);
 		StartQuizCommand = AsyncDelegateCommand.Create(StartQuizAsync, CanStartQuiz);
 		AddNewQuestionCommand = AsyncDelegateCommand.Create(AddNewQuestionAsync, CanAddNewQuestion);
 		EditQuestionCommand = AsyncDelegateCommand.Create(OpenEditQuestionPageAsync);
 		DeleteQuestionCommand = AsyncDelegateCommand.Create(DeleteQuestionAsync);
 		
 		OpenDropDownQuestionTypesCommand = new DelegateCommand(OpenDropDownQuestionTypes, CanAddNewQuestion);
+
+	}
+
+	~QuizPageViewModel()
+	{
+		if (Quiz != null)
+		{
+			Quiz.PropertyChanged -= _propertyChangedHandler;
+		}
 	}
 
 	public void Drop(IDropInfo dropInfo)
 	{
 		_dropHandler.Drop(dropInfo);
 		ChangeAllQuestionNumbers();
+		IsNeedSaving = true;
+		CommandManager.InvalidateRequerySuggested();
 	}
 
 	public void DragOver(IDropInfo dropInfo) => _dropHandler.DragOver(dropInfo);
@@ -103,10 +140,13 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 
 	private async Task StartQuizAsync(CancellationToken token)
 	{
-		if (SaveQuizCommand.CanExecute(null) && Quiz != null)
+		if (SaveQuizCommand.CanExecute(null))
 		{
 			await SaveQuizCommand.ExecuteAsync(null);
+		}
 
+		if (Quiz != null)
+		{
 			_trainingNavigationService.Navigate(Quiz.Id);
 		}
 	}
@@ -115,51 +155,105 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 
 	private async Task LoadQuizAsync(CancellationToken token)
 	{
-		if (_quizId is Guid id)
+		await Task.Run(async () =>
 		{
-			_quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, token: token);
-		}
-		else
-		{
-			_quiz = new Quiz();
-		}
+			if (_quizId is Guid id)
+			{
+				_quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, token);
+			}
+			else
+			{
+				_quiz = new Quiz();
+			}
 
-		_quizId = _quiz.Id;
-		Quiz = new QuizViewModel(_quiz);
-		Quiz.Questions = new ObservableCollection<QuestionViewModel>(
-			Quiz.Questions.OrderBy(qVM => qVM.ListNumber));
+			_quizId = _quiz.Id;
+
+			var questionViewModels = _quiz.Questions
+				.Select(q => new QuestionViewModel(q))
+				.OrderBy(q => q.ListNumber);
+
+			Application.Current.Dispatcher.Invoke(() =>
+			{
+				Quiz = new QuizViewModel(_quiz);
+				Quiz.Questions = new ObservableCollection<QuestionViewModel>(questionViewModels);
+
+				Quiz.PropertyChanged += _propertyChangedHandler;
+			});
+
+		}, token);
 	}
 
 	private async Task SaveQuizAsync(CancellationToken token)
 	{
-		if (Quiz != null && _quiz != null)
+		if (Quiz == null || _quiz == null)
 		{
-			IsNowSaving = true;
+			return;
+		}
 
+		IsNowSaving = true;
+
+		await Task.Run(async () =>
+		{
 			Quiz.CopyToQuiz(_quiz);
 
 			await _unitOfWork.QuizRepository.UpdateOrCreateAsync(_quiz, token);
 
+			
 			foreach (var questionVM in Quiz.Questions)
 			{
-				var question = await _unitOfWork.QuestionRepository.GetByIdAsync(questionVM.Id, token: token);
-				questionVM.CopyToQuestion(question);
-				await _unitOfWork.QuestionRepository.UpdateAsync(question, token);
+				if (_newQuestions.FirstOrDefault(q => q.Id == questionVM.Id) is Question newQuestion)
+				{
+					questionVM.CopyToQuestion(newQuestion);
+					await _unitOfWork.QuestionRepository.CreateAsync(newQuestion, token);
+				}
+				else
+				{
+					var question = await _unitOfWork.QuestionRepository.GetByIdAsync(questionVM.Id, token);
+					questionVM.CopyToQuestion(question);
+					await _unitOfWork.QuestionRepository.UpdateAsync(question, token);
+				}
 			}
 
+			_newQuestions.Clear();
 			await _unitOfWork.SaveAsync(token);
+		}, token);
 
-			IsNowSaving = false;
+		IsNowSaving = false;
+		IsNeedSaving = false;
+	}
+
+	private async Task DeleteQuizAsync(CancellationToken token)
+	{
+		if (Quiz == null || _quiz == null)
+		{
+			return;
+		}
+
+		try
+		{
+			var quiz = await _unitOfWork.QuizRepository.GetByIdAsync(Quiz.Id, token);
+			await _unitOfWork.QuizRepository.DeleteAsync(quiz, token);
+
+			await _unitOfWork.SaveAsync(token);
+		}
+		catch (InvalidOperationException)
+		{
+		}
+		finally
+		{
+			_backNavigationService.Navigate();
 		}
 	}
 
 	private async Task OpenEditQuestionPageAsync(object? parameter, CancellationToken token)
 	{
-		if (SaveQuizCommand.CanExecute(null) &&
-			parameter is QuestionViewModel questionViewModel)
+		if (SaveQuizCommand.CanExecute(null))
 		{
 			await SaveQuizCommand.ExecuteAsync(null);
+		}
 
+		if (parameter is QuestionViewModel questionViewModel)
+		{
 			_questionNavigationService.Navigate(questionViewModel.Id);
 		}
 	}
@@ -170,28 +264,29 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		{
 			var question = await _unitOfWork.QuestionRepository.GetByIdAsync(questionViewModel.Id);
 			await _unitOfWork.QuestionRepository.DeleteAsync(question);
-			await _unitOfWork.SaveAsync(token);
 
 			Quiz.Questions.Remove(questionViewModel);
 			
 			ChangeAllQuestionNumbers();
+			IsNeedSaving = true;
 		}
 	}
 
-	private async Task AddNewQuestionAsync(object? obj, CancellationToken token)
+	private Task AddNewQuestionAsync(object? obj, CancellationToken token)
 	{
 		var minimalNumber = 1;
 
 		if (obj is QuestionType questionType && _quiz != null && Quiz != null)
 		{
 			var listNumber = (Quiz.Questions.LastOrDefault()?.ListNumber + 1) ?? minimalNumber;
-			var question = new Question(_quizId, 1, questionType, listNumber);
+			var question = new Question(_quiz.Id, 1, questionType, listNumber);
 
-			await _unitOfWork.QuestionRepository.CreateAsync(question, token);
-			await _unitOfWork.SaveAsync(token);
+			_newQuestions.Add(question);
 
 			Quiz.Questions.Add(new QuestionViewModel(question));
+			IsNeedSaving = true;
 		}
+		return Task.CompletedTask;
 	}
 
 	private void OpenDropDownQuestionTypes(object? obj)

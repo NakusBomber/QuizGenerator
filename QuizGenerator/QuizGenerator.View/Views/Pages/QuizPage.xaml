@@ -13,9 +13,14 @@
       xmlns:modelsViewModel="clr-namespace:QuizGenerator.ViewModel.ViewModels.Models;assembly=QuizGenerator.ViewModel"
       xmlns:dd="urn:gong-wpf-dragdrop"
       xmlns:viewModels="clr-namespace:QuizGenerator.View.Models"
+      FocusManager.IsFocusScope="True"
       mc:Ignorable="d"
       d:DataContext="{d:DesignInstance vms:QuizPageViewModel}"
       Title="Quiz" d:DesignWidth="517.601">
+    <Page.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveQuizCommand}"/>
+    </Page.InputBindings>
+
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadQuizCommand}"/>
@@ -74,7 +79,7 @@
                 <comp:ExtendedTextBox Grid.Column="1"
                                       Grid.Row="0"
                                       Margin="10 0"
-                                      Text="{Binding Quiz.Name}"
+                                      Text="{Binding Quiz.Name, UpdateSourceTrigger=PropertyChanged}"
                                       Placeholder="Type name here"/>
 
                 <Label Style="{StaticResource HeaderLabelStyle}"
@@ -97,7 +102,7 @@
 
                 <comp:ExtendedTextBox Placeholder="12:34"
                                       Margin="10 0"
-                                      Text="{Binding Quiz.Interval}"
+                                      Text="{Binding Quiz.Interval, UpdateSourceTrigger=LostFocus}"
                                       Visibility="{Binding ElementName=TimeLimitCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
                                       Grid.Row="2"
                                       Grid.Column="1"/>
@@ -106,11 +111,17 @@
 
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="0"
+                <comp:IconButton ToolTip="Delete quiz"
+                                 Command="{Binding DeleteQuizCommand}"
+                                 MaterialIcon="Trash"
+                                 Margin="0 0 10 0"/>
+
+                <Label Grid.Column="1"
                        VerticalAlignment="Stretch"
                        VerticalContentAlignment="Center"
                        Foreground="{DynamicResource DisableTextBrush}"

@@ -4,15 +4,11 @@ using Microsoft.Extensions.Hosting;
 using QuizGenerator.DAL;
 using QuizGenerator.Model.Entities;
 using QuizGenerator.Model.Interfaces;
-using QuizGenerator.View.Helpers;
 using QuizGenerator.View.Views.Windows;
-using QuizGenerator.ViewModel.Commands;
 using QuizGenerator.ViewModel.Other;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels;
-using QuizGenerator.ViewModel.ViewModels.Bases;
-using System.Configuration;
-using System.Data;
+using System.IO;
 using System.Windows;
 
 namespace QuizGenerator.View;
@@ -23,6 +19,7 @@ namespace QuizGenerator.View;
 public partial class App : Application
 {
 	private readonly IHost _host;
+	private bool _debug = false;
 
 	public App()
 	{
@@ -35,6 +32,13 @@ public partial class App : Application
 
 	protected override void OnStartup(StartupEventArgs e)
 	{
+		if (!_debug)
+		{
+			using var scope = _host.Services.CreateScope();
+			var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+			context.Database.Migrate();
+		}
+
 		var startWindow = _host.Services.GetRequiredService<StartWindow>();
 		startWindow.DataContext = _host.Services.GetRequiredService<NavigationViewModel>();
 		startWindow.Show();
@@ -57,32 +61,46 @@ public partial class App : Application
 
 	private void ConfigureApplicationContext(IServiceCollection services)
 	{
-		var debug = true;
-		ApplicationContext context;
-		if (debug)
+		if (_debug)
 		{
-			context = new InMemoryApplicationContext();
+			services.AddDbContext<ApplicationContext>(
+				optionsBuilder => optionsBuilder
+					.UseInMemoryDatabase("databaseInMemory")
+					.UseLazyLoadingProxies(),
+				ServiceLifetime.Singleton);
 		}
 		else
 		{
-			context = new ApplicationContext();
-			context.Database.Migrate();
+			var path = Path.Combine(Environment.CurrentDirectory, "database.db");
+			services.AddDbContext<ApplicationContext>(
+				optionsBuilder => optionsBuilder
+					.UseSqlite($"Filename={path}")
+					.UseLazyLoadingProxies(),
+				ServiceLifetime.Singleton);
 		}
-
-		services.AddSingleton(context);
 	}
 
 	private void ConfigureRepositories(IServiceCollection services)
 	{
-		services.AddSingleton<IRepository<Quiz>, GeneralRepository<Quiz>>();
-		services.AddSingleton<IRepository<Question>, GeneralRepository<Question>>();
-		services.AddSingleton<IRepository<QuestionDetail>, GeneralRepository<QuestionDetail>>();
-		services.AddSingleton<IRepository<AnswerDetail>, GeneralRepository<AnswerDetail>>();
+		services.AddSingleton<IRepository<Quiz>>(
+			sp => new GeneralRepository<Quiz>(sp.GetRequiredService<ApplicationContext>()));
+		services.AddSingleton<IRepository<Question>>(
+			sp => new GeneralRepository<Question>(sp.GetRequiredService<ApplicationContext>()));
+		services.AddSingleton<IRepository<QuestionDetail>>(
+			sp => new GeneralRepository<QuestionDetail>(sp.GetRequiredService<ApplicationContext>()));
+		services.AddSingleton<IRepository<AnswerDetail>>(
+			sp => new GeneralRepository<AnswerDetail>(sp.GetRequiredService<ApplicationContext>()));
 	}
 
 	private void ConfigureUnitOfWork(IServiceCollection services)
 	{
-		services.AddSingleton<IUnitOfWork, UnitOfWork>();
+		services.AddSingleton<IUnitOfWork>(
+			sp => new UnitOfWork(
+				sp.GetRequiredService<ApplicationContext>(),
+				sp.GetRequiredService<IRepository<Quiz>>(),
+				sp.GetRequiredService<IRepository<Question>>(),
+				sp.GetRequiredService<IRepository<QuestionDetail>>(),
+				sp.GetRequiredService<IRepository<AnswerDetail>>()));
 	}
 
 	private void ConfigureNavigation(IServiceCollection services)
@@ -130,7 +148,8 @@ public partial class App : Application
 					p,
 					sp.GetRequiredService<IUnitOfWork>(),
 					sp.GetRequiredService<IParameterNavigationService<Guid?, TrainingViewModel>>(),
-					sp.GetRequiredService<IParameterNavigationService<Guid?, QuestionPageViewModel>>())
+					sp.GetRequiredService<IParameterNavigationService<Guid?, QuestionPageViewModel>>(),
+					sp.GetRequiredService<IBackNavigationService>())
 			));
 	}
 

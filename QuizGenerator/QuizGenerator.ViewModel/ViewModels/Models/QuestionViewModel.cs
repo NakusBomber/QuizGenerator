@@ -74,8 +74,7 @@ public class QuestionViewModel : ViewModelBase
 		_evaluationPrice = question.EvaluationPrice;
 		_listNumber = question.ListNumber;
 		_questionType = question.QuestionType;
-		_questionDetails = new ObservableCollection<QuestionDetailViewModel>(
-			question.QuestionDetails.Select(qd => new QuestionDetailViewModel(qd)));
+		_questionDetails = new ObservableCollection<QuestionDetailViewModel>();
 	}
 
 	public void CopyToQuestion(Question question)

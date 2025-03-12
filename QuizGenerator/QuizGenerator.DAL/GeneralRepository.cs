@@ -29,7 +29,6 @@ public class GeneralRepository<TEntity> : IRepository<TEntity>
 	public async Task<IEnumerable<TEntity>> GetAsync(
 		Expression<Func<TEntity, bool>>? filter = null,
 		Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-		Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null,
 		bool asNoTracking = false,
 		CancellationToken token = default)
 	{
@@ -38,11 +37,6 @@ public class GeneralRepository<TEntity> : IRepository<TEntity>
 		if (filter != null)
 		{
 			query = query.Where(filter);
-		}
-
-		if (include != null)
-		{
-			query = include(query);
 		}
 
 		if (asNoTracking)
@@ -57,13 +51,12 @@ public class GeneralRepository<TEntity> : IRepository<TEntity>
 
 	public async Task<TEntity> GetByIdAsync(
 		Guid id,
-		Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null,
 		CancellationToken token = default)
 	{
-		var entity = (await GetAsync(e => e.Id == id, include: include, token: token)).FirstOrDefault();
+		var entity = (await GetAsync(e => e.Id == id, token: token)).FirstOrDefault();
 		if (entity == null)
 		{
-			throw new ArgumentException($"Entity with id: {id} not found");
+			throw new InvalidOperationException($"Entity with id: {id} not found");
 		}
 
 		return entity;

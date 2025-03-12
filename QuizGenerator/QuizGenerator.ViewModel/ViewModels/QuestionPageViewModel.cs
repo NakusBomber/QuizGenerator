@@ -4,8 +4,6 @@ using QuizGenerator.ViewModel.Commands.Bases;
 using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace QuizGenerator.ViewModel.ViewModels;
 
@@ -73,31 +71,17 @@ public class QuestionPageViewModel : ViewModelBase
 
 	private async Task SaveQuestionAsync(CancellationToken token)
 	{
-		if (Question != null)
+		if (Question != null && _question != null)
 		{
 			IsNowSaving = true;
 
-			//_question = Question.ToQuestion();
+			Question.CopyToQuestion(_question);
 
-			try
-			{
-				await _unitOfWork.QuestionRepository.UpdateAsync(_question, token);
-			}
-			catch (Exception)
-			{
-				await _unitOfWork.QuestionRepository.CreateAsync(_question, token);
-			}
-
+			await _unitOfWork.QuestionRepository.UpdateOrCreateAsync(_question, token);
+			
 			foreach (var questionDetail in _question.QuestionDetails)
 			{
-				try
-				{
-					await _unitOfWork.QuestionDetailRepository.CreateAsync(questionDetail, token);
-				}
-				catch (Exception)
-				{
-					await _unitOfWork.QuestionDetailRepository.UpdateAsync(questionDetail, token);
-				}
+				await _unitOfWork.QuestionDetailRepository.UpdateOrCreateAsync(questionDetail, token);
 			}
 
 			await _unitOfWork.SaveAsync(token);

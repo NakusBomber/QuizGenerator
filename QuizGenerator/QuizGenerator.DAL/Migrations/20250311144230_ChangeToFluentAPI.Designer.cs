@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuizGenerator.DAL;
 
@@ -10,9 +11,11 @@ using QuizGenerator.DAL;
 namespace QuizGenerator.DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250311144230_ChangeToFluentAPI")]
+    partial class ChangeToFluentAPI
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -116,8 +119,7 @@ namespace QuizGenerator.DAL.Migrations
                 {
                     b.HasOne("QuizGenerator.Model.Entities.QuestionDetail", "QuestionDetail")
                         .WithMany("AnswerDetails")
-                        .HasForeignKey("QuestionDetailId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("QuestionDetailId");
 
                     b.Navigation("QuestionDetail");
                 });
@@ -126,8 +128,7 @@ namespace QuizGenerator.DAL.Migrations
                 {
                     b.HasOne("QuizGenerator.Model.Entities.Quiz", "Quiz")
                         .WithMany("Questions")
-                        .HasForeignKey("QuizId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("QuizId");
 
                     b.Navigation("Quiz");
                 });
@@ -136,8 +137,7 @@ namespace QuizGenerator.DAL.Migrations
                 {
                     b.HasOne("QuizGenerator.Model.Entities.Question", "Question")
                         .WithMany("QuestionDetails")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("QuestionId");
 
                     b.Navigation("Question");
                 });

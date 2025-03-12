@@ -6,12 +6,10 @@ namespace QuizGenerator.Model.Entities;
 [Table("AnswerDetails")]
 public class AnswerDetail : Entity
 {
-    [Key]
     public override Guid Id { get; set; }
 
     public Guid? QuestionDetailId { get; set; }
-    [ForeignKey(nameof(QuestionDetailId))]
-    public QuestionDetail? QuestionDetail { get; set; }
+    public virtual QuestionDetail? QuestionDetail { get; set; }
 
     public string Text { get; set; }
     public bool IsCorrect { get; set; }

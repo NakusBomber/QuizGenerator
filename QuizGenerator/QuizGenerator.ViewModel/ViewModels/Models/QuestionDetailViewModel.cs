@@ -46,7 +46,7 @@ public class QuestionDetailViewModel : ViewModelBase
 		_id = questionDetail.Id;
 		_questionId = questionDetail.QuestionId;
 		_text = questionDetail.Text;
-		_answerDetails = new ObservableCollection<AnswerDetail>(questionDetail.AnswerDetails);
+		_answerDetails = new ObservableCollection<AnswerDetail>();
 	}
 
 	public void CopyToQuestionDetail(QuestionDetail questionDetail)

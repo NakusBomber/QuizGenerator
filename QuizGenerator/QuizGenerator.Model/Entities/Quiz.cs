@@ -6,17 +6,14 @@ namespace QuizGenerator.Model.Entities;
 [Table("Quizes")]
 public class Quiz : Entity
 {
-    [Key]
     public override Guid Id { get; set; }
-
-    [Required]
     public string Name { get; set; }
     public DateTime DateTimeCreated { get; set; }
     public DateTime DateTimeChanged { get; set; }
     public DateTime? DateTimeLastPractice { get; set; }
     public TimeSpan? IntervalPractice { get; set; }
 
-    public IEnumerable<Question> Questions { get; set; }
+    public virtual IEnumerable<Question> Questions { get; set; }
 
     public Quiz()
         : this(string.Empty)
