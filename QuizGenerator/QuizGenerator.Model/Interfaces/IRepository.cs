@@ -9,6 +9,7 @@ public interface IRepository<TEntity> where TEntity : Entity
 		Expression<Func<TEntity, bool>>? filter = null,
 		Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
 		bool asNoTracking = false,
+		int? limit = null,
 		CancellationToken token = default);
 	public Task<TEntity> GetByIdAsync(
 		Guid id,

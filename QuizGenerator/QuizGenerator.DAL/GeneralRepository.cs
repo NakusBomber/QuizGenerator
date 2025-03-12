@@ -30,6 +30,7 @@ public class GeneralRepository<TEntity> : IRepository<TEntity>
 		Expression<Func<TEntity, bool>>? filter = null,
 		Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
 		bool asNoTracking = false,
+		int? limit = null,
 		CancellationToken token = default)
 	{
 		IQueryable<TEntity> query = _dbSet;
@@ -44,9 +45,17 @@ public class GeneralRepository<TEntity> : IRepository<TEntity>
 			query = query.AsNoTracking();
 		}
 
-		return orderBy != null 
-			? await orderBy(query).ToListAsync(token) 
-			: await query.ToListAsync(token);
+		if (orderBy != null)
+		{
+			query = orderBy(query);
+		}
+
+		if (limit.HasValue)
+		{
+			query = query.Take(limit.Value);
+		}
+
+		return await query.ToListAsync(token);
 	}
 
 	public async Task<TEntity> GetByIdAsync(

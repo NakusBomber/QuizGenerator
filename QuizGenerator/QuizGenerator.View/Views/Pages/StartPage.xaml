@@ -63,8 +63,8 @@
 
             <Grid.Resources>
                 <x:Array x:Key="RecentlyTestData" Type="{x:Type models:Quiz}">
-                    <models:Quiz Name="TestName1"/>
-                    <models:Quiz Name="TestName2"/>
+                    <models:Quiz Name="TestName1" DateTimeLastPractice="2024-03-13T14:30:00"/>
+                    <models:Quiz Name="TestName2" DateTimeLastPractice="2024-03-13T10:30:00"/>
                 </x:Array>
             </Grid.Resources>
 
@@ -94,10 +94,18 @@
                           ItemsSource="{Binding RecentlyQuizes}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type models:Quiz}">
-                        <Button Content="{Binding Name}"
-                                Command="{Binding DataContext.QuizNavigateCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                        <Button Command="{Binding DataContext.QuizNavigateCommand, RelativeSource={RelativeSource AncestorType=Page}}"
                                 CommandParameter="{Binding Id}"
-                                Style="{StaticResource RecentlyQuizButtonStyle}"/>
+                                Style="{StaticResource RecentlyQuizButtonStyle}">
+                            <Button.Content>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock Text="{Binding DateTimeLastPractice, TargetNullValue='No practice'}"
+                                               Foreground="{DynamicResource DisableTextBrush}"
+                                               FontSize="12"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
