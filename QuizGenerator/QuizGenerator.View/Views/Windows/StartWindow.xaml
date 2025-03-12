@@ -13,7 +13,11 @@
         MinWidth="550"
         Width="550"
         Title="QuizGenerator"
+        FocusManager.IsFocusScope="True"
         d:DataContext="{d:DesignInstance vms:NavigationViewModel}">
+    <Window.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding BackNavigateCommand}"/>
+    </Window.InputBindings>
 
     <Grid>
 

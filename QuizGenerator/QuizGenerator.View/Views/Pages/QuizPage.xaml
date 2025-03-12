@@ -55,10 +55,6 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid.Resources>
-                <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
-            </Grid.Resources>
-
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

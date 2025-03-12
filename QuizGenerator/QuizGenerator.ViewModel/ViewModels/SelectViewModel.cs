@@ -43,6 +43,7 @@ public class SelectViewModel : ViewModelBase
 
 
 	public IAsyncCommand<object?> SearchCommand { get; }
+	public ICommand ClearSearchTextCommand { get; }
 	public ICommand QuizNavigateCommand { get; }
 
 	public SelectViewModel(
@@ -52,6 +53,7 @@ public class SelectViewModel : ViewModelBase
 		_unitOfWork = unitOfWork;
 
 		QuizNavigateCommand = new ParameterNavigateCommand<Guid?, QuizPageViewModel>(quizParameterNavigationService);
+		ClearSearchTextCommand = new DelegateCommand(ClearSearchText, CanClearSearchText);
 		SearchCommand = AsyncDelegateCommand.Create(SearchQuizesAsync);
 	}
 
@@ -62,4 +64,8 @@ public class SelectViewModel : ViewModelBase
 			token: token);
 		Quizes = new ObservableCollection<Quiz>(quizes);
 	}
+
+	private void ClearSearchText(object? parameter) => SearchText = string.Empty;
+
+	private bool CanClearSearchText(object? obj) => SearchText != null && SearchText.Length > 0;
 }

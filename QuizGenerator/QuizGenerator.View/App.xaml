@@ -43,6 +43,7 @@
                 <!-- Global converters -->
                 <ResourceDictionary>
                     <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+                    <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

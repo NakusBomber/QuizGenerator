@@ -41,7 +41,7 @@
 
             <Button Style="{StaticResource PrimaryButtonStyle}"
                     Margin="10"
-                    Content="Open"
+                    Content="All quizes"
                     Command="{Binding SelectNavigateCommand}"/>
 
             <Button Content="Import"
@@ -71,10 +71,22 @@
             <Label Content="Recently quiz:"
                    Grid.Row="0"
                    Style="{StaticResource HeaderLabelStyle}"/>
+
             <ProgressBar d:Visibility="Collapsed"
                          Visibility="{Binding LoadQuizesCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
                          Grid.Row="1"
                          Style="{StaticResource SpinnerProgressBarStyle}"/>
+
+            <Label Content="No recent quiz"
+                   Grid.Row="1"
+                   VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center"
+                   HorizontalAlignment="Stretch"
+                   HorizontalContentAlignment="Center"
+                   d:Visibility="Collapsed"
+                   Visibility="{Binding RecentlyQuizes.Count, Converter={StaticResource IntToVisibilityConverter}, ConverterParameter=Invert}"
+                   Style="{StaticResource HeaderLabelStyle}"/>
+
             <ItemsControl d:ItemsSource="{StaticResource RecentlyTestData}"
                           Grid.Row="1"
                           Style="{StaticResource FlatBaseStyle}"

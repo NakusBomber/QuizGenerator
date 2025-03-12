@@ -41,11 +41,23 @@
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
 
-        <comp:ExtendedTextBox Grid.Row="0"
-                              IconSeparator="True"
-                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                              MaterialIcon="Search"
-                              Placeholder="Type text for searching"/>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="40" />
+            </Grid.ColumnDefinitions>
+
+            <comp:ExtendedTextBox IconSeparator="True"
+                                  Grid.Column="0"
+                                  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                  MaterialIcon="Search"
+                                  Placeholder="Type text for searching"/>
+
+            <comp:IconButton Command="{Binding ClearSearchTextCommand}"
+                             Grid.Column="1"
+                             MaterialIcon="ClearOutline"
+                             ToolTip="Clear"/>
+        </Grid>
 
 
         <ProgressBar d:Visibility="Collapsed"
