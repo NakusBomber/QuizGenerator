@@ -4,6 +4,7 @@
                     xmlns:comp="clr-namespace:QuizGenerator.View.Components">
     <Style TargetType="{x:Type comp:QuestionEditCard}"
            BasedOn="{StaticResource FlatBaseStyle}">
+
         <Setter Property="BorderBrush" Value="{DynamicResource TextBrush}" />
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="Padding" Value="6" />
@@ -51,6 +52,8 @@
                                             Grid.Column="2">
 
                                     <comp:IconButton Grid.Column="2"
+                                                     x:Name="_editBtn"
+                                                     Visibility="Collapsed"
                                                      VerticalAlignment="Top"
                                                      MaterialIcon="Edit"
                                                      Margin="5 0"
@@ -59,6 +62,8 @@
                                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:QuestionEditCard}}, Path=EditCommandParameter}"/>
                                     <comp:IconButton Grid.Column="2"
                                                      VerticalAlignment="Top"
+                                                     x:Name="_deleteBtn"
+                                                     Visibility="Collapsed"
                                                      MaterialIcon="Trash"
                                                      Margin="5 0"
                                                      ToolTip="Delete"
@@ -95,6 +100,13 @@
 
                         </StackPanel>
                     </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="_editBtn" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="_deleteBtn" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
