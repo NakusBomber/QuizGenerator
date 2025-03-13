@@ -146,7 +146,11 @@ public class QuizPageViewModel : SavingStateViewModel, IDropTarget
 				.Select(q => new QuestionViewModel(q)
 				{
 					QuestionDetails = new ObservableCollection<QuestionDetailViewModel>(
-						q.QuestionDetails.Select(d => new QuestionDetailViewModel(d)))
+						q.QuestionDetails.Select(d => new QuestionDetailViewModel(d)
+						{
+							AnswerDetails = new ObservableCollection<AnswerDetailViewModel>(
+								d.AnswerDetails.Select(a => new AnswerDetailViewModel(a)))
+						}))
 				})
 				.OrderBy(q => q.ListNumber);
 

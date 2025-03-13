@@ -48,7 +48,7 @@
                     Margin="10"
                     Style="{StaticResource SecondaryButtonStyle}"/>
 
-            <Button Content="Export DB"
+            <Button Content="Export"
                     Margin="10"
                     Style="{StaticResource SecondaryButtonStyle}"/>
         </StackPanel>
