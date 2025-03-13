@@ -143,7 +143,11 @@ public class QuizPageViewModel : SavingStateViewModel, IDropTarget
 			_quizId = _quiz.Id;
 
 			var questionViewModels = _quiz.Questions
-				.Select(q => new QuestionViewModel(q))
+				.Select(q => new QuestionViewModel(q)
+				{
+					QuestionDetails = new ObservableCollection<QuestionDetailViewModel>(
+						q.QuestionDetails.Select(d => new QuestionDetailViewModel(d)))
+				})
 				.OrderBy(q => q.ListNumber);
 
 			Application.Current.Dispatcher.Invoke(() =>
@@ -242,8 +246,8 @@ public class QuizPageViewModel : SavingStateViewModel, IDropTarget
 			}
 			else
 			{
-				var question = await _unitOfWork.QuestionRepository.GetByIdAsync(questionViewModel.Id);
-				await _unitOfWork.QuestionRepository.DeleteAsync(question);
+				var question = await _unitOfWork.QuestionRepository.GetByIdAsync(questionViewModel.Id, token);
+				await _unitOfWork.QuestionRepository.DeleteAsync(question, token);
 			}
 
 			Quiz.Questions.Remove(questionViewModel);

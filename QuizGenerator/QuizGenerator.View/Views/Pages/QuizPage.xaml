@@ -183,11 +183,11 @@
                           VerticalScrollBarVisibility="Auto">
                 <ScrollViewer.Resources>
                     <x:Array x:Key="AnswerDetailsDesignData"
-                             Type="{x:Type models:AnswerDetail}">
-                        <models:AnswerDetail Text="Green"/>
-                        <models:AnswerDetail Text="Yellow"/>
-                        <models:AnswerDetail Text="Blue"/>
-                        <models:AnswerDetail Text="Red"/>
+                             Type="{x:Type modelsViewModel:AnswerDetailViewModel}">
+                        <modelsViewModel:AnswerDetailViewModel Text="Green"/>
+                        <modelsViewModel:AnswerDetailViewModel Text="Yellow"/>
+                        <modelsViewModel:AnswerDetailViewModel Text="Blue"/>
+                        <modelsViewModel:AnswerDetailViewModel Text="Red"/>
                     </x:Array>
                     <x:Array x:Key="QuestionDetailsDesignData"
                              Type="{x:Type modelsViewModel:QuestionDetailViewModel}">

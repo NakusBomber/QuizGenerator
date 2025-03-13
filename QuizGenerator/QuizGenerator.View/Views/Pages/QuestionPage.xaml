@@ -9,11 +9,16 @@
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
       xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model"
+      xmlns:modelsVm="clr-namespace:QuizGenerator.ViewModel.ViewModels.Models;assembly=QuizGenerator.ViewModel"
       mc:Ignorable="d"
       Title="Question"
       d:Width="550"
       d:Height="450"
       d:DataContext="{d:DesignInstance vms:QuestionPageViewModel}">
+    <Page.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveQuestionCommand}"/>
+    </Page.InputBindings>
+
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadQuestionCommand}"/>
@@ -56,12 +61,18 @@
                     </ObjectDataProvider.MethodParameters>
                 </ObjectDataProvider>
 
-                <x:Array x:Key="AnswerTestData"
-                         Type="{x:Type sys:String}">
-                    <sys:String>Answer 1</sys:String>
-                    <sys:String>Answer 2</sys:String>
-                    <sys:String>Answer 3</sys:String>
-                    <sys:String>Answer 4</sys:String>
+                <x:Array x:Key="AnswerDetailsDesignData"
+                         Type="{x:Type modelsVm:AnswerDetailViewModel}">
+                    <modelsVm:AnswerDetailViewModel Text="Green"/>
+                    <modelsVm:AnswerDetailViewModel Text="Yellow"/>
+                    <modelsVm:AnswerDetailViewModel Text="Blue"/>
+                    <modelsVm:AnswerDetailViewModel Text="Red"/>
+                </x:Array>
+
+                <x:Array x:Key="QuestionDetailsTestData"
+                         Type="{x:Type modelsVm:QuestionDetailViewModel}">
+                    <modelsVm:QuestionDetailViewModel Text="Favourite color?"
+                                                      AnswerDetails="{StaticResource AnswerDetailsDesignData}"/>
                 </x:Array>
             </Grid.Resources>
 
@@ -84,7 +95,7 @@
                 <comp:ExtendedTextBox Grid.Column="1"
                                       Grid.Row="0"
                                       Margin="10 0"
-                                      Text="{Binding Question.EvaluationPrice}"
+                                      Text="{Binding Question.EvaluationPrice, UpdateSourceTrigger=PropertyChanged}"
                                       Placeholder="Integer digit"/>
 
                 <Label Style="{StaticResource HeaderLabelStyle}"
@@ -101,40 +112,44 @@
             </Grid>
 
             <comp:IconButton VerticalAlignment="Center"
+                             HorizontalAlignment="Left"
+                             Margin="10 0"
+                             Grid.Row="1"
+                             ToolTip="Delete question"
+                             Command="{Binding DeleteQuestionCommand}"
+                             MaterialIcon="Trash"/>
+
+            <comp:IconButton VerticalAlignment="Center"
                              HorizontalAlignment="Right"
                              Margin="10 0"
                              Grid.Row="1"
                              ToolTip="Add"
+                             Command="{Binding AddQuestionDetailCommand}"
                              MaterialIcon="Add"/>
 
 
             <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                           Grid.Row="2"
                           VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{StaticResource AnswerTestData}"
+                <ItemsControl d:ItemsSource="{StaticResource QuestionDetailsTestData}"
+                              ItemsSource="{Binding Question.QuestionDetails}"
                               Margin="0 0 10 0">
+                    <ItemsControl.Resources>
+                        <ResourceDictionary Source="/Styles/Animations/FadeInOpacityStoryboard.xaml"/>
+                    </ItemsControl.Resources>
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type sys:String}">
-                            <Border Background="Transparent"
-                                    Margin="0 10 0 0"
-                                    CornerRadius="8"
-                                    BorderThickness="1"
-                                    BorderBrush="{StaticResource TextBrush}">
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Label Style="{StaticResource HeaderLabelStyle}"
-                                           Grid.Column="0"
-                                           Content="{Binding}"/>
-
-                                    <comp:IconButton Grid.Column="1"
-                                                     MaterialIcon="Edit"
-                                                     Margin="0 0 5 0"/>
-                                </Grid>
-                            </Border>
+                        <DataTemplate>
+                            <comp:QuestionDetailEditCard QuestionDetail="{Binding}"
+                                                         DeleteCommand="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.DeleteQuestionDetailCommand}"
+                                                         EditCommand="{Binding RelativeSource={RelativeSource AncestorType=Page}, Path=DataContext.EditQuestionDetailCommand}"
+                                                         DeleteCommandParameter="{Binding}"
+                                                         EditCommandParameter="{Binding}"
+                                                         Margin="0 4 5 4"/>
+                            <DataTemplate.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard Storyboard="{StaticResource FadeInOpacityStoryboard}"/>
+                                </EventTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

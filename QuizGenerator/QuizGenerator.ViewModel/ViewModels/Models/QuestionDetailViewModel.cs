@@ -24,9 +24,9 @@ public class QuestionDetailViewModel : ViewModelBase
 	}
 
 
-	private ICollection<AnswerDetail> _answerDetails;
+	private ICollection<AnswerDetailViewModel> _answerDetails;
 
-	public ICollection<AnswerDetail> AnswerDetails
+	public ICollection<AnswerDetailViewModel> AnswerDetails
 	{
 		get => _answerDetails;
 		set
@@ -46,7 +46,7 @@ public class QuestionDetailViewModel : ViewModelBase
 		_id = questionDetail.Id;
 		_questionId = questionDetail.QuestionId;
 		_text = questionDetail.Text;
-		_answerDetails = new ObservableCollection<AnswerDetail>();
+		_answerDetails = new ObservableCollection<AnswerDetailViewModel>();
 	}
 
 	public void CopyToQuestionDetail(QuestionDetail questionDetail)
