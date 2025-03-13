@@ -15,7 +15,7 @@ using System.Windows.Input;
 
 namespace QuizGenerator.ViewModel.ViewModels;
 
-public class QuizPageViewModel : ViewModelBase, IDropTarget
+public class QuizPageViewModel : SavingStateViewModel, IDropTarget
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IDropTarget _dropHandler;
@@ -37,30 +37,6 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 		set
 		{
 			_quizViewModel = value;
-			OnPropertyChanged();
-		}
-	}
-
-	private bool _isNowSaving;
-
-	public bool IsNowSaving
-	{
-		get => _isNowSaving;
-		set
-		{
-			_isNowSaving = value;
-			OnPropertyChanged();
-		}
-	}
-
-	private bool _isNeedSaving;
-
-	public bool IsNeedSaving
-	{
-		get => _isNeedSaving;
-		set
-		{
-			_isNeedSaving = value;
 			OnPropertyChanged();
 		}
 	}
@@ -91,8 +67,6 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 
 		_propertyChangedHandler = (s, a) => IsNeedSaving = true;
 		_quizId = id;
-		_isNowSaving = false;
-		_isNeedSaving = false;
 		_newQuestions = new List<Question>();
 
 		LoadQuizCommand = AsyncDelegateCommand.Create(LoadQuizAsync);
@@ -262,8 +236,15 @@ public class QuizPageViewModel : ViewModelBase, IDropTarget
 	{
 		if (obj is QuestionViewModel questionViewModel && Quiz != null)
 		{
-			var question = await _unitOfWork.QuestionRepository.GetByIdAsync(questionViewModel.Id);
-			await _unitOfWork.QuestionRepository.DeleteAsync(question);
+			if (_newQuestions.FirstOrDefault(q => q.Id == questionViewModel.Id) is Question newQuestion)
+			{
+				_newQuestions.Remove(newQuestion);
+			}
+			else
+			{
+				var question = await _unitOfWork.QuestionRepository.GetByIdAsync(questionViewModel.Id);
+				await _unitOfWork.QuestionRepository.DeleteAsync(question);
+			}
 
 			Quiz.Questions.Remove(questionViewModel);
 			
