@@ -67,7 +67,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Label Style="{StaticResource RequirementLabelStyle}"
+                <Label Style="{StaticResource HeaderLabelStyle}"
                        Grid.Column="0"
                        Grid.Row="0"
                        Content="Quiz name"/>
@@ -160,10 +160,6 @@
                             </ContextMenu>
                         </comp:IconButton.ContextMenu>
                     </comp:IconButton>
-
-                    <comp:IconButton ToolTip="Export"
-                                     MaterialIcon="ExportVariant"
-                                     Margin="0 0 10 0"/>
 
                     <comp:IconButton ToolTip="Start"
                                      MaterialIcon="Play"
