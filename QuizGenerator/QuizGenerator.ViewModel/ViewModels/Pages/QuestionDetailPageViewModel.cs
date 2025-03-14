@@ -10,7 +10,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
-namespace QuizGenerator.ViewModel.ViewModels;
+namespace QuizGenerator.ViewModel.ViewModels.Pages;
 
 public class QuestionDetailPageViewModel : SavingStateViewModel
 {

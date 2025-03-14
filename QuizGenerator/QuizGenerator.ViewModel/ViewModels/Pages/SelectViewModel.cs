@@ -9,7 +9,7 @@ using QuizGenerator.ViewModel.ViewModels.Bases;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace QuizGenerator.ViewModel.ViewModels;
+namespace QuizGenerator.ViewModel.ViewModels.Pages;
 
 public class SelectViewModel : ViewModelBase
 {

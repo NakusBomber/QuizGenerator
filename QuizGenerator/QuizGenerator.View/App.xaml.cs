@@ -8,6 +8,7 @@ using QuizGenerator.View.Views.Windows;
 using QuizGenerator.ViewModel.Other;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels;
+using QuizGenerator.ViewModel.ViewModels.Pages;
 using System.IO;
 using System.Windows;
 

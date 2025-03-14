@@ -13,7 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace QuizGenerator.ViewModel.ViewModels;
+namespace QuizGenerator.ViewModel.ViewModels.Pages;
 
 public class QuizPageViewModel : SavingStateViewModel, IDropTarget
 {
@@ -267,7 +267,7 @@ public class QuizPageViewModel : SavingStateViewModel, IDropTarget
 
 		if (obj is QuestionType questionType && _quiz != null && Quiz != null)
 		{
-			var listNumber = (Quiz.Questions.LastOrDefault()?.ListNumber + 1) ?? minimalNumber;
+			var listNumber = Quiz.Questions.LastOrDefault()?.ListNumber + 1 ?? minimalNumber;
 			var question = new Question(_quiz.Id, 1, questionType, listNumber);
 
 			_newQuestions.Add(question);

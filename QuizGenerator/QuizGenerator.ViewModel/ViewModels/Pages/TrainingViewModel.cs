@@ -1,6 +1,6 @@
 ﻿using QuizGenerator.ViewModel.ViewModels.Bases;
 
-namespace QuizGenerator.ViewModel.ViewModels;
+namespace QuizGenerator.ViewModel.ViewModels.Pages;
 
 public class TrainingViewModel : ViewModelBase
 {

@@ -8,7 +8,7 @@ using QuizGenerator.ViewModel.ViewModels.Models;
 using System.ComponentModel;
 using System.Windows;
 
-namespace QuizGenerator.ViewModel.ViewModels;
+namespace QuizGenerator.ViewModel.ViewModels.Pages;
 
 public class AnswerDetailPageViewModel : SavingStateViewModel
 {
