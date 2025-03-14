@@ -87,6 +87,7 @@ public class QuestionDetailPageViewModel : SavingStateViewModel
 				_questionDetail = new QuestionDetail();
 			}
 
+			_questionDetailId = _questionDetail.Id;
 			var answerDetailViewModels = _questionDetail.AnswerDetails
 				.Select(a => new AnswerDetailViewModel(a));
 

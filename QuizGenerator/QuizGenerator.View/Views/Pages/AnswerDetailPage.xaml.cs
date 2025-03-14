@@ -12,14 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace QuizGenerator.View.Views.Windows
+namespace QuizGenerator.View.Views.Pages
 {
-    /// <summary>
-    /// Interaction logic for AnswerWindow.xaml
-    /// </summary>
-    public partial class AnswerWindow : Window
+	/// <summary>
+	/// Interaction logic for AnswerDetailPage.xaml
+	/// </summary>
+	public partial class AnswerDetailPage : Page
     {
-        public AnswerWindow()
+        public AnswerDetailPage()
         {
             InitializeComponent();
         }
