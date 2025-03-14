@@ -61,6 +61,8 @@
                                      Background="Transparent"
                                      HorizontalAlignment="Stretch"
                                      VerticalAlignment="Stretch"
+                                     MaxLines="{TemplateBinding MaxLines}"
+                                     AcceptsReturn="{TemplateBinding AcceptsReturn}"
                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                      BorderBrush="Transparent"

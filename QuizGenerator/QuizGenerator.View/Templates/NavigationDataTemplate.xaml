@@ -21,4 +21,8 @@
     <DataTemplate DataType="{x:Type vms:TrainingViewModel}">
         <pages:TrainingPage/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vms:QuestionDetailPageViewModel}">
+        <pages:QuestionDetailPage/>
+    </DataTemplate>
 </ResourceDictionary>

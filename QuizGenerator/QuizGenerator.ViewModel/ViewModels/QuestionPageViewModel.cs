@@ -89,7 +89,11 @@ public class QuestionPageViewModel : SavingStateViewModel
 			_questionId = _question.Id;
 
 			var questionDetailViewModels = _question.QuestionDetails
-				.Select(qd => new QuestionDetailViewModel(qd));
+				.Select(qd => new QuestionDetailViewModel(qd)
+				{
+					AnswerDetails = new ObservableCollection<AnswerDetailViewModel>(
+						qd.AnswerDetails.Select(a => new AnswerDetailViewModel(a)))
+				});
 
 			Application.Current.Dispatcher.Invoke(() =>
 			{
@@ -205,7 +209,7 @@ public class QuestionPageViewModel : SavingStateViewModel
 			return;
 		}
 
-		var questionDetail = new QuestionDetail(Question.Id, "No text");
+		var questionDetail = new QuestionDetail(Question.Id, "Question");
 		_newQuestionDetails.Add(questionDetail);
 
 		var questionDetailViewModel = new QuestionDetailViewModel(questionDetail);

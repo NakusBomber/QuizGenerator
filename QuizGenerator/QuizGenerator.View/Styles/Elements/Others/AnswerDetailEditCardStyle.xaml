@@ -1,0 +1,87 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model"
+                    xmlns:comp="clr-namespace:QuizGenerator.View.Components"
+                    xmlns:modelVm="clr-namespace:QuizGenerator.ViewModel.ViewModels.Models;assembly=QuizGenerator.ViewModel">
+    <Style TargetType="{x:Type comp:AnswerDetailEditCard}"
+           BasedOn="{StaticResource FlatBaseStyle}">
+        <Style.Resources>
+            <ResourceDictionary Source="/Styles/Elements/Labels/HeaderLabelStyle.xaml"/>
+        </Style.Resources>
+
+        <Setter Property="BorderBrush" Value="{DynamicResource TextBrush}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Padding" Value="6" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type comp:AnswerDetailEditCard}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="Transparent"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="8">
+                        <Grid VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0"
+                                   Content="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:AnswerDetailEditCard}},
+                                   Path=AnswerDetail.Text}">
+                                <Label.Style>
+                                    <Style TargetType="Label" BasedOn="{StaticResource HeaderLabelStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding AnswerDetail.IsCorrect,
+                                                         RelativeSource={RelativeSource AncestorType={x:Type comp:AnswerDetailEditCard}}}"
+                                                         Value="True">
+                                                <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Label.Style>
+                            </Label>
+
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch"
+                                        Grid.Column="2">
+
+                                <comp:IconButton Grid.Column="2"
+                                                 x:Name="_editBtn"
+                                                 Visibility="Collapsed"
+                                                 VerticalAlignment="Top"
+                                                 MaterialIcon="Edit"
+                                                 Margin="5 0"
+                                                 ToolTip="Edit"
+                                                 Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:AnswerDetailEditCard}}, Path=EditCommand}"
+                                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:AnswerDetailEditCard}}, Path=EditCommandParameter}"/>
+
+                                <comp:IconButton Grid.Column="2"
+                                                 VerticalAlignment="Top"
+                                                 x:Name="_deleteBtn"
+                                                 Visibility="Collapsed"
+                                                 MaterialIcon="Trash"
+                                                 Margin="5 0"
+                                                 ToolTip="Delete"
+                                                 Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:AnswerDetailEditCard}}, Path=DeleteCommand}"
+                                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:AnswerDetailEditCard}}, Path=DeleteCommandParameter}"/>
+                            </StackPanel>
+
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="_editBtn" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="_deleteBtn" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

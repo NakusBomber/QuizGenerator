@@ -110,6 +110,7 @@ public partial class App : Application
 
 		services.AddSingleton<IBackNavigationService, BackNavigationService>();
 
+		RegisterAnswerDetailNavigationService(services);
 		RegisterQuestionDetailNavigationService(services);
 		RegisterQuestionPageNavigationService(services);
 		RegisterTrainingNavigationService(services);
@@ -187,9 +188,27 @@ public partial class App : Application
 			new ParameterNavigationService<Guid?, QuestionDetailPageViewModel>(
 				sp.GetRequiredService<NavigationStore>(),
 				sp.GetRequiredService<INavigationJournal>(),
-				p => new QuestionDetailPageViewModel(p)
+				p => new QuestionDetailPageViewModel(
+					p,
+					sp.GetRequiredService<IUnitOfWork>(),
+					sp.GetRequiredService<IParameterNavigationService<Guid?, AnswerDetailPageViewModel>>(),
+					sp.GetRequiredService<IBackNavigationService>())
 			));
 	}
+
+	private void RegisterAnswerDetailNavigationService(IServiceCollection services)
+	{
+		services.AddSingleton<IParameterNavigationService<Guid?, AnswerDetailPageViewModel>>(sp =>
+			new ParameterNavigationService<Guid?, AnswerDetailPageViewModel>(
+				sp.GetRequiredService<NavigationStore>(),
+				sp.GetRequiredService<INavigationJournal>(),
+				p => new AnswerDetailPageViewModel(
+					p,
+					sp.GetRequiredService<IUnitOfWork>(),
+					sp.GetRequiredService<IBackNavigationService>())
+			));
+	}
+
 
 	private void StartNavigation()
 	{
