@@ -4,11 +4,13 @@ using Microsoft.Extensions.Hosting;
 using QuizGenerator.DAL;
 using QuizGenerator.Model.Entities;
 using QuizGenerator.Model.Interfaces;
+using QuizGenerator.View.Services;
 using QuizGenerator.View.Views.Windows;
 using QuizGenerator.ViewModel.Other;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels;
 using QuizGenerator.ViewModel.ViewModels.Pages;
+using QuizGenerator.ViewModel.ViewModels.Windows;
 using System.IO;
 using System.Windows;
 
@@ -111,6 +113,8 @@ public partial class App : Application
 
 		services.AddSingleton<IBackNavigationService, BackNavigationService>();
 
+		RegisterDialogNavigationServices(services);
+
 		RegisterAnswerDetailNavigationService(services);
 		RegisterQuestionDetailNavigationService(services);
 		RegisterQuestionPageNavigationService(services);
@@ -120,6 +124,12 @@ public partial class App : Application
 		RegisterStartNavigationService(services);
 
 		services.AddSingleton<NavigationViewModel>();
+	}
+
+	private void RegisterDialogNavigationServices(IServiceCollection services)
+	{
+		services.AddSingleton<IWindowNavigationService<ConfirmationWindowViewModel, bool>>(
+			new ConfirmationWindowNavigationService());
 	}
 
 	private void RegisterQuestionPageNavigationService(IServiceCollection services)
