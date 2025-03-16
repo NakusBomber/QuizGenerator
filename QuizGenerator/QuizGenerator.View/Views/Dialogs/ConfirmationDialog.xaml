@@ -37,14 +37,20 @@
                     HorizontalAlignment="Right"
                     Grid.Row="1">
             <Button Command="{Binding CancelCommand}"
-                    Style="{StaticResource PrimaryButtonStyle}"
+                    Style="{StaticResource SecondaryButtonStyle}"
                     MinWidth="80"
+                    MinHeight="30"
+                    Padding="0"
+                    Height="1"
                     Content="Cancel"
                     Margin="0 0 10 0"/>
 
             <Button Command="{Binding ConfirmCommand}"
-                    Style="{StaticResource SecondaryButtonStyle}"
+                    Style="{StaticResource PrimaryButtonStyle}"
                     MinWidth="80"
+                    MinHeight="30"
+                    Padding="0"
+                    Height="1"
                     Content="Ok"/>
         </StackPanel>
     </Grid>
