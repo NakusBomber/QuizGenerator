@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:comp="clr-namespace:QuizGenerator.View.Components"
-      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
+      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels.Pages;assembly=QuizGenerator.ViewModel"
       mc:Ignorable="d"
       d:Height="240"
       d:Width="550"

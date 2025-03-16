@@ -4,7 +4,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:comp="clr-namespace:QuizGenerator.View.Components"
-      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
+      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels.Pages;assembly=QuizGenerator.ViewModel"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"

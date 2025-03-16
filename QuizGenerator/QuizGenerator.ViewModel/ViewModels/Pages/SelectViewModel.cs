@@ -7,6 +7,7 @@ using QuizGenerator.ViewModel.Other;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace QuizGenerator.ViewModel.ViewModels.Pages;
@@ -59,10 +60,17 @@ public class SelectViewModel : ViewModelBase
 
 	private async Task SearchQuizesAsync(CancellationToken token)
 	{
-		var quizes = await _unitOfWork.QuizRepository.GetAsync(
+		await Task.Run(async () =>
+		{
+			var quizes = await _unitOfWork.QuizRepository.GetAsync(
 			q => q.Name.Contains(SearchText ?? string.Empty),
 			token: token);
-		Quizes = new ObservableCollection<Quiz>(quizes);
+
+			Application.Current.Dispatcher.Invoke(() =>
+			{
+				Quizes = new ObservableCollection<Quiz>(quizes);
+			});
+		}, token);
 	}
 
 	private void ClearSearchText(object? parameter) => SearchText = string.Empty;

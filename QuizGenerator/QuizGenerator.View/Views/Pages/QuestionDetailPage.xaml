@@ -7,7 +7,7 @@
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
       xmlns:comp="clr-namespace:QuizGenerator.View.Components"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
-      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
+      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels.Pages;assembly=QuizGenerator.ViewModel"
       xmlns:modelsVm="clr-namespace:QuizGenerator.ViewModel.ViewModels.Models;assembly=QuizGenerator.ViewModel"
       mc:Ignorable="d"
       Title="QuestionDetail"

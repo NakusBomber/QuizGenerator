@@ -6,6 +6,7 @@ using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace QuizGenerator.ViewModel.ViewModels.Pages;
@@ -43,13 +44,20 @@ public class StartViewModel : ViewModelBase
 
 	private async Task LoadQuizesAsync(CancellationToken token)
 	{
-		var list = await _unitOfWork.QuizRepository.GetAsync(
+		await Task.Run(async () =>
+		{
+			var list = await _unitOfWork.QuizRepository.GetAsync(
 			orderBy: q => q
 				.OrderByDescending(x => x.DateTimeLastPractice)
 				.ThenByDescending(x => x.DateTimeChanged)
 				.ThenByDescending(x => x.DateTimeCreated),
 			limit: 3,
 			token: token);
-		RecentlyQuizes = new ObservableCollection<Quiz>(list);
+
+			Application.Current.Dispatcher.Invoke(() =>
+			{
+				RecentlyQuizes = new ObservableCollection<Quiz>(list);
+			});
+		}, token);
 	}
 }

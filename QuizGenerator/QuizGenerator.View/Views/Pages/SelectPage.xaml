@@ -8,7 +8,7 @@
       xmlns:comp="clr-namespace:QuizGenerator.View.Components"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
       xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model"
-      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels;assembly=QuizGenerator.ViewModel"
+      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels.Pages;assembly=QuizGenerator.ViewModel"
       mc:Ignorable="d"
       d:DesignHeight="350"
       d:DesignWidth="500"
