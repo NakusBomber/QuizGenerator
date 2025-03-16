@@ -9,5 +9,6 @@ public class ConfirmationWindowNavigationService :
 {
 	protected override Type WindowType => typeof(ConfirmationDialog);
 
-	public override bool Navigate(ConfirmationWindowViewModel viewModel) => viewModel.IsSuccess;
+	public override bool Navigate(ConfirmationWindowViewModel viewModel) =>
+		ShowWindow(viewModel).IsSuccess;
 }
