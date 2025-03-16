@@ -3,6 +3,7 @@ using QuizGenerator.Model.Entities;
 using QuizGenerator.Model.Interfaces;
 using QuizGenerator.ViewModel.Commands.Bases;
 using QuizGenerator.ViewModel.Commands.Interfaces;
+using QuizGenerator.ViewModel.Other;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
@@ -147,15 +148,7 @@ public class QuizPageViewModel : SavingStateViewModel, IDropTarget
 			_quizId = _quiz.Id;
 
 			var questionViewModels = _quiz.Questions
-				.Select(q => new QuestionViewModel(q)
-				{
-					QuestionDetails = new ObservableCollection<QuestionDetailViewModel>(
-						q.QuestionDetails.Select(d => new QuestionDetailViewModel(d)
-						{
-							AnswerDetails = new ObservableCollection<AnswerDetailViewModel>(
-								d.AnswerDetails.Select(a => new AnswerDetailViewModel(a)))
-						}))
-				})
+				.ToVMs()
 				.OrderBy(q => q.ListNumber);
 
 			Application.Current.Dispatcher.Invoke(() =>

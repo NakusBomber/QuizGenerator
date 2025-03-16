@@ -47,12 +47,12 @@ public class StartViewModel : ViewModelBase
 		await Task.Run(async () =>
 		{
 			var list = await _unitOfWork.QuizRepository.GetAsync(
-			orderBy: q => q
-				.OrderByDescending(x => x.DateTimeLastPractice)
-				.ThenByDescending(x => x.DateTimeChanged)
-				.ThenByDescending(x => x.DateTimeCreated),
-			limit: 3,
-			token: token);
+				orderBy: q => q
+					.OrderByDescending(x => x.DateTimeLastPractice)
+					.ThenByDescending(x => x.DateTimeChanged)
+					.ThenByDescending(x => x.DateTimeCreated),
+				limit: 3,
+				token: token);
 
 			Application.Current.Dispatcher.Invoke(() =>
 			{

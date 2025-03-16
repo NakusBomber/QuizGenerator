@@ -2,6 +2,7 @@
 using QuizGenerator.Model.Interfaces;
 using QuizGenerator.ViewModel.Commands.Bases;
 using QuizGenerator.ViewModel.Commands.Interfaces;
+using QuizGenerator.ViewModel.Other;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
@@ -92,12 +93,7 @@ public class QuestionPageViewModel : SavingStateViewModel
 
 			_questionId = _question.Id;
 
-			var questionDetailViewModels = _question.QuestionDetails
-				.Select(qd => new QuestionDetailViewModel(qd)
-				{
-					AnswerDetails = new ObservableCollection<AnswerDetailViewModel>(
-						qd.AnswerDetails.Select(a => new AnswerDetailViewModel(a)))
-				});
+			var questionDetailViewModels = _question.QuestionDetails.ToVMs();
 
 			Application.Current.Dispatcher.Invoke(() =>
 			{

@@ -63,8 +63,8 @@ public class SelectViewModel : ViewModelBase
 		await Task.Run(async () =>
 		{
 			var quizes = await _unitOfWork.QuizRepository.GetAsync(
-			q => q.Name.Contains(SearchText ?? string.Empty),
-			token: token);
+				q => q.Name.Contains(SearchText ?? string.Empty),
+				token: token);
 
 			Application.Current.Dispatcher.Invoke(() =>
 			{
