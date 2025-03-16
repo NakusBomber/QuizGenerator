@@ -107,8 +107,7 @@
                           Grid.Row="2"
                           VerticalScrollBarVisibility="Auto">
                 <ItemsControl d:ItemsSource="{StaticResource AnswerDetailsDesignData}"
-                              ItemsSource="{Binding QuestionDetail.AnswerDetails}"
-                              Margin="0 0 10 0">
+                              ItemsSource="{Binding QuestionDetail.AnswerDetails}">
                     <ItemsControl.Resources>
                         <ResourceDictionary Source="/Styles/Animations/FadeInOpacityStoryboard.xaml"/>
                     </ItemsControl.Resources>
