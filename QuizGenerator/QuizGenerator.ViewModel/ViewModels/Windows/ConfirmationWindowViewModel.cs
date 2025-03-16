@@ -29,6 +29,11 @@ public class ConfirmationWindowViewModel : DialogViewModel
 		CancelCommand = new DelegateCommand(Cancel);
 	}
 
+	public static ConfirmationWindowViewModel DeletePrefab(string? name = null) =>
+		new("Are you sure?", 
+			string.IsNullOrEmpty(name) ? "Want delete?"
+									   : $"Want delete \"{name}\"?");
+
 	private void Confirm(object? parameter)
 	{
 		IsSuccess = true;

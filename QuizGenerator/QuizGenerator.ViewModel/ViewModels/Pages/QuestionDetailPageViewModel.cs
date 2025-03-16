@@ -5,6 +5,7 @@ using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
+using QuizGenerator.ViewModel.ViewModels.Windows;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
@@ -17,6 +18,7 @@ public class QuestionDetailPageViewModel : SavingStateViewModel
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IParameterNavigationService<Guid?, AnswerDetailPageViewModel> _answerDetailNavigationService;
 	private readonly IBackNavigationService _backNavigationService;
+	private readonly IWindowNavigationService<ConfirmationWindowViewModel, bool> _confirmationNavigationService;
 
 	private readonly PropertyChangedEventHandler _propertyChangedHandler;
 	private readonly ICollection<AnswerDetail> _newAnswerDetails;
@@ -46,11 +48,13 @@ public class QuestionDetailPageViewModel : SavingStateViewModel
 		Guid? id,
 		IUnitOfWork unitOfWork,
 		IParameterNavigationService<Guid?, AnswerDetailPageViewModel> answerDetailNavigationService,
-		IBackNavigationService backNavigationService)
+		IBackNavigationService backNavigationService,
+		IWindowNavigationService<ConfirmationWindowViewModel, bool> confirmationNavigationService)
 	{
 		_unitOfWork = unitOfWork;
 		_answerDetailNavigationService = answerDetailNavigationService;
 		_backNavigationService = backNavigationService;
+		_confirmationNavigationService = confirmationNavigationService;
 
 		_newAnswerDetails = new List<AnswerDetail>();
 		_propertyChangedHandler = (s, e) => IsNeedSaving = true;
@@ -146,6 +150,14 @@ public class QuestionDetailPageViewModel : SavingStateViewModel
 	private async Task DeleteQuestionDetailAsync(CancellationToken token)
 	{
 		if (QuestionDetail == null || _questionDetail == null)
+		{
+			return;
+		}
+
+		var result = _confirmationNavigationService.Navigate(
+			ConfirmationWindowViewModel.DeletePrefab(QuestionDetail.Text));
+
+		if (!result)
 		{
 			return;
 		}

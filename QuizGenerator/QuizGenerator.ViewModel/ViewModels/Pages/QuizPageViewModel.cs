@@ -6,6 +6,7 @@ using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
+using QuizGenerator.ViewModel.ViewModels.Windows;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -22,6 +23,7 @@ public class QuizPageViewModel : SavingStateViewModel, IDropTarget
 	private readonly IParameterNavigationService<Guid?, TrainingViewModel> _trainingNavigationService;
 	private readonly IParameterNavigationService<Guid?, QuestionPageViewModel> _questionNavigationService;
 	private readonly IBackNavigationService _backNavigationService;
+	private readonly IWindowNavigationService<ConfirmationWindowViewModel, bool> _confirmationNavigationService;
 
 	private readonly PropertyChangedEventHandler _propertyChangedHandler;
 	private readonly ICollection<Question> _newQuestions;
@@ -57,13 +59,15 @@ public class QuizPageViewModel : SavingStateViewModel, IDropTarget
 		IUnitOfWork unitOfWork,
 		IParameterNavigationService<Guid?, TrainingViewModel> trainingNavigationService,
 		IParameterNavigationService<Guid?, QuestionPageViewModel> questionNavigationService,
-		IBackNavigationService backNavigationService)
+		IBackNavigationService backNavigationService,
+		IWindowNavigationService<ConfirmationWindowViewModel, bool> confirmationNavigationService)
 	{
 		_unitOfWork = unitOfWork;
 		_dropHandler = new DefaultDropHandler();
 		_trainingNavigationService = trainingNavigationService;
 		_questionNavigationService = questionNavigationService;
 		_backNavigationService = backNavigationService;
+		_confirmationNavigationService = confirmationNavigationService;
 
 		_propertyChangedHandler = (s, a) => IsNeedSaving = true;
 		_quizId = id;
@@ -207,6 +211,14 @@ public class QuizPageViewModel : SavingStateViewModel, IDropTarget
 	private async Task DeleteQuizAsync(CancellationToken token)
 	{
 		if (Quiz == null || _quiz == null)
+		{
+			return;
+		}
+
+		var result = _confirmationNavigationService.Navigate(
+			ConfirmationWindowViewModel.DeletePrefab(Quiz.Name));
+
+		if (!result)
 		{
 			return;
 		}

@@ -5,6 +5,7 @@ using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
+using QuizGenerator.ViewModel.ViewModels.Windows;
 using System.ComponentModel;
 using System.Windows;
 
@@ -14,6 +15,7 @@ public class AnswerDetailPageViewModel : SavingStateViewModel
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IBackNavigationService _backNavigationService;
+	private readonly IWindowNavigationService<ConfirmationWindowViewModel, bool> _confirmationNavigationService;
 
 	private readonly PropertyChangedEventHandler _propertyChangedHandler;
 	private Guid? _answerDetailId;
@@ -38,10 +40,12 @@ public class AnswerDetailPageViewModel : SavingStateViewModel
 	public AnswerDetailPageViewModel(
 		Guid? id,
 		IUnitOfWork unitOfWork,
-		IBackNavigationService backNavigationService)
+		IBackNavigationService backNavigationService,
+		IWindowNavigationService<ConfirmationWindowViewModel, bool> confirmationNavigationService)
 	{
 		_unitOfWork = unitOfWork;
 		_backNavigationService = backNavigationService;
+		_confirmationNavigationService = confirmationNavigationService;
 
 		_answerDetailId = id;
 		_propertyChangedHandler = (s, e) => IsNeedSaving = true;
@@ -107,6 +111,14 @@ public class AnswerDetailPageViewModel : SavingStateViewModel
 	private async Task DeleteAnswerDetailAsync(CancellationToken token)
 	{
 		if (AnswerDetail == null || _answerDetail == null)
+		{
+			return;
+		}
+
+		var result = _confirmationNavigationService.Navigate(
+			ConfirmationWindowViewModel.DeletePrefab(AnswerDetail.Text));
+
+		if (!result)
 		{
 			return;
 		}

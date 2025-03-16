@@ -141,7 +141,8 @@ public partial class App : Application
 				p => new QuestionPageViewModel(p, 
 					sp.GetRequiredService<IUnitOfWork>(),
 					sp.GetRequiredService<IParameterNavigationService<Guid?, QuestionDetailPageViewModel>>(),
-					sp.GetRequiredService<IBackNavigationService>())
+					sp.GetRequiredService<IBackNavigationService>(),
+					sp.GetRequiredService<IWindowNavigationService<ConfirmationWindowViewModel, bool>>())
 			));
 	}
 
@@ -165,7 +166,8 @@ public partial class App : Application
 					sp.GetRequiredService<IUnitOfWork>(),
 					sp.GetRequiredService<IParameterNavigationService<Guid?, TrainingViewModel>>(),
 					sp.GetRequiredService<IParameterNavigationService<Guid?, QuestionPageViewModel>>(),
-					sp.GetRequiredService<IBackNavigationService>())
+					sp.GetRequiredService<IBackNavigationService>(),
+					sp.GetRequiredService<IWindowNavigationService<ConfirmationWindowViewModel, bool>>())
 			));
 	}
 
@@ -203,7 +205,8 @@ public partial class App : Application
 					p,
 					sp.GetRequiredService<IUnitOfWork>(),
 					sp.GetRequiredService<IParameterNavigationService<Guid?, AnswerDetailPageViewModel>>(),
-					sp.GetRequiredService<IBackNavigationService>())
+					sp.GetRequiredService<IBackNavigationService>(),
+					sp.GetRequiredService<IWindowNavigationService<ConfirmationWindowViewModel, bool>>())
 			));
 	}
 
@@ -216,7 +219,8 @@ public partial class App : Application
 				p => new AnswerDetailPageViewModel(
 					p,
 					sp.GetRequiredService<IUnitOfWork>(),
-					sp.GetRequiredService<IBackNavigationService>())
+					sp.GetRequiredService<IBackNavigationService>(),
+					sp.GetRequiredService<IWindowNavigationService<ConfirmationWindowViewModel, bool>>())
 			));
 	}
 
