@@ -119,9 +119,7 @@
 
                 <Label Grid.Column="1"
                        VerticalAlignment="Stretch"
-                       VerticalContentAlignment="Center"
-                       Foreground="{DynamicResource DisableTextBrush}"
-                       FontSize="14"
+                       Style="{StaticResource BodyLabelStyle}"
                        Content="{Binding Quiz.Questions.Count}"
                        d:Content="1"
                        ContentStringFormat="Question count: {0}"/>
@@ -197,7 +195,7 @@
                     <x:Array x:Key="QuestionsDesignData"
                              Type="{x:Type modelsViewModel:QuestionViewModel}">
                         <modelsViewModel:QuestionViewModel EvaluationPrice="1"
-                                                           QuestionType="OneMore"
+                                                           QuestionType="One"
                                                            ListNumber="1"
                                                            QuestionDetails="{StaticResource QuestionDetailsDesignData}"/>
 

@@ -18,7 +18,7 @@ public class Question : Entity
     public virtual IEnumerable<QuestionDetail> QuestionDetails { get; set; }
 
     public Question()
-        : this(null, 1, QuestionType.OneMore, 0)
+        : this(null, 1, QuestionType.One, 0)
     {
     }
 

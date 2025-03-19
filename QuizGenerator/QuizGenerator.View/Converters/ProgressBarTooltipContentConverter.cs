@@ -8,8 +8,8 @@ public class ProgressBarTooltipContentConverter : IMultiValueConverter
 	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 	{
 		if (values.Length == 2 &&
-			values[0] is double value &&
-			values[1] is double maximum)
+			double.TryParse(values[0]?.ToString(), out double value) &&
+			double.TryParse(values[1]?.ToString(), out double maximum))
 		{
 			return $"{value} / {maximum}";
 		}

@@ -3,94 +3,132 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:comp="clr-namespace:QuizGenerator.View.Components"
+      xmlns:converters="clr-namespace:QuizGenerator.View.Converters"
+      xmlns:icons="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
       xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels.Pages;assembly=QuizGenerator.ViewModel"
       mc:Ignorable="d"
       d:Height="240"
       d:Width="550"
       Title="Training"
       d:DataContext="{d:DesignInstance vms:TrainingViewModel}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadQuizCommand}"/>
+        </i:EventTrigger>
 
-        <comp:SmoothProgressBar Grid.Row="0"
-                                Value="9"
-                                Maximum="12"/>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding LoadQuizCommand.CancelCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
-        <Grid Grid.Row="1"
-              Margin="10 0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+    <comp:UnloadableContainer DataContext="{Binding}">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="DataContextClearing">
+                <i:InvokeCommandAction Command="{Binding StopTimerCommand}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
 
-            <Label Style="{StaticResource HeaderLabelStyle}"
-                   Grid.Column="0"
-                   Content="Remaining time: 08:13"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
 
-            <comp:IconButton MaterialIcon="Flag"
-                             ToolTip="Finish"
-                             Grid.Column="1"/>
+            <ProgressBar Style="{StaticResource SpinnerProgressBarStyle}"
+                         d:Visibility="Collapsed"
+                         Grid.Row="0"
+                         Visibility="{Binding LoadQuizCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+            <Grid Grid.Row="0"
+                  Visibility="{Binding LoadQuizCommand.Execution.IsCompleted, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <comp:SmoothProgressBar Grid.Row="0"
+                                        Height="2"
+                                        ShowValue="False"
+                                        d:Value="4"
+                                        d:Maximum="6"
+                                        Value="{Binding ActiveQuestion.ListNumber}"
+                                        Maximum="{Binding Quiz.Questions.Count}"/>
+
+                <Grid Grid.Row="1"
+                      Margin="10 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Visibility="{Binding Quiz.IsNeedInterval, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Grid.Column="0"
+                                Orientation="Horizontal">
+                        <icons:MaterialIcon Foreground="{DynamicResource TextBrush}"
+                                            Kind="ClockFast"
+                                            Margin="5 0"/>
+
+                        <Label Style="{StaticResource HeaderLabelStyle}"
+                               d:Content="00:12:33"
+                               Content="{Binding Quiz.Interval}"/>
+                    </StackPanel>
+
+                    <Label Style="{StaticResource HeaderLabelStyle}"
+                           Grid.ColumnSpan="3"
+                           HorizontalAlignment="Center"
+                           ToolTip="Number a question"
+                           d:Content="4/6">
+                        <Label.Content>
+                            <MultiBinding>
+                                <MultiBinding.Converter>
+                                    <converters:ProgressBarTooltipContentConverter/>
+                                </MultiBinding.Converter>
+
+                                <Binding Path="ActiveQuestion.ListNumber"/>
+                                <Binding Path="Quiz.Questions.Count"/>
+                            </MultiBinding>
+                        </Label.Content>
+                    </Label>
+
+                    <comp:IconButton MaterialIcon="Flag"
+                                     ToolTip="Finish"
+                                     Command="{Binding StopTimerCommand}"
+                                     Grid.Column="2"/>
+                </Grid>
+
+                <Label Style="{StaticResource BodyLabelStyle}"
+                       Grid.Row="2"
+                       ContentStringFormat="Price: {0}"
+                       d:Content="1"
+                       Content="{Binding ActiveQuestion.EvaluationPrice, FallbackValue='?'}"/>
+
+                <ScrollViewer VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch"
+                              Margin="10"
+                              Grid.Row="3"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Auto">
+                    <ContentControl ContentTemplateSelector="{StaticResource QuestionTypeTemplateSelector}"
+                                    Content="{Binding ActiveQuestion}"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Stretch"/>
+                </ScrollViewer>
+
+                <comp:IconButton MaterialIcon="CheckAll"
+                                 Grid.Row="4"
+                                 Margin="5"
+                                 Content="Submit"
+                                 Command="{Binding NextQuestionCommand}"
+                                 Grid.Column="1"/>
+
+            </Grid>
         </Grid>
-
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="8*" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-
-            <StackPanel Orientation="Vertical"
-                        VerticalAlignment="Stretch"
-                        HorizontalAlignment="Stretch"
-                        Grid.Column="1">
-                <StackPanel.Resources>
-                    <x:Array x:Key="TestAnswers"
-                             Type="{x:Type sys:String}">
-                        <sys:String>Answer 1</sys:String>
-                        <sys:String>Answer 2</sys:String>
-                        <sys:String>Answer 3</sys:String>
-                        <sys:String>Answer 4</sys:String>
-                    </x:Array>
-                </StackPanel.Resources>
-                <Label Style="{StaticResource HeaderLabelStyle}"
-                       Content="Question"/>
-                <ItemsControl ItemsSource="{StaticResource TestAnswers}"
-                              VerticalAlignment="Stretch"
-                              HorizontalAlignment="Stretch">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical"
-                                        VerticalAlignment="Stretch"
-                                        HorizontalAlignment="Stretch"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderBrush="Gray"
-                                    BorderThickness="1"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch">
-                                <Label Style="{StaticResource HeaderLabelStyle}"
-                                       Content="{Binding}"
-                                       HorizontalAlignment="Stretch"
-                                       VerticalAlignment="Center"/>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
-
-
-            <comp:IconButton MaterialIcon="ChevronDoubleRight"
-                             ToolTip="Skip"
-                             Grid.Column="2"/>
-        </Grid>
-    </Grid>
+    </comp:UnloadableContainer>
 </Page>

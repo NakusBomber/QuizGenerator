@@ -6,7 +6,7 @@ namespace QuizGenerator.DAL;
 
 public class ApplicationContext : DbContext
 {
-	public DbSet<Quiz> Quizes { get; set; }
+	public DbSet<Quiz> Quizzes { get; set; }
 	public DbSet<Question> Questions { get; set; }
 	public DbSet<QuestionDetail> QuestionDetails { get; set; }
 	public DbSet<AnswerDetail> AnswerDetails { get; set; }
@@ -21,7 +21,7 @@ public class ApplicationContext : DbContext
 		base.OnModelCreating(modelBuilder);
 
 		modelBuilder.Entity<Quiz>()
-			.HasKey(q => q.Id);;
+			.HasKey(q => q.Id);
 		modelBuilder.Entity<Quiz>()
 			.HasMany(q => q.Questions)
 			.WithOne(question => question.Quiz)

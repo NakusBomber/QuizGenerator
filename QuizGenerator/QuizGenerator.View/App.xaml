@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:QuizGenerator.View"
-             xmlns:converters="clr-namespace:QuizGenerator.View.Converters">
+             xmlns:converters="clr-namespace:QuizGenerator.View.Converters"
+             xmlns:models="clr-namespace:QuizGenerator.View.Models">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -30,6 +31,7 @@
                 <ResourceDictionary Source="/Styles/Elements/Buttons/IconButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/TextBoxes/ExtendedTextBoxStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Labels/HeaderLabelStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Elements/Labels/BodyLabelStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Labels/RequirementLabelStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/CheckBoxes/DefaultCheckBoxStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/ProgressBars/SmoothProgressBarStyle.xaml"/>
@@ -41,11 +43,22 @@
                 <!-- Templates -->
                 <ResourceDictionary Source="/Templates/NavigationDataTemplate.xaml"/>
                 <ResourceDictionary Source="/Templates/DragAdornerDataTemplate.xaml"/>
+                <ResourceDictionary Source="/Templates/QuestionTypes/QuestionOneTemplate.xaml"/>
+                <ResourceDictionary Source="/Templates/QuestionTypes/QuestionOpenTemplate.xaml"/>
+                <ResourceDictionary Source="/Templates/QuestionTypes/QuestionManyTemplate.xaml"/>
 
                 <!-- Global converters -->
                 <ResourceDictionary>
                     <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
                     <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
+                </ResourceDictionary>
+
+                <!-- Selectors -->
+                <ResourceDictionary>
+                    <models:QuestionTypeTemplateSelector x:Key="QuestionTypeTemplateSelector"
+                                                         OneTemplate="{StaticResource QuestionOneTemplate}"
+                                                         OpenTemplate="{StaticResource QuestionOpenTemplate}"
+                                                         ManyTemplate="{StaticResource QuestionManyTemplate}"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

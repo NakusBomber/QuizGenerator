@@ -173,6 +173,7 @@ public class QuizPageViewModel : SavingStateViewModel, IDropTarget
 
 		await Task.Run(async () =>
 		{
+			Quiz.DateTimeChanged = DateTime.Now;
 			Quiz.CopyToQuiz(_quiz);
 
 			await _unitOfWork.QuizRepository.UpdateOrCreateAsync(_quiz, token);

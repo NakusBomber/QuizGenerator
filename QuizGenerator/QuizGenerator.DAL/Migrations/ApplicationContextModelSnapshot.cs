@@ -37,7 +37,7 @@ namespace QuizGenerator.DAL.Migrations
 
                     b.HasIndex("QuestionDetailId");
 
-                    b.ToTable("AnswerDetails");
+                    b.ToTable("AnswerDetails", (string)null);
                 });
 
             modelBuilder.Entity("QuizGenerator.Model.Entities.Question", b =>
@@ -62,7 +62,7 @@ namespace QuizGenerator.DAL.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("QuizGenerator.Model.Entities.QuestionDetail", b =>
@@ -82,7 +82,7 @@ namespace QuizGenerator.DAL.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuestionDetails");
+                    b.ToTable("QuestionDetails", (string)null);
                 });
 
             modelBuilder.Entity("QuizGenerator.Model.Entities.Quiz", b =>
@@ -109,7 +109,7 @@ namespace QuizGenerator.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Quizes");
+                    b.ToTable("Quizes", (string)null);
                 });
 
             modelBuilder.Entity("QuizGenerator.Model.Entities.AnswerDetail", b =>

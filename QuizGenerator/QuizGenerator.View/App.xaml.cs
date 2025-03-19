@@ -152,7 +152,9 @@ public partial class App : Application
 			new ParameterNavigationService<Guid?, TrainingViewModel>(
 				sp.GetRequiredService<NavigationStore>(),
 				sp.GetRequiredService<INavigationJournal>(),
-				p => new TrainingViewModel(p)));
+				p => new TrainingViewModel(
+					p,
+					sp.GetRequiredService<IUnitOfWork>())));
 	}
 
 	private void RegisterQuizPageNavigationService(IServiceCollection services)

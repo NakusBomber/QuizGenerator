@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuizGenerator.View.Components;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

@@ -2,6 +2,7 @@
 
 public enum QuestionType
 {
-    OneMore = 0,
-    Open = 1
+    One = 0,
+    Open = 1,
+    Many = 2
 }
