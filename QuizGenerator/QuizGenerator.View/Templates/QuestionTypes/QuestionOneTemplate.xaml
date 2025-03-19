@@ -17,6 +17,7 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type models:AnswerDetailViewModel}">
                                     <RadioButton Content="{Binding Text}"
+                                                 Foreground="White"
                                                  GroupName="_answers"/>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

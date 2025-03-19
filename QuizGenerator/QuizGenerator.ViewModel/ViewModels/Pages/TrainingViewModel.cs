@@ -125,10 +125,9 @@ public class TrainingViewModel : ViewModelBase
 			});
 		}, token);
 
-		if (Quiz != null && Quiz.Questions.Count > 0)
+		if (NextQuestionCommand.CanExecute(null))
 		{
-			_questionIndex = 0;
-			ActiveQuestion = Quiz.Questions.ElementAt(_questionIndex++);
+			NextQuestionCommand.Execute(null);
 		}
 		if (Quiz != null && Quiz.IsNeedInterval && StartTimerCommand.CanExecute(null))
 		{
@@ -147,8 +146,15 @@ public class TrainingViewModel : ViewModelBase
 		{
 			return;
 		}
+		
+		var questionViewModel = Quiz.Questions.ElementAt(_questionIndex);
+		foreach (var qd in questionViewModel.QuestionDetails)
+		{
+			qd.AnswerDetails.Shuffle();
+		}
+		questionViewModel.QuestionDetails.Shuffle();
 
-		ActiveQuestion = Quiz.Questions.ElementAt(_questionIndex);
+		ActiveQuestion = questionViewModel;
 		_questionIndex++;
 	}
 

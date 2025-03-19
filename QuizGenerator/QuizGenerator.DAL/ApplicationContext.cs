@@ -46,5 +46,27 @@ public class ApplicationContext : DbContext
 
 		modelBuilder.Entity<AnswerDetail>()
 			.HasKey(ad => ad.Id);
+		modelBuilder.Entity<AnswerDetail>()
+			.HasOne(ad => ad.QuestionDetail)
+			.WithMany(qd => qd.AnswerDetails)
+			.HasForeignKey(ad => ad.QuestionDetailId)
+			.OnDelete(DeleteBehavior.Cascade);
+
+		modelBuilder.Entity<PracticeSession>()
+			.HasKey(p => p.Id);
+		modelBuilder.Entity<PracticeSession>()
+			.HasMany(p => p.UserAnswers)
+			.WithOne(ua => ua.PracticeSession)
+			.HasForeignKey(ua => ua.PracticeSessionId)
+			.OnDelete(DeleteBehavior.Cascade);
+
+		modelBuilder.Entity<UserAnswer>()
+			.HasKey(ua => ua.Id);
+		modelBuilder.Entity<UserAnswer>()
+			.HasOne(ua => ua.PracticeSession)
+			.WithMany(p => p.UserAnswers)
+			.HasForeignKey(ua => ua.PracticeSessionId)
+			.OnDelete(DeleteBehavior.Cascade);
+
 	}
 }
