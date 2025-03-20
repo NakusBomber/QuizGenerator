@@ -75,7 +75,7 @@ public class TrainingViewModel : ViewModelBase
 		{
 			return;
 		}
-
+		
 		_timer.Stop();
 		_timer.Start();
 	}
@@ -86,7 +86,7 @@ public class TrainingViewModel : ViewModelBase
 		{
 			return;
 		}
-
+		
 		_timer.Stop();
 	}
 

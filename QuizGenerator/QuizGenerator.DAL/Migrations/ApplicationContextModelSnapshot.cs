@@ -37,23 +37,7 @@ namespace QuizGenerator.DAL.Migrations
 
                     b.HasIndex("QuestionDetailId");
 
-                    b.ToTable("AnswerDetails");
-                });
-
-            modelBuilder.Entity("QuizGenerator.Model.Entities.PracticeSession", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("QuizId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuizId");
-
-                    b.ToTable("PracticeSessions");
+                    b.ToTable("AnswerDetails", (string)null);
                 });
 
             modelBuilder.Entity("QuizGenerator.Model.Entities.Question", b =>
@@ -78,7 +62,7 @@ namespace QuizGenerator.DAL.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("QuizGenerator.Model.Entities.QuestionDetail", b =>
@@ -98,7 +82,7 @@ namespace QuizGenerator.DAL.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuestionDetails");
+                    b.ToTable("QuestionDetails", (string)null);
                 });
 
             modelBuilder.Entity("QuizGenerator.Model.Entities.Quiz", b =>
@@ -125,36 +109,7 @@ namespace QuizGenerator.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Quizes");
-                });
-
-            modelBuilder.Entity("QuizGenerator.Model.Entities.UserAnswer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("AnswerDetailId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("PracticeSessionId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("QuestionDetailId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AnswerDetailId");
-
-                    b.HasIndex("PracticeSessionId");
-
-                    b.HasIndex("QuestionDetailId");
-
-                    b.ToTable("UserAnswers");
+                    b.ToTable("Quizes", (string)null);
                 });
 
             modelBuilder.Entity("QuizGenerator.Model.Entities.AnswerDetail", b =>
@@ -165,15 +120,6 @@ namespace QuizGenerator.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("QuestionDetail");
-                });
-
-            modelBuilder.Entity("QuizGenerator.Model.Entities.PracticeSession", b =>
-                {
-                    b.HasOne("QuizGenerator.Model.Entities.Quiz", "Quiz")
-                        .WithMany()
-                        .HasForeignKey("QuizId");
-
-                    b.Navigation("Quiz");
                 });
 
             modelBuilder.Entity("QuizGenerator.Model.Entities.Question", b =>
@@ -194,33 +140,6 @@ namespace QuizGenerator.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Question");
-                });
-
-            modelBuilder.Entity("QuizGenerator.Model.Entities.UserAnswer", b =>
-                {
-                    b.HasOne("QuizGenerator.Model.Entities.AnswerDetail", "AnswerDetail")
-                        .WithMany()
-                        .HasForeignKey("AnswerDetailId");
-
-                    b.HasOne("QuizGenerator.Model.Entities.PracticeSession", "PracticeSession")
-                        .WithMany("UserAnswers")
-                        .HasForeignKey("PracticeSessionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("QuizGenerator.Model.Entities.QuestionDetail", "QuestionDetail")
-                        .WithMany()
-                        .HasForeignKey("QuestionDetailId");
-
-                    b.Navigation("AnswerDetail");
-
-                    b.Navigation("PracticeSession");
-
-                    b.Navigation("QuestionDetail");
-                });
-
-            modelBuilder.Entity("QuizGenerator.Model.Entities.PracticeSession", b =>
-                {
-                    b.Navigation("UserAnswers");
                 });
 
             modelBuilder.Entity("QuizGenerator.Model.Entities.Question", b =>

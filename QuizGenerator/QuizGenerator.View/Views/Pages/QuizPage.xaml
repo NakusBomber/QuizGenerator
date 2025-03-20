@@ -80,6 +80,7 @@
 
                 <Label Style="{StaticResource HeaderLabelStyle}"
                        Grid.Row="1"
+                       Grid.Column="0"
                        Content="Time limit"/>
 
                 <CheckBox Grid.Row="1"
@@ -222,7 +223,7 @@
                                                    EditCommandParameter="{Binding}"
                                                    Margin="0 4 5 4"/>
                             <DataTemplate.Triggers>
-                                <EventTrigger RoutedEvent="Loaded">
+                                <EventTrigger RoutedEvent="comp:QuestionEditCard.Loaded">
                                     <BeginStoryboard Storyboard="{StaticResource FadeInOpacityStoryboard}"/>
                                 </EventTrigger>
                             </DataTemplate.Triggers>
