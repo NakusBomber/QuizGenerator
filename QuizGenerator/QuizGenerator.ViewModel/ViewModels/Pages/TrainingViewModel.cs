@@ -125,6 +125,7 @@ public class TrainingViewModel : ViewModelBase
 			});
 		}, token);
 
+		_questionIndex = 0;
 		if (NextQuestionCommand.CanExecute(null))
 		{
 			NextQuestionCommand.Execute(null);

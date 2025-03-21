@@ -3,7 +3,7 @@ using QuizGenerator.ViewModel.ViewModels.Bases;
 
 namespace QuizGenerator.ViewModel.ViewModels.Models;
 
-public class AnswerDetailViewModel : ObservableObject
+public class AnswerDetailViewModel : ViewModelBase
 {
 	private Guid _id;
 
@@ -33,6 +33,19 @@ public class AnswerDetailViewModel : ObservableObject
 		}
 	}
 
+	private UserAnswerViewModel _userAnswer;
+
+	public UserAnswerViewModel UserAnswer
+	{
+		get => _userAnswer;
+		set
+		{
+			_userAnswer = value;
+			OnPropertyChanged();
+		}
+	}
+
+
 	public AnswerDetailViewModel()
 		: this(new AnswerDetail())
 	{
@@ -43,6 +56,8 @@ public class AnswerDetailViewModel : ObservableObject
 		_id = answerDetail.Id;
 		_text = answerDetail.Text;
 		_isCorrect = answerDetail.IsCorrect;
+
+		_userAnswer = new UserAnswerViewModel();
 	}
 
 	public void CopyToAnswerDetail(AnswerDetail answerDetail)

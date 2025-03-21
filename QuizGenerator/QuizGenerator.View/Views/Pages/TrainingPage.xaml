@@ -99,7 +99,7 @@
 
                     <comp:IconButton MaterialIcon="Flag"
                                      ToolTip="Finish"
-                                     Command="{Binding StopTimerCommand}"
+                                     Command="{Binding FinishCommand}"
                                      Grid.Column="2"/>
                 </Grid>
 

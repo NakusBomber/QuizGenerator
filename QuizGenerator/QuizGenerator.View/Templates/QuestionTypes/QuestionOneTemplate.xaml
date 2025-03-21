@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:QuizGenerator.View.Converters"
                     xmlns:models="clr-namespace:QuizGenerator.ViewModel.ViewModels.Models;assembly=QuizGenerator.ViewModel">
     <DataTemplate x:Key="QuestionOneTemplate"
                   DataType="{x:Type models:QuestionViewModel}">
@@ -14,11 +15,17 @@
                                Margin="5 0 5 15"/>
 
                         <ItemsControl ItemsSource="{Binding AnswerDetails}">
+                            <ItemsControl.Resources>
+                                <converters:BooleanInvertedConverter x:Key="BooleanInvertedConverter"/>
+                            </ItemsControl.Resources>
+
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type models:AnswerDetailViewModel}">
                                     <RadioButton Content="{Binding Text}"
-                                                 Foreground="White"
-                                                 GroupName="_answers"/>
+                                                 IsChecked="{Binding UserAnswer.IsSelected}"
+                                                 IsEnabled="{Binding UserAnswer.IsReadOnly, Converter={StaticResource BooleanInvertedConverter}}"
+                                                 GroupName="{Binding Path=DataContext.Id, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}}}"
+                                                 Foreground="White"/>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
