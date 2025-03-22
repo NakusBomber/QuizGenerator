@@ -9,12 +9,33 @@
       xmlns:comp="clr-namespace:QuizGenerator.View.Components"
       xmlns:converters="clr-namespace:QuizGenerator.View.Converters"
       xmlns:icons="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
+      xmlns:modelsViewModel="clr-namespace:QuizGenerator.ViewModel.ViewModels.Models;assembly=QuizGenerator.ViewModel"
       xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels.Pages;assembly=QuizGenerator.ViewModel"
       mc:Ignorable="d"
       d:Height="240"
       d:Width="550"
       Title="Training"
       d:DataContext="{d:DesignInstance vms:TrainingViewModel}">
+    <Page.Resources>
+        <x:Array x:Key="AnswerDetailsDesignData"
+                 Type="{x:Type modelsViewModel:AnswerDetailViewModel}">
+            <modelsViewModel:AnswerDetailViewModel Text="Green"/>
+            <modelsViewModel:AnswerDetailViewModel Text="Yellow"/>
+            <modelsViewModel:AnswerDetailViewModel Text="Blue"/>
+            <modelsViewModel:AnswerDetailViewModel Text="Red"/>
+        </x:Array>
+        <x:Array x:Key="QuestionDetailsDesignData"
+                 Type="{x:Type modelsViewModel:QuestionDetailViewModel}">
+            <modelsViewModel:QuestionDetailViewModel Text="Favourite color?"
+                                                     AnswerDetails="{StaticResource AnswerDetailsDesignData}"/>
+        </x:Array>
+        <modelsViewModel:QuestionViewModel x:Key="QuestionsDesignData"
+                                           EvaluationPrice="1"
+                                           QuestionType="One"
+                                           ListNumber="1"
+                                           QuestionDetails="{StaticResource QuestionDetailsDesignData}"/>
+    </Page.Resources>
+
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadQuizCommand}"/>
@@ -70,6 +91,7 @@
 
                     <StackPanel Visibility="{Binding Quiz.IsNeedInterval, Converter={StaticResource BooleanToVisibilityConverter}}"
                                 Grid.Column="0"
+                                ToolTip="Time left"
                                 Orientation="Horizontal">
                         <icons:MaterialIcon Foreground="{DynamicResource TextBrush}"
                                             Kind="ClockFast"
@@ -77,7 +99,7 @@
 
                         <Label Style="{StaticResource HeaderLabelStyle}"
                                d:Content="00:12:33"
-                               Content="{Binding Quiz.Interval}"/>
+                               Content="{Binding TimeLeft}"/>
                     </StackPanel>
 
                     <Label Style="{StaticResource HeaderLabelStyle}"
@@ -117,6 +139,7 @@
                               HorizontalScrollBarVisibility="Auto">
                     <ContentControl ContentTemplateSelector="{StaticResource QuestionTypeTemplateSelector}"
                                     Content="{Binding ActiveQuestion}"
+                                    d:Content="{StaticResource QuestionsDesignData}"
                                     VerticalAlignment="Stretch"
                                     HorizontalAlignment="Stretch"/>
                 </ScrollViewer>
@@ -125,8 +148,16 @@
                                  Grid.Row="4"
                                  Margin="5"
                                  Content="Submit"
-                                 Command="{Binding NextQuestionCommand}"
-                                 Grid.Column="1"/>
+                                 Visibility="{Binding IsLastQuestion, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='Invert'}"
+                                 Command="{Binding NextQuestionCommand}"/>
+
+                <comp:IconButton MaterialIcon="Flag"
+                                 Grid.Row="4"
+                                 Margin="5"
+                                 Visibility="{Binding IsLastQuestion, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                 d:Visibility="Collapsed"
+                                 Content="End"
+                                 Command="{Binding NextQuestionCommand}"/>
 
             </Grid>
         </Grid>

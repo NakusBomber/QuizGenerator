@@ -3,6 +3,7 @@ using QuizGenerator.Model.Interfaces;
 using QuizGenerator.ViewModel.Commands.Bases;
 using QuizGenerator.ViewModel.Commands.Interfaces;
 using QuizGenerator.ViewModel.Other;
+using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Models;
 using System.Collections.ObjectModel;
@@ -16,6 +17,8 @@ public class TrainingViewModel : ViewModelBase
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly DispatcherTimer _timer;
+	private readonly IParameterNavigationService<TrainingViewModel, AnalisysViewModel> _analisysNavigationService;
+	private readonly IUserAnswerValidator _userAnswerValidator;
 	
 	private Guid? _quizId;
 	private Quiz? _quiz;
@@ -33,6 +36,19 @@ public class TrainingViewModel : ViewModelBase
 		}
 	}
 
+	private TimeSpan? _timeLeft;
+
+	public TimeSpan? TimeLeft
+	{
+		get => _timeLeft;
+		set
+		{
+			_timeLeft = value;
+			OnPropertyChanged();
+		}
+	}
+
+
 	private QuestionViewModel? _activeQuestion;
 
 	public QuestionViewModel? ActiveQuestion
@@ -46,28 +62,31 @@ public class TrainingViewModel : ViewModelBase
 	}
 
 	public IAsyncCommand<object?> LoadQuizCommand { get; }
-	public IAsyncCommand<object?> FinishCommand { get; }
+	public ICommand FinishCommand { get; }
 	public ICommand NextQuestionCommand { get; }
-	public ICommand SubmitAnswerCommand { get; }
 	public ICommand StartTimerCommand { get; }
 	public ICommand StopTimerCommand { get; }
 
 	public TrainingViewModel(
 		Guid? id,
-		IUnitOfWork unitOfWork)
+		IUnitOfWork unitOfWork,
+		IParameterNavigationService<TrainingViewModel, AnalisysViewModel> analisysNavigationService)
 	{
 		_unitOfWork = unitOfWork;
+		_analisysNavigationService = analisysNavigationService;
+		_userAnswerValidator = new UserAnswerValidator();
 		_timer = CreateTimer();
 
 		_quizId = id;
-		
+
 		LoadQuizCommand = AsyncDelegateCommand.Create(LoadQuizAsync);
-		FinishCommand = AsyncDelegateCommand.Create(FinishQuizAsync);
+		FinishCommand = new DelegateCommand(FinishQuiz);
 		NextQuestionCommand = new DelegateCommand(NextQuestion, CanNextQuestion);
-		SubmitAnswerCommand = new DelegateCommand(SubmitAnswer);
 		StartTimerCommand = new DelegateCommand(StartTimer);
 		StopTimerCommand = new DelegateCommand(StopTimer);
 	}
+
+	public bool IsLastQuestion => Quiz != null && _questionIndex == Quiz.Questions.Count;
 
 	private void StartTimer(object? obj)
 	{
@@ -95,17 +114,21 @@ public class TrainingViewModel : ViewModelBase
 		if (_quizId == null)
 		{
 			return;
-			// TODO : Make another way
 		}
 
 		await Task.Run(async () =>
 		{
 			if (_quizId is Guid id)
 			{
-				_quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, token);
+				try
+				{
+					_quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, token);
+				}
+				catch (InvalidOperationException)
+				{
+					return;
+				}
 			}
-
-			// TODO : Make another way
 
 			if (_quiz == null)
 			{
@@ -132,19 +155,34 @@ public class TrainingViewModel : ViewModelBase
 		}
 		if (Quiz != null && Quiz.IsNeedInterval && StartTimerCommand.CanExecute(null))
 		{
+			TimeLeft = Quiz.Interval;
 			StartTimerCommand.Execute(null);
 		}
 	}
 
-	private async Task FinishQuizAsync(CancellationToken token)
+	private void FinishQuiz(object? parameter)
 	{
-		MessageBox.Show("FINISH");
+		if (StopTimerCommand.CanExecute(null))
+		{
+			StopTimerCommand.Execute(null);
+		}
+
+		_analisysNavigationService.Navigate(this);
 	}
 
 	private void NextQuestion(object? parameter)
 	{
 		if (Quiz == null)
 		{
+			return;
+		}
+
+		if (IsLastQuestion)
+		{
+			if (FinishCommand.CanExecute(null))
+			{
+				FinishCommand.Execute(null);
+			}
 			return;
 		}
 		
@@ -157,16 +195,12 @@ public class TrainingViewModel : ViewModelBase
 
 		ActiveQuestion = questionViewModel;
 		_questionIndex++;
+		OnPropertyChanged(nameof(IsLastQuestion));
 	}
 
 	private bool CanNextQuestion(object? obj) =>
 		Quiz != null &&
-		_questionIndex < Quiz.Questions.Count;
-
-	private void SubmitAnswer(object? parameter)
-	{
-		// TODO : Make logic
-	}
+		(ActiveQuestion == null || _userAnswerValidator.Validate(ActiveQuestion));
 
 	private DispatcherTimer CreateTimer()
 	{
@@ -176,12 +210,12 @@ public class TrainingViewModel : ViewModelBase
 			DispatcherPriority.Normal,
 			(s, e) =>
 			{
-				if (Quiz == null || Quiz.Interval == null)
+				if (TimeLeft == null)
 				{
 					return;
 				}
 
-				if (Quiz.Interval == TimeSpan.Zero)
+				if (TimeLeft == TimeSpan.Zero)
 				{
 					if (StopTimerCommand.CanExecute(null))
 					{
@@ -195,7 +229,7 @@ public class TrainingViewModel : ViewModelBase
 					return;
 				}
 
-				Quiz.Interval -= sec;
+				TimeLeft -= sec;
 			},
 			Application.Current.Dispatcher)
 		{

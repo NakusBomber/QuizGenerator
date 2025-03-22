@@ -115,6 +115,7 @@ public partial class App : Application
 
 		RegisterDialogNavigationServices(services);
 
+		RegisterAnalisysNavigationService(services);
 		RegisterAnswerDetailNavigationService(services);
 		RegisterQuestionDetailNavigationService(services);
 		RegisterQuestionPageNavigationService(services);
@@ -145,6 +146,14 @@ public partial class App : Application
 					sp.GetRequiredService<IWindowNavigationService<ConfirmationWindowViewModel, bool>>())
 			));
 	}
+	private void RegisterAnalisysNavigationService(IServiceCollection services)
+	{
+		services.AddSingleton<IParameterNavigationService<TrainingViewModel, AnalisysViewModel>>(sp =>
+			new ParameterNavigationService<TrainingViewModel, AnalisysViewModel>(
+				sp.GetRequiredService<NavigationStore>(),
+				sp.GetRequiredService<INavigationJournal>(),
+				p => new AnalisysViewModel(p)));
+	}
 
 	private void RegisterTrainingNavigationService(IServiceCollection services)
 	{
@@ -154,7 +163,8 @@ public partial class App : Application
 				sp.GetRequiredService<INavigationJournal>(),
 				p => new TrainingViewModel(
 					p,
-					sp.GetRequiredService<IUnitOfWork>())));
+					sp.GetRequiredService<IUnitOfWork>(),
+					sp.GetRequiredService<IParameterNavigationService<TrainingViewModel, AnalisysViewModel>>())));
 	}
 
 	private void RegisterQuizPageNavigationService(IServiceCollection services)

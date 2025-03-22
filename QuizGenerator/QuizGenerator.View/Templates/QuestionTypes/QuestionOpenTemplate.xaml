@@ -15,7 +15,7 @@
                                Margin="5 0 5 15"/>
 
                         <comp:ExtendedTextBox Placeholder="Type your answer here"
-                                              Text="{Binding AnswerDetails[0].UserAnswer.Text, FallbackValue=''}"/>
+                                              Text="{Binding AnswerDetails[0].UserAnswer.Text, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
