@@ -123,12 +123,15 @@ public class TrainingViewModel : ViewModelBase
 				try
 				{
 					_quiz = await _unitOfWork.QuizRepository.GetByIdAsync(id, token);
+					_quiz.DateTimeLastPractice = DateTime.Now;
+					await _unitOfWork.QuizRepository.UpdateAsync(_quiz);
 				}
 				catch (InvalidOperationException)
 				{
 					return;
 				}
 			}
+			await _unitOfWork.SaveAsync(token);
 
 			if (_quiz == null)
 			{
