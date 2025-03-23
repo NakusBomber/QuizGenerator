@@ -163,9 +163,9 @@ namespace QuizGenerator.View.IndependentComponents.Components
 					var path = new Path
 					{
 						Data = pathGeometry,
-						Fill = item.Brush
+						Fill = item.Brush,
+						ToolTip = item.Name
 					};
-
 					canvas.Children.Add(path);
 
 					segmentsQueue.Enqueue(new PieChartSegment(arcSegment, startAngleDegree, endAngleDegree));
@@ -218,7 +218,7 @@ namespace QuizGenerator.View.IndependentComponents.Components
 				}
 			};
 
-			_clock.Completed += (s, e) => { AnimateNextSegment(queue); };
+			_clock.Completed += (s, e) => AnimateNextSegment(queue);
 
 			_clock.Controller.Begin();
 		}
