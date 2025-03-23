@@ -5,14 +5,16 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:local="clr-namespace:QuizGenerator.View.Views.Windows"
       xmlns:comp="clr-namespace:QuizGenerator.View.Components"
+      xmlns:indComp="clr-namespace:QuizGenerator.View.IndependentComponents.Components;assembly=QuizGenerator.View.IndependentComponents"
+      xmlns:indModels="clr-namespace:QuizGenerator.View.IndependentComponents.Models;assembly=QuizGenerator.View.IndependentComponents"
       xmlns:models="clr-namespace:QuizGenerator.View.Models"
+      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels.Pages;assembly=QuizGenerator.ViewModel"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
       mc:Ignorable="d"
       Title="Analysis"
-      Height="450"
-      MinHeight="340"
-      MinWidth="550"
-      Width="600">
+      d:Height="450"
+      d:Width="600"
+      d:DataContext="{d:DesignInstance {x:Type vms:AnalisysViewModel}}">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto">
 
@@ -33,9 +35,11 @@
                 <Label Style="{StaticResource HeaderLabelStyle}"
                        Margin="0 10"
                        Grid.Column="0"
-                       Content="Quiz name"/>
+                       Content="{Binding TrainingSession.Quiz.Name}"
+                       d:Content="Quiz name"/>
 
                 <comp:IconButton MaterialIcon="Reload"
+                                 Command="{Binding RetryCommand}"
                                  Grid.Column="1"
                                  ToolTip="Again"/>
             </Grid>
@@ -43,32 +47,37 @@
             <Grid Grid.Row="1"
                   Margin="20 0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <Grid.Resources>
-                    <x:Array x:Key="PieChartData"
-                             Type="{x:Type models:PieChartData}">
-                        <models:PieChartData Brush="{StaticResource SuccessBrush}" Weight="9" Name="Correct"/>
-                        <models:PieChartData Brush="DarkRed" Weight="3" Name="Incorrect"/>
+                    <x:Array x:Key="PieChartTestData"
+                             Type="{x:Type indModels:PieChartData}">
+                        <indModels:PieChartData Brush="{StaticResource SuccessBrush}"
+                                                Weight="9"
+                                                Name="Correct"/>
+                        <indModels:PieChartData Brush="DarkRed"
+                                                Weight="3"
+                                                Name="Incorrect"/>
                     </x:Array>
                 </Grid.Resources>
-                <comp:PieChart Grid.Column="0"
-                               Width="180"
-                               Height="180"
-                               Data="{StaticResource PieChartData}"/>
+                <indComp:PieChart Grid.Column="0"
+                                  Width="120"
+                                  Height="120"
+                                  d:Data="{StaticResource PieChartTestData}"/>
 
                 <StackPanel Orientation="Vertical"
+                            Margin="10 0 0 0"
                             VerticalAlignment="Center"
                             Grid.Column="1">
                     <Label Style="{StaticResource HeaderLabelStyle}"
-                           Content="Correct answers: 9"/>
-                    <Label Style="{StaticResource HeaderLabelStyle}"
-                           FontSize="12"
-                           Content="Incorrect answers: 3"/>
-                    <Label Style="{StaticResource HeaderLabelStyle}"
-                           FontSize="12"
+                           ContentStringFormat="Correct answers: {0}"
+                           d:Content="9"/>
+                    <Label Style="{StaticResource BodyLabelStyle}"
+                           ContentStringFormat="Incorrect answers: {0}"
+                           d:Content="3"/>
+                    <Label Style="{StaticResource BodyLabelStyle}"
                            Content="Elapsed time: 04:32"/>
                 </StackPanel>
             </Grid>

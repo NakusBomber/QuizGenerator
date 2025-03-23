@@ -29,4 +29,8 @@
     <DataTemplate DataType="{x:Type vms:AnswerDetailPageViewModel}">
         <pages:AnswerDetailPage/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vms:AnalisysViewModel}">
+        <pages:AnalisysPage/>
+    </DataTemplate>
 </ResourceDictionary>

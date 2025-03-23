@@ -15,7 +15,6 @@
 
                 <!-- Other styles -->
                 <ResourceDictionary Source="/Styles/Elements/Others/TooltipStyle.xaml"/>
-                <ResourceDictionary Source="/Styles/Elements/Others/PieChartStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Others/QuestionEditCardStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Others/QuestionDetailEditCardStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements/Others/AnswerDetailEditCardStyle.xaml"/>

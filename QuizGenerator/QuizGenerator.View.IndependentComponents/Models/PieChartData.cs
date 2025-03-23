@@ -1,9 +1,8 @@
-﻿using QuizGenerator.ViewModel.ViewModels.Bases;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
-namespace QuizGenerator.View.Models;
+namespace QuizGenerator.View.IndependentComponents.Models;
 
-public class PieChartData : ObservableObject
+public class PieChartData
 {
 	private Brush _brush;
 	public Brush Brush
@@ -12,7 +11,6 @@ public class PieChartData : ObservableObject
 		set
 		{
 			_brush = value;
-			OnPropertyChanged();
 		}
 	}
 
@@ -23,7 +21,6 @@ public class PieChartData : ObservableObject
 		set
 		{
 			_name = value;
-			OnPropertyChanged();
 		}
 	}
 
@@ -34,7 +31,6 @@ public class PieChartData : ObservableObject
 		set
 		{
 			_weight = value;
-			OnPropertyChanged();
 		}
 	}
 
@@ -47,7 +43,7 @@ public class PieChartData : ObservableObject
 		if (brush == null)
 		{
 			var rand = new Random();
-			
+
 			var r = (byte)rand.Next(0, 256);
 			var g = (byte)rand.Next(0, 256);
 			var b = (byte)rand.Next(0, 256);
@@ -60,10 +56,10 @@ public class PieChartData : ObservableObject
 		this._brush.Freeze();
 	}
 
-	public PieChartData() :
-		this(string.Empty, 0)
+	public PieChartData()
+		: this(string.Empty, 0)
 	{
-	
+
 	}
 
 }

@@ -152,7 +152,10 @@ public partial class App : Application
 			new ParameterNavigationService<TrainingViewModel, AnalisysViewModel>(
 				sp.GetRequiredService<NavigationStore>(),
 				sp.GetRequiredService<INavigationJournal>(),
-				p => new AnalisysViewModel(p)));
+				p => new AnalisysViewModel(
+					p,
+					sp.GetRequiredService<IWindowNavigationService<ConfirmationWindowViewModel, bool>>(),
+					sp.GetRequiredService<IBackNavigationService>())));
 	}
 
 	private void RegisterTrainingNavigationService(IServiceCollection services)
