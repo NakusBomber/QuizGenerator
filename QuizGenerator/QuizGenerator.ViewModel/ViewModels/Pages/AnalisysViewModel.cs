@@ -1,8 +1,12 @@
-﻿using QuizGenerator.ViewModel.Commands.Bases;
+﻿using QuizGenerator.View.IndependentComponents.Models;
+using QuizGenerator.ViewModel.Commands.Bases;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
 using QuizGenerator.ViewModel.ViewModels.Windows;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace QuizGenerator.ViewModel.ViewModels.Pages;
 
@@ -47,6 +51,17 @@ public class AnalisysViewModel : ViewModelBase
 		}
 	}
 
+	private ObservableCollection<PieChartData> _pieChartData;
+
+	public ObservableCollection<PieChartData> PieChartData
+	{
+		get => _pieChartData;
+		set
+		{
+			_pieChartData = value;
+			OnPropertyChanged();
+		}
+	}
 
 	public ICommand RetryCommand { get; }
 	public AnalisysViewModel(
@@ -58,13 +73,18 @@ public class AnalisysViewModel : ViewModelBase
 		_confirmationNavigationService = confirmationNavigationService;
 		_backNavigationService = backNavigationService;
 
+		_pieChartData = new ObservableCollection<PieChartData>([
+				new PieChartData("1", 1),
+				new PieChartData("2", 2)]);
+
+
+
 		RetryCommand = new DelegateCommand(RetryPractice);
 
 	}
 
 	private void RetryPractice(object? parameter)
 	{
-		CountCorrectAnswers++;
 		var confirmationViewModel = new ConfirmationWindowViewModel(
 			"Are you sure?", 
 			"Retry this quiz?");

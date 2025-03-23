@@ -1,5 +1,7 @@
 ﻿using QuizGenerator.View.IndependentComponents.Models;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.DirectoryServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -27,29 +29,25 @@ namespace QuizGenerator.View.IndependentComponents.Components
 			}
 		}
 
-		private readonly EventHandler _handler;
 		private readonly TimeSpan _oneAngleAnimationDuration = TimeSpan.FromMilliseconds(2.5d);
+		private AnimationClock? _clock;
 		private double _radius = 0;
 
 		public override void OnApplyTemplate()
 		{
 			base.OnApplyTemplate();
-
-			AddValueChanged(ActualHeightProperty);
-			AddValueChanged(ActualWidthProperty);
-			AddValueChanged(DataProperty);
-
+			
 			CreateSectors();
 		}
 
-		public IEnumerable<PieChartData> Data
+		public ObservableCollection<PieChartData> Data
 		{
-			get { return (IEnumerable<PieChartData>)GetValue(DataProperty); }
+			get { return (ObservableCollection<PieChartData>)GetValue(DataProperty); }
 			set { SetValue(DataProperty, value); }
 		}
 
 		public static readonly DependencyProperty DataProperty =
-			DependencyProperty.Register("Data", typeof(IEnumerable<PieChartData>), typeof(PieChart), new PropertyMetadata(null));
+			DependencyProperty.Register("Data", typeof(ObservableCollection<PieChartData>), typeof(PieChart), new PropertyMetadata(null, OnDataChanged));
 
 
 		public double StartAngle
@@ -66,19 +64,69 @@ namespace QuizGenerator.View.IndependentComponents.Components
 		public PieChart()
 		{
 			InitializeComponent();
-
-			_handler = (sender, e) => CreateSectors();
-			Unloaded += PieChart_Unloaded;
 		}
 
-		private void PieChart_Unloaded(object sender, RoutedEventArgs e)
+		private static void OnDataChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
 		{
-			RemoveValueChanged(ActualHeightProperty);
-			RemoveValueChanged(ActualWidthProperty);
-			RemoveValueChanged(DataProperty);
+			if (o is PieChart chart)
+			{
 
+				chart.OnDataCollectionChanged(
+					e.OldValue as ObservableCollection<PieChartData>,
+					e.NewValue as ObservableCollection<PieChartData>);
+			}
+		}
 
-			Unloaded -= PieChart_Unloaded;
+		private void OnDataCollectionChanged(
+			ObservableCollection<PieChartData>? oldCollection,
+			ObservableCollection<PieChartData>? newCollection)
+		{
+			if (oldCollection != null)
+			{
+				oldCollection.CollectionChanged -= Data_CollectionChanged;
+				foreach (var item in oldCollection)
+				{
+					item.PropertyChanged -= Data_PropertyChanged;
+				}
+			}
+
+			if (newCollection != null)
+			{
+				newCollection.CollectionChanged += Data_CollectionChanged;
+				foreach (var item in newCollection)
+				{
+					item.PropertyChanged += Data_PropertyChanged;
+				}
+			}
+
+			CreateSectors();
+		}
+
+		private void Data_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+		{
+			CreateSectors();
+		}
+
+		private void Data_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+		{
+			if (e.OldItems != null)
+			{
+				foreach (PieChartData oldItem in e.OldItems)
+				{
+					oldItem.PropertyChanged -= Data_PropertyChanged;
+				}
+			}
+
+			if (e.NewItems != null)
+			{
+				foreach (PieChartData newItem in e.NewItems)
+				{
+					newItem.PropertyChanged += Data_PropertyChanged;
+				}
+			}
+			
+
+			CreateSectors();
 		}
 
 		private void CreateSectors()
@@ -151,8 +199,8 @@ namespace QuizGenerator.View.IndependentComponents.Components
 				EasingFunction = new CircleEase { EasingMode = EasingMode.EaseOut }
 			};
 
-			var clock = animation.CreateClock();
-			clock.CurrentTimeInvalidated += (s, e) =>
+			_clock = animation.CreateClock();
+			_clock.CurrentTimeInvalidated += (s, e) =>
 			{
 				if (s is AnimationClock animationClock)
 				{
@@ -170,25 +218,9 @@ namespace QuizGenerator.View.IndependentComponents.Components
 				}
 			};
 
-			clock.Completed += (s, e) => { AnimateNextSegment(queue); };
+			_clock.Completed += (s, e) => { AnimateNextSegment(queue); };
 
-			clock.Controller.Begin();
-		}
-
-		private void AddValueChanged(DependencyProperty property)
-		{
-			Type targetType = GetType();
-
-			var discriptor = DependencyPropertyDescriptor.FromProperty(property, targetType);
-			discriptor?.AddValueChanged(this, _handler);
-		}
-		
-		private void RemoveValueChanged(DependencyProperty property)
-		{
-			Type targetType = GetType();
-
-			var discriptor = DependencyPropertyDescriptor.FromProperty(property, targetType);
-			discriptor?.RemoveValueChanged(this, _handler);
+			_clock.Controller.Begin();
 		}
 
 		private Point CalculateArcPoint(double angleDegree)

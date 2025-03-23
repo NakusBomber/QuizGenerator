@@ -2,7 +2,7 @@
 
 namespace QuizGenerator.View.IndependentComponents.Models;
 
-public class PieChartData
+public class PieChartData : ObservableObject
 {
 	private Brush _brush;
 	public Brush Brush
@@ -11,6 +11,7 @@ public class PieChartData
 		set
 		{
 			_brush = value;
+			OnPropertyChanged();
 		}
 	}
 
@@ -21,6 +22,7 @@ public class PieChartData
 		set
 		{
 			_name = value;
+			OnPropertyChanged();
 		}
 	}
 
@@ -31,6 +33,7 @@ public class PieChartData
 		set
 		{
 			_weight = value;
+			OnPropertyChanged();
 		}
 	}
 

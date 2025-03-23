@@ -51,21 +51,10 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Grid.Resources>
-                    <x:Array x:Key="PieChartTestData"
-                             Type="{x:Type indModels:PieChartData}">
-                        <indModels:PieChartData Brush="{StaticResource SuccessBrush}"
-                                                Weight="9"
-                                                Name="Correct"/>
-                        <indModels:PieChartData Brush="DarkRed"
-                                                Weight="3"
-                                                Name="Incorrect"/>
-                    </x:Array>
-                </Grid.Resources>
                 <indComp:PieChart Grid.Column="0"
                                   Width="120"
                                   Height="120"
-                                  d:Data="{StaticResource PieChartTestData}"/>
+                                  Data="{Binding PieChartData}"/>
 
                 <StackPanel Orientation="Vertical"
                             Margin="10 0 0 0"
