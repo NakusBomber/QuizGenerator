@@ -8,6 +8,7 @@ using QuizGenerator.View.Services;
 using QuizGenerator.View.Views.Windows;
 using QuizGenerator.ViewModel.Other;
 using QuizGenerator.ViewModel.Other.Interfaces;
+using QuizGenerator.ViewModel.Other.QuestionEvaluators;
 using QuizGenerator.ViewModel.ViewModels;
 using QuizGenerator.ViewModel.ViewModels.Pages;
 using QuizGenerator.ViewModel.ViewModels.Windows;
@@ -59,7 +60,17 @@ public partial class App : Application
 
 		ConfigureUnitOfWork(services);
 
+		ConfigureOthers(services);
+
 		ConfigureNavigation(services);
+	}
+
+	private void ConfigureOthers(IServiceCollection services)
+	{
+		services.AddSingleton<IUserAnswerEvaluator>(new UserAnswerEvaluator([
+			new QuestionOneEvaluator(),
+			new QuestionOpenEvaluator(),
+			new QuestionManyEvaluator()]));
 	}
 
 	private void ConfigureApplicationContext(IServiceCollection services)
@@ -154,6 +165,7 @@ public partial class App : Application
 				sp.GetRequiredService<INavigationJournal>(),
 				p => new AnalisysViewModel(
 					p,
+					sp.GetRequiredService<IUserAnswerEvaluator>(),
 					sp.GetRequiredService<IWindowNavigationService<ConfirmationWindowViewModel, bool>>(),
 					sp.GetRequiredService<IBackNavigationService>())));
 	}
@@ -167,6 +179,7 @@ public partial class App : Application
 				p => new TrainingViewModel(
 					p,
 					sp.GetRequiredService<IUnitOfWork>(),
+					sp.GetRequiredService<IUserAnswerEvaluator>(),
 					sp.GetRequiredService<IParameterNavigationService<TrainingViewModel, AnalisysViewModel>>())));
 	}
 

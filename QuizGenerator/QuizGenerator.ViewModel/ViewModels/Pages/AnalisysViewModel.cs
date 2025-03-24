@@ -111,11 +111,12 @@ public class AnalisysViewModel : ViewModelBase
 	public ICommand RetryCommand { get; }
 	public AnalisysViewModel(
 		TrainingViewModel trainingViewModel,
+		IUserAnswerEvaluator userAnswerEvaluator,
 		IWindowNavigationService<ConfirmationWindowViewModel, bool> confirmationNavigationService,
 		IBackNavigationService backNavigationService)
 	{
 		_quizName = trainingViewModel.Quiz?.Name ?? string.Empty;
-		_userAnswerEvaluator = new UserAnswerEvaluator();
+		_userAnswerEvaluator = userAnswerEvaluator;
 		_confirmationNavigationService = confirmationNavigationService;
 		_backNavigationService = backNavigationService;
 

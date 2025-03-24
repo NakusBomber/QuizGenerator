@@ -70,11 +70,12 @@ public class TrainingViewModel : ViewModelBase
 	public TrainingViewModel(
 		Guid? id,
 		IUnitOfWork unitOfWork,
+		IUserAnswerEvaluator userAnswerEvaluator,
 		IParameterNavigationService<TrainingViewModel, AnalisysViewModel> analisysNavigationService)
 	{
 		_unitOfWork = unitOfWork;
 		_analisysNavigationService = analisysNavigationService;
-		_userAnswerEvaluator = new UserAnswerEvaluator();
+		_userAnswerEvaluator = userAnswerEvaluator;
 		_timer = CreateTimer();
 
 		_quizId = id;

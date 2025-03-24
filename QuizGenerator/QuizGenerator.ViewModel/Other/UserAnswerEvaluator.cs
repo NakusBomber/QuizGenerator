@@ -1,33 +1,29 @@
 ﻿using QuizGenerator.Model.Entities;
 using QuizGenerator.ViewModel.Other.Interfaces;
+using QuizGenerator.ViewModel.Other.QuestionEvaluators;
 using QuizGenerator.ViewModel.ViewModels.Models;
 
 namespace QuizGenerator.ViewModel.Other;
 
 public class UserAnswerEvaluator : IUserAnswerEvaluator
 {
+	private readonly IEnumerable<IQuestionEvaluator> _evaluators;
+
+	public UserAnswerEvaluator(IEnumerable<IQuestionEvaluator> evaluators)
+	{
+		_evaluators = evaluators;
+	}
+
+
 	public bool IsCorrect(QuestionType questionType, AnswerDetailViewModel answerDetailViewModel)
 	{
-		if (questionType == QuestionType.Open)
-		{
-			if (answerDetailViewModel.UserAnswer == null ||
-				string.IsNullOrEmpty(answerDetailViewModel.UserAnswer.Text))
-			{
-				return false;
-			}
-
-			var answerText = FormatedAnswer(answerDetailViewModel.Text);
-			var userText = FormatedAnswer(answerDetailViewModel.UserAnswer.Text);
-			return answerDetailViewModel.IsCorrect &&
-					answerText == userText;
-		}
-
 		if (answerDetailViewModel.UserAnswer == null)
 		{
 			return false;
 		}
 
-		return answerDetailViewModel.IsCorrect == answerDetailViewModel.UserAnswer.IsSelected;
+		var evaluator = GetEvaluator(questionType);
+		return evaluator == null || evaluator.IsCorrect(answerDetailViewModel);
 	}
 
 	public float CalculatePrice(QuestionViewModel questionViewModel)
@@ -48,10 +44,14 @@ public class UserAnswerEvaluator : IUserAnswerEvaluator
 				continue;
 			}
 
-			result += CalculatePriceQuestionDetail(
-				questionViewModel.QuestionType,
-				score,
-				questionDetail);
+			var evaluator = GetEvaluator(questionViewModel.QuestionType);
+			if (evaluator == null)
+			{
+				result += score;
+				continue;
+			}
+
+			result += evaluator.CalculatePrice(score, questionDetail);
 		}
 
 		return result;
@@ -59,81 +59,12 @@ public class UserAnswerEvaluator : IUserAnswerEvaluator
 
 	public bool Validate(QuestionViewModel questionViewModel)
 	{
-		return questionViewModel.QuestionType switch
-		{
-			QuestionType.One => ValidateOneOrMany(questionViewModel),
-			QuestionType.Open => ValidateOpen(questionViewModel),
-			QuestionType.Many => ValidateOneOrMany(questionViewModel),
-			_ => true
-		};
+		var evaluator = GetEvaluator(questionViewModel.QuestionType);
+
+		return evaluator == null || evaluator.Validate(questionViewModel);
 	}
 
-	private bool ValidateOneOrMany(QuestionViewModel questionViewModel) =>
-		questionViewModel.QuestionDetails
-			.Where(q => q.AnswerDetails.Count > 0)
-			.All(qd => qd.AnswerDetails.Any(a => a.UserAnswer.IsSelected));
+	private IQuestionEvaluator? GetEvaluator(QuestionType questionType) =>
+		_evaluators.FirstOrDefault(e => e.QuestionType == questionType);
 
-	private bool ValidateOpen(QuestionViewModel questionViewModel) =>
-		questionViewModel.QuestionDetails
-			.Where(q => q.AnswerDetails.Count > 0)
-			.All(qd => qd.AnswerDetails.Any(a => !string.IsNullOrEmpty(a.UserAnswer.Text)));
-
-	private string FormatedAnswer(string text) =>
-		text.Trim().ToLower();
-
-	private float CalculatePriceQuestionDetail(
-		QuestionType questionType,
-		float maxPrice,
-		QuestionDetailViewModel questionDetailViewModel)
-	{
-		return questionType switch
-		{
-			QuestionType.One => CalculatePriceOne(maxPrice, questionDetailViewModel),
-			QuestionType.Open => CalculatePriceOpen(maxPrice, questionDetailViewModel),
-			QuestionType.Many => CalculatePriceMany(maxPrice, questionDetailViewModel),
-			_ => maxPrice
-		};
-	}
-
-	private float CalculatePriceOpen(
-		float maxPrice, 
-		QuestionDetailViewModel questionDetailViewModel)
-	{
-		if (questionDetailViewModel.AnswerDetails
-				.Any(a => IsCorrect(QuestionType.Open, a)))
-		{
-			return maxPrice;
-		}
-
-		return 0.0f;
-	}
-
-	private float CalculatePriceOne(
-		float maxPrice,
-		QuestionDetailViewModel questionDetailViewModel)
-	{
-		if (questionDetailViewModel.AnswerDetails
-				.All(a => IsCorrect(QuestionType.One, a)))
-		{
-			return maxPrice;
-		}
-
-		return 0.0f;
-	}
-
-	private float CalculatePriceMany(
-		float maxPrice,
-		QuestionDetailViewModel questionDetailViewModel)
-	{
-		var countAnswers = questionDetailViewModel.AnswerDetails.Count;
-		if (countAnswers == 0)
-		{
-			return maxPrice;
-		}
-
-		var priceAnswer = maxPrice / countAnswers;
-		var countIncorrect = questionDetailViewModel.AnswerDetails
-								.Count(a => !IsCorrect(QuestionType.Many, a));
-		return maxPrice - (countIncorrect * priceAnswer);
-	}
 }
