@@ -139,6 +139,11 @@ namespace QuizGenerator.View.IndependentComponents.Components
 				var startAngleDegree = StartAngle;
 				var sumItems = (double)Data.Sum(d => d.Weight);
 
+				if (sumItems <= 0)
+				{
+					return;
+				}
+
 				_radius = Width / 2;
 
 				var segmentsQueue = new Queue<PieChartSegment>();

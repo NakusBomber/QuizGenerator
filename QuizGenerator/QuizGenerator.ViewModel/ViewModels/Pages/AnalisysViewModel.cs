@@ -47,9 +47,24 @@ public class AnalisysViewModel : ViewModelBase
 		set
 		{
 			_countCorrectAnswers = value;
+			OnScoreChanged();
 			OnPropertyChanged();
 		}
 	}
+
+	private int _countIncorrectAnswers;
+
+	public int CountIncorrectAnswers
+	{
+		get => _countIncorrectAnswers;
+		set
+		{
+			_countIncorrectAnswers = value;
+			OnScoreChanged();
+			OnPropertyChanged();
+		}
+	}
+
 
 	private ObservableCollection<PieChartData> _pieChartData;
 
@@ -73,14 +88,37 @@ public class AnalisysViewModel : ViewModelBase
 		_confirmationNavigationService = confirmationNavigationService;
 		_backNavigationService = backNavigationService;
 
+		SetIsReadOnly();
+
 		_pieChartData = new ObservableCollection<PieChartData>([
-				new PieChartData("1", 1),
-				new PieChartData("2", 2)]);
+				new PieChartData("Correct", 0, Brushes.Green),
+				new PieChartData("Incorrect", 0, Brushes.Red)]);
 
-
+		CountCorrectAnswers = 5;
+		CountIncorrectAnswers = 3;
 
 		RetryCommand = new DelegateCommand(RetryPractice);
+	}
 
+	private void OnScoreChanged()
+	{
+		PieChartData.ElementAt(0).Weight = CountCorrectAnswers;
+		PieChartData.ElementAt(1).Weight = CountIncorrectAnswers;
+	}
+
+	private void SetIsReadOnly()
+	{
+		var questions = TrainingSession.Quiz?.Questions;
+		if (questions == null || questions.Count == 0)
+		{
+			return;
+		}
+
+		questions
+			.SelectMany(q => q.QuestionDetails)
+			.SelectMany(qd => qd.AnswerDetails)
+			.ToList()
+			.ForEach(a => a.UserAnswer.IsReadOnly = true);
 	}
 
 	private void RetryPractice(object? parameter)

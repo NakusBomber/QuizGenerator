@@ -1,10 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:models="clr-namespace:QuizGenerator.ViewModel.ViewModels.Models;assembly=QuizGenerator.ViewModel"
+                    xmlns:converters="clr-namespace:QuizGenerator.View.Converters"
                     xmlns:comp="clr-namespace:QuizGenerator.View.Components">
     <DataTemplate x:Key="QuestionOpenTemplate"
                   DataType="{x:Type models:QuestionViewModel}">
         <ItemsControl ItemsSource="{Binding QuestionDetails}">
+            <ItemsControl.Resources>
+                <converters:BooleanInvertedConverter x:Key="BooleanInvertedConverter"/>
+            </ItemsControl.Resources>
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type models:QuestionDetailViewModel}">
                     <StackPanel Orientation="Vertical"
@@ -15,6 +19,7 @@
                                Margin="5 0 5 15"/>
 
                         <comp:ExtendedTextBox Placeholder="Type your answer here"
+                                              IsEnabled="{Binding AnswerDetails[0].UserAnswer.IsReadOnly, Converter={StaticResource BooleanInvertedConverter}}"
                                               Text="{Binding AnswerDetails[0].UserAnswer.Text, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </DataTemplate>
