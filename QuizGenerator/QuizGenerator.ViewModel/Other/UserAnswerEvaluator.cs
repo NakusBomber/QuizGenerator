@@ -69,12 +69,14 @@ public class UserAnswerEvaluator : IUserAnswerEvaluator
 	}
 
 	private bool ValidateOneOrMany(QuestionViewModel questionViewModel) =>
-		questionViewModel.QuestionDetails.All(
-			qd => qd.AnswerDetails.Any(a => a.UserAnswer.IsSelected));
+		questionViewModel.QuestionDetails
+			.Where(q => q.AnswerDetails.Count > 0)
+			.All(qd => qd.AnswerDetails.Any(a => a.UserAnswer.IsSelected));
 
 	private bool ValidateOpen(QuestionViewModel questionViewModel) =>
-		questionViewModel.QuestionDetails.All(
-			qd => qd.AnswerDetails.Any(a => !string.IsNullOrEmpty(a.UserAnswer.Text)));
+		questionViewModel.QuestionDetails
+			.Where(q => q.AnswerDetails.Count > 0)
+			.All(qd => qd.AnswerDetails.Any(a => !string.IsNullOrEmpty(a.UserAnswer.Text)));
 
 	private string FormatedAnswer(string text) =>
 		text.Trim().ToLower();
