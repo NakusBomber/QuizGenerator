@@ -1,7 +1,9 @@
 ﻿using QuizGenerator.View.IndependentComponents.Models;
 using QuizGenerator.ViewModel.Commands.Bases;
+using QuizGenerator.ViewModel.Other;
 using QuizGenerator.ViewModel.Other.Interfaces;
 using QuizGenerator.ViewModel.ViewModels.Bases;
+using QuizGenerator.ViewModel.ViewModels.Models;
 using QuizGenerator.ViewModel.ViewModels.Windows;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -13,19 +15,21 @@ namespace QuizGenerator.ViewModel.ViewModels.Pages;
 public class AnalisysViewModel : ViewModelBase
 {
 	private readonly IBackNavigationService _backNavigationService;
+	private readonly IUserAnswerEvaluator _userAnswerEvaluator;
 	private readonly IWindowNavigationService<ConfirmationWindowViewModel, bool> _confirmationNavigationService;
 
-	private TrainingViewModel _trainingSession;
+	private string _quizName;
 
-	public TrainingViewModel TrainingSession
+	public string QuizName
 	{
-		get => _trainingSession;
+		get => _quizName;
 		set
 		{
-			_trainingSession = value;
+			_quizName = value;
 			OnPropertyChanged();
 		}
 	}
+
 
 	private TimeSpan? _elapsedTime;
 
@@ -36,6 +40,7 @@ public class AnalisysViewModel : ViewModelBase
 		{
 			_elapsedTime = value;
 			OnPropertyChanged();
+			OnPropertyChanged(nameof(IsWasTime));
 		}
 	}
 
@@ -65,6 +70,31 @@ public class AnalisysViewModel : ViewModelBase
 		}
 	}
 
+	private int _countPartiallyCorrectAnswers;
+
+	public int CountPartiallyCorrectAnswers
+	{
+		get => _countPartiallyCorrectAnswers;
+		set
+		{
+			_countPartiallyCorrectAnswers = value;
+			OnScoreChanged();
+			OnPropertyChanged();
+		}
+	}
+
+	private ObservableCollection<AnalisysQuestionViewModel> _analisedQuestions;
+
+	public ObservableCollection<AnalisysQuestionViewModel> AnalisedQuestions
+	{
+		get => _analisedQuestions;
+		set
+		{
+			_analisedQuestions = value;
+			OnPropertyChanged();
+		}
+	}
+
 
 	private ObservableCollection<PieChartData> _pieChartData;
 
@@ -84,41 +114,75 @@ public class AnalisysViewModel : ViewModelBase
 		IWindowNavigationService<ConfirmationWindowViewModel, bool> confirmationNavigationService,
 		IBackNavigationService backNavigationService)
 	{
-		_trainingSession = trainingViewModel;
+		_quizName = trainingViewModel.Quiz?.Name ?? string.Empty;
+		_userAnswerEvaluator = new UserAnswerEvaluator();
 		_confirmationNavigationService = confirmationNavigationService;
 		_backNavigationService = backNavigationService;
 
+		_analisedQuestions = new(trainingViewModel.Quiz?.Questions
+			.Select(q => new AnalisysQuestionViewModel(q)) ?? []);
+
 		SetIsReadOnly();
 
+		ElapsedTime = trainingViewModel.Quiz?.Interval - trainingViewModel.TimeLeft;
 		_pieChartData = new ObservableCollection<PieChartData>([
 				new PieChartData("Correct", 0, Brushes.Green),
+				new PieChartData("Partially correct", 0, Brushes.Yellow),
 				new PieChartData("Incorrect", 0, Brushes.Red)]);
 
-		CountCorrectAnswers = 5;
-		CountIncorrectAnswers = 3;
+		CalculateAllQuestions();
 
 		RetryCommand = new DelegateCommand(RetryPractice);
 	}
 
+	public bool IsWasTime => ElapsedTime != null;
+	public float SumCurrentScore => AnalisedQuestions.Sum(a => a.Score);
+	public int SumMaxScore => AnalisedQuestions.Sum(a => a.Question.EvaluationPrice);
 	private void OnScoreChanged()
 	{
 		PieChartData.ElementAt(0).Weight = CountCorrectAnswers;
-		PieChartData.ElementAt(1).Weight = CountIncorrectAnswers;
+		PieChartData.ElementAt(1).Weight = CountPartiallyCorrectAnswers;
+		PieChartData.ElementAt(2).Weight = CountIncorrectAnswers;
 	}
 
 	private void SetIsReadOnly()
 	{
-		var questions = TrainingSession.Quiz?.Questions;
-		if (questions == null || questions.Count == 0)
+		if (AnalisedQuestions.Count == 0)
 		{
 			return;
 		}
 
-		questions
-			.SelectMany(q => q.QuestionDetails)
+		AnalisedQuestions
+			.SelectMany(aq => aq.Question.QuestionDetails)
 			.SelectMany(qd => qd.AnswerDetails)
 			.ToList()
 			.ForEach(a => a.UserAnswer.IsReadOnly = true);
+	}
+
+	private void CalculateAllQuestions()
+	{
+		foreach (var analizedQuestion in AnalisedQuestions)
+		{
+			analizedQuestion.Score = _userAnswerEvaluator.CalculatePrice(analizedQuestion.Question);
+			if (analizedQuestion.Score == analizedQuestion.Question.EvaluationPrice)
+			{
+				analizedQuestion.AnalizedResult = AnalizedQuestionResult.Correct;
+				continue;
+			}
+			if (analizedQuestion.Score <= 0.0f)
+			{
+				analizedQuestion.AnalizedResult = AnalizedQuestionResult.Incorrect;
+				continue;
+			}
+			analizedQuestion.AnalizedResult = AnalizedQuestionResult.PartiallyCorrect;
+		}
+
+		CountCorrectAnswers = AnalisedQuestions.Count(q => q.AnalizedResult == AnalizedQuestionResult.Correct);
+		CountPartiallyCorrectAnswers = AnalisedQuestions.Count(q => q.AnalizedResult == AnalizedQuestionResult.PartiallyCorrect);
+		CountIncorrectAnswers = AnalisedQuestions.Count(q => q.AnalizedResult == AnalizedQuestionResult.Incorrect);
+
+		OnPropertyChanged(nameof(SumCurrentScore));
+		OnPropertyChanged(nameof(SumMaxScore));
 	}
 
 	private void RetryPractice(object? parameter)

@@ -18,7 +18,7 @@ public class TrainingViewModel : ViewModelBase
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly DispatcherTimer _timer;
 	private readonly IParameterNavigationService<TrainingViewModel, AnalisysViewModel> _analisysNavigationService;
-	private readonly IUserAnswerValidator _userAnswerValidator;
+	private readonly IUserAnswerEvaluator _userAnswerEvaluator;
 	
 	private Guid? _quizId;
 	private Quiz? _quiz;
@@ -74,7 +74,7 @@ public class TrainingViewModel : ViewModelBase
 	{
 		_unitOfWork = unitOfWork;
 		_analisysNavigationService = analisysNavigationService;
-		_userAnswerValidator = new UserAnswerValidator();
+		_userAnswerEvaluator = new UserAnswerEvaluator();
 		_timer = CreateTimer();
 
 		_quizId = id;
@@ -203,7 +203,7 @@ public class TrainingViewModel : ViewModelBase
 
 	private bool CanNextQuestion(object? obj) =>
 		Quiz != null &&
-		(ActiveQuestion == null || _userAnswerValidator.Validate(ActiveQuestion));
+		(ActiveQuestion == null || _userAnswerEvaluator.Validate(ActiveQuestion));
 
 	private DispatcherTimer CreateTimer()
 	{
