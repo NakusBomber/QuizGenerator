@@ -33,6 +33,7 @@ public class QuestionDetailViewModel : ViewModelBase
 		{
 			_answerDetails = value;
 			OnPropertyChanged();
+			OnPropertyChanged(nameof(FirstAnswerDetail));
 		}
 	}
 
@@ -48,6 +49,8 @@ public class QuestionDetailViewModel : ViewModelBase
 		_text = questionDetail.Text;
 		_answerDetails = new ObservableCollection<AnswerDetailViewModel>();
 	}
+
+	public AnswerDetailViewModel? FirstAnswerDetail => AnswerDetails?.FirstOrDefault();
 
 	public void CopyToQuestionDetail(QuestionDetail questionDetail)
 	{

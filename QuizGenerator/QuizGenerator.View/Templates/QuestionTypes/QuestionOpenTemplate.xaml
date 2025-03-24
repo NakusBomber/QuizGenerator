@@ -19,8 +19,8 @@
                                Margin="5 0 5 15"/>
 
                         <comp:ExtendedTextBox Placeholder="Type your answer here"
-                                              IsEnabled="{Binding AnswerDetails[0].UserAnswer.IsReadOnly, Converter={StaticResource BooleanInvertedConverter}}"
-                                              Text="{Binding AnswerDetails[0].UserAnswer.Text, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"/>
+                                              IsEnabled="{Binding FirstAnswerDetail.UserAnswer.IsReadOnly, FallbackValue=False, TargetNullValue=False, Converter={StaticResource BooleanInvertedConverter}}"
+                                              Text="{Binding FirstAnswerDetail.UserAnswer.Text, FallbackValue='', TargetNullValue='', UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
