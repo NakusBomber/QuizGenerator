@@ -153,6 +153,7 @@ public class TrainingViewModel : ViewModelBase
 		}, token);
 
 		_questionIndex = 0;
+		ActiveQuestion = null;
 		if (NextQuestionCommand.CanExecute(null))
 		{
 			NextQuestionCommand.Execute(null);
