@@ -13,8 +13,7 @@ public class ScoreConverter : IMultiValueConverter
 		{
 			var firstValue = (current == 0f || current == max) 
 								? string.Format("{0:F0}", current)
-								: string.Format("{0:F2}", current);
-			firstValue = firstValue.EndsWith(",00") ? firstValue.Replace(",00", "") : firstValue;
+								: string.Format("{0:F2}", current).Replace(",00", "").Replace(".00", "");
 			return $"{firstValue.Replace(',', '.')}/{max}";
 		}
 		return string.Empty;
