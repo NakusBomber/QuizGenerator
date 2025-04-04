@@ -1,0 +1,87 @@
+﻿<Page x:Class="QuizGenerator.View.Views.Pages.SelectPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:comp="clr-namespace:QuizGenerator.View.Components"
+      xmlns:local="clr-namespace:QuizGenerator.View.Views.Pages"
+      xmlns:models="clr-namespace:QuizGenerator.Model.Entities;assembly=QuizGenerator.Model"
+      xmlns:vms="clr-namespace:QuizGenerator.ViewModel.ViewModels.Pages;assembly=QuizGenerator.ViewModel"
+      mc:Ignorable="d"
+      d:DesignHeight="350"
+      d:DesignWidth="500"
+      d:DataContext="{d:DesignInstance vms:SelectViewModel}"
+      Title="SelectPage">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding SearchCommand}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding SearchCommand.CancelCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Margin="15 0">
+        <Grid.Resources>
+            <x:Array Type="{x:Type models:Quiz}"
+                     x:Key="TempDataSearch">
+                <models:Quiz Name="Name1"/>
+                <models:Quiz Name="Name2"/>
+                <models:Quiz Name="Name3"/>
+                <models:Quiz Name="Name4"/>
+                <models:Quiz Name="Name5"/>
+                <models:Quiz Name="Name6"/>
+            </x:Array>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="40" />
+            </Grid.ColumnDefinitions>
+
+            <comp:ExtendedTextBox IconSeparator="True"
+                                  Grid.Column="0"
+                                  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                  MaterialIcon="Search"
+                                  Placeholder="Type text for searching"/>
+
+            <comp:IconButton Command="{Binding ClearSearchTextCommand}"
+                             Grid.Column="1"
+                             MaterialIcon="ClearOutline"
+                             ToolTip="Clear"/>
+        </Grid>
+
+
+        <ProgressBar d:Visibility="Collapsed"
+                     Visibility="{Binding SearchCommand.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
+                     Grid.Row="1"
+                     Style="{StaticResource SpinnerProgressBarStyle}"/>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
+                      Visibility="{Binding SearchCommand.Execution.IsCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
+                      Margin="0 10"
+                      Grid.Row="1">
+            <ItemsControl d:ItemsSource="{StaticResource TempDataSearch}"
+                          ItemsSource="{Binding Quizes}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:Quiz}">
+                        <Button Style="{StaticResource RecentlyQuizButtonStyle}"
+                                Margin="8 10 8 0"
+                                Command="{Binding DataContext.QuizNavigateCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                CommandParameter="{Binding Id}"
+                                Content="{Binding Name}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Page>

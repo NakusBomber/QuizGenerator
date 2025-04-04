@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Media\app_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Fonts\proximanova_black.otf" />
+    <None Remove="Fonts\proximanova_black.ttf" />
+    <None Remove="Fonts\proximanova_blackit.otf" />
+    <None Remove="Fonts\proximanova_bold.otf" />
+    <None Remove="Fonts\proximanova_boldit.otf" />
+    <None Remove="Fonts\proximanova_extrabold.otf" />
+    <None Remove="Fonts\proximanova_light.otf" />
+    <None Remove="Fonts\proximanova_regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Material.Icons.WPF" Version="2.1.10" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QuizGenerator.DAL\QuizGenerator.DAL.csproj" />
+    <ProjectReference Include="..\QuizGenerator.View.IndependentComponents\QuizGenerator.View.IndependentComponents.csproj" />
+    <ProjectReference Include="..\QuizGenerator.ViewModel\QuizGenerator.ViewModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\proximanova_black.otf" />
+    <Resource Include="Fonts\proximanova_black.ttf" />
+    <Resource Include="Fonts\proximanova_blackit.otf" />
+    <Resource Include="Fonts\proximanova_bold.otf" />
+    <Resource Include="Fonts\proximanova_boldit.otf" />
+    <Resource Include="Fonts\proximanova_extrabold.otf" />
+    <Resource Include="Fonts\proximanova_light.otf" />
+    <Resource Include="Fonts\proximanova_regular.ttf" />
+  </ItemGroup>
+
+</Project>
